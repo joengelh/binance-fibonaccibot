@@ -1,0 +1,51 @@
+#connect to timescaledb
+con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
+                 host = "192.168.2.8",
+                 user = "postgres",
+                 password = "password")
+
+#declare fibonacci levels
+fR <- data.frame(
+  retracement = c(1.618,1.382,1.236,1,0.786,
+                  0.618,0.5,0.382,0.236,0),
+  lineColor = c('red', 'blue', 'green',
+                'yellow', 'brown', 'turquoise3',
+                'orange', 'purple', 
+                'violet', 'goldenrod1')
+)
+fR$fibLevel <- NA
+fR$southLevel <- NA
+fR$northLevel <- NA
+
+#get list of buy advice instances
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
+                     WHERE resultpercent IS NOT NULL
+                        AND corvalue >= '0.5'
+                        AND corvalue <= '0.8'
+                        AND fiblevel >= '0.5';")
+validated <- dbFetch(sqlQuery)
+dbClearResult(sqlQuery)
+
+for (i in unique(validated$fiblevel)){
+  print(paste("==================", i,"=================="))
+  interm <- validated[validated$fiblevel == i,]
+  print(paste("trades: ", length(interm$symbol)))
+  print(paste("mean percent: ", mean(interm$resultpercent)))
+  print(paste("result: ", sum(interm$resultpercent) * 100 / length(interm$resultpercent)))
+  print(paste("id time cor: ", mean(interm$corvalue)))
+  print(paste("corvalue resultpercent cor: ", cor(interm$resultpercent, interm$corvalue)))
+  successcount <- 0
+  unsuccesscount <- 0
+  for (row in interm$resultpercent){
+    if (row > 0){
+      successcount <- successcount +1
+    }
+    else{
+      unsuccesscount <- unsuccesscount +1
+    }
+  }
+  print(paste("success n: ", successcount))
+  print(paste("unsuccess n: ", unsuccesscount))
+}
+print(paste("total corvalue resultpercent cor: ", cor(validated$resultpercent, validated$corvalue)))
+dbDisconnect(con) 

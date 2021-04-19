@@ -1,0 +1,12 @@
+---
+- name: open port "{{ dbPort }}" on docker host
+  hosts: all
+  become: yes
+  tasks:
+  - firewalld:
+      port: "{{ dbPort }}/tcp"
+      permanent: yes
+      state: enabled
+      immediate: yes
+  vars:
+  - dbPort: 5432
