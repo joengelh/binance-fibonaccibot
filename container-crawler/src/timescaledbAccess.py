@@ -38,12 +38,10 @@ class timescaleAccess:
             sys.exit(1)
 
     def dict2sql(self, dict4sql):
-        self.columns = ', '.join("`" + str(x).replace('/', '_') + "`" for x in dict4sql.keys())
+        self.columns = ', '.join(str(x).replace('/', '_') for x in dict4sql.keys())
         self.values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dict4sql.values())
-        self.types = ', '.join("'" for x in dict4sql.values())
 
     def tableCreate(self, writeDict, tableName = "table001"):
-        self.dict2sql(writeDict)
         #create table if not exists
         dbHeader = "CREATE TABLE IF NOT EXISTS " + str(tableName) + " (\n"
         dbContent = ""
@@ -56,8 +54,7 @@ class timescaleAccess:
                 dbContent += str(key) + " TEXT" + ",\n"
             elif isinstance(value, int):
                 dbContent += str(key) + " DOUBLE PRECISION" + ",\n"
-        dbEnd = """time TIMESTAMPTZ NOT NULL,
-id serial);"""
+        dbEnd = "time TIMESTAMPTZ NOT NULL, id serial);"
         try:
             self.cur.execute(dbHeader + dbContent + dbEnd)
         except:
@@ -70,12 +67,23 @@ id serial);"""
         except:
             print("table " + str(tableName) + " is already hypertable")
 
-    def insertColumn(self, name, tableName = "table001"):
-        sql = "ALTER TABLE " + str(tableName) + " ADD COLUMN IF NOT ExISTS " + str(name) + " DOUBLE PRECISION;"
-        try: 
-            self.cur.execute(sql)
+    def insertColumns(self, WriteCol, tableName = "table001"):
+        dbHeader = "ALTER TABLE " + str(tableName) + " (\n"
+        dbContent = ""
+        for key, value in writeCol.items():
+            if isinstance(value, bool):
+                dbContent += "ADD COLUMN IF NOT EXISTS" + str(key) + " BOOLEAN" + ",\n"
+            elif isinstance(value, float):
+                dbContent += "ADD COLUMN IF NOT EXISTS" + str(key) + " DOUBLE PRECISION" + ",\n"
+            elif isinstance(value, str):
+                dbContent += "ADD COLUMN IF NOT EXISTS" + str(key) + " TEXT" + ",\n"
+            elif isinstance(value, int):
+                dbContent += "ADD COLUMN IF NOT EXISTS" + str(key) + " DOUBLE PRECISION" + ",\n"
+        dbEnd = "time TIMESTAMPTZ NOT NULL, id serial);"
+        try:
+            self.cur.execute(dbHeader + dbContent + dbEnd)
         except:
-            print("column " + str(name) + " already exists")
+            print("was not able to add column " + str(tableName) + " if not exists")
     
     def sqlUpdate(self, sql):
         try:
@@ -89,15 +97,12 @@ id serial);"""
             result = self.cur.fetchall()
         except:
             print("error in query")
-        
         return result
 
     def insertRow(self, writeDict, tableName = "table001"):
         self.dict2sql(writeDict)
         #append dict as row to table
-        sql = "INSERT INTO %s ( %s, time) VALUES ( %s, NOW() );" % (str(tableName), self.columns, self.values)
-        #shitty solution to a shitty problem, API returns `symbol` instead of 'symbol'
-        sql = sql.replace("`", "")
+        sql = "INSERT INTO %s ( %s, time) VALUES ( %s, NOW() );" % (tableName, self.columns, self.values)
         try:
             self.cur.execute(sql)
         except (Exception, psycopg2.Error)as error:

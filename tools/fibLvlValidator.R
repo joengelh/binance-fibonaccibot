@@ -17,6 +17,8 @@ fR$fibLevel <- NA
 fR$southLevel <- NA
 fR$northLevel <- NA
 
+#################################logics#################################
+
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
                      WHERE resultpercent IS NOT NULL
@@ -26,12 +28,25 @@ sqlQuery <- dbSendQuery(con, "SELECT * FROM table001
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
+#get list of buy advice instances
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
+                     WHERE resultpercent IS NOT NULL;")
+validated <- dbFetch(sqlQuery)
+dbClearResult(sqlQuery)
+
+###############################end logics################################################
+
 for (i in unique(validated$fiblevel)){
-  print(paste("==================", i,"=================="))
+  #calculate 100er result
   interm <- validated[validated$fiblevel == i,]
+  capital <- 10000
+  for (move in interm$resultpercent){
+    capital <- capital + move
+  }
+  print(paste("==================", i,"=================="))
   print(paste("trades: ", length(interm$symbol)))
   print(paste("mean percent: ", mean(interm$resultpercent)))
-  print(paste("result: ", sum(interm$resultpercent) * 100 / length(interm$resultpercent)))
+  print(paste("result: ", capital))
   print(paste("id time cor: ", mean(interm$corvalue)))
   print(paste("corvalue resultpercent cor: ", cor(interm$resultpercent, interm$corvalue)))
   successcount <- 0

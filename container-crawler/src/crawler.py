@@ -13,8 +13,7 @@ from envs import env
 import timescaledbAccess
 import tradingEngineAccess
 
-#read columns to be added data from json
-with open('columnsToAdd.json') as file:
+with open('databaseColumns.json') as file:
     cols = json.load(file)
 
 #read env vars
@@ -31,11 +30,7 @@ except KeyError:
 
 def initiateTable():
     timescale = timescaledbAccess.timescaleAccess()
-    client = Client(apiKey, apiSecret, {'timeout':600})
-    tickers = client.get_ticker()
-    timescale.tableCreate(tickers[0])
-    for level in cols:
-        timescale.insertColumn(level)
+    timescale.tableCreate(cols)
     timescale.databaseClose()
     print("SUCCESS: initialteTable()")
 
@@ -46,13 +41,18 @@ def crawl():
     tickers = client.get_ticker()
     #get count to determine if lengh is sufficient
     count = timescale.sqlQuery("""SELECT count(*) FROM table001 
-            WHERE time > NOW() - INTERVAL '10 hours' and symbol LIKE 'BNBETH';""")
+            WHERE time > NOW() - INTERVAL '10 hours' and symbol LIKE 'CAKEBNB';""")
     for i in range(len(tickers)):
-        if (tickers[i]['symbol'].startswith('BNB') and
-           len(tickers[i]['symbol']) 11):
-            timescale.insertRow(tickers[i])
-            if count[0][0] > 1450:
-                trader.runCalculation(tickers[i])
+        intermDict = {}
+        intermDict['askPrice'] = float(tickers[i]['askPrice'])
+        intermDict['symbol'] = tickers[i]['symbol']
+        #filter for only coins relevant for the bot
+        if (intermDict['symbol'].endswith('BNB') and
+           len(intermDict['symbol']) < 11 and
+           intermDict['askPrice'] > 0):
+            timescale.insertRow(intermDict)
+            if count[0][0] > 450:
+                trader.runCalculation(intermDict)
     timescale.databaseClose()
 
 #create table once on startup, if not exists

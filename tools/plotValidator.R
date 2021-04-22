@@ -19,8 +19,7 @@ fR$northLevel <- NA
 
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
-                     WHERE resultpercent IS NOT NULL and
-                        fiblevel >= 1;")
+                     WHERE resultpercent IS NOT NULL;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
@@ -29,9 +28,16 @@ for (i in 1:nrow(validated)){
   sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"' 
   and id >= '", validated$startid[i], "' 
-  and id <= '", validated$id[i] + 30000, "';", sep = "")
+  and id <= '", validated$stopid[i] + 30000, "';", sep = "")
   sqlQuery <- dbSendQuery(con, sqlString)
   plotData <- dbFetch(sqlQuery)
+  dbClearResult(sqlQuery)
+  
+  # get stopid time
+  sqlString <-  paste("select time from table001 
+  where id = '", validated$stopid[i], "';", sep = "")
+  sqlQuery <- dbSendQuery(con, sqlString)
+  stopIdTime <- dbFetch(sqlQuery)
   dbClearResult(sqlQuery)
   
   # re-engineer data present at point of making decision
@@ -77,6 +83,7 @@ for (i in 1:nrow(validated)){
   
   #add lines for buy and sell, aswell as fibonacci retracement levels
   abline(v = validated$time[i], col = "red")
+  abline(v = stopIdTime, col = "blue")
   for (fiblvl in 1:nrow(fR)){
     abline(h=c(fR$northLevel[fiblvl], fR$southLevel[fiblvl]), 
            col=fR$lineColor[fiblvl])

@@ -1,0 +1,11 @@
+{
+	"symbol": "yes",
+	"askPrice": 0.1, 
+	"takeProfit": 0.1, 
+	"stopLoss": 0.1, 
+	"fibLevel":0.1, 
+	"startId":1,
+	"resultPercent":-0.1,
+	"corValue": -0.1,
+	"stopId":1
+}
