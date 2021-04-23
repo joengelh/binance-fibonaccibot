@@ -68,13 +68,13 @@ class tradingAccess:
                         " AND time < NOW() - INTERVAL '1 hour'" +
                         " AND askprice <= '" + str(tick['askPrice']) + "';")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
-                        self.timescale.sqlQuery(sql2)[0][0] > 0):
+                        self.timescale.sqlQuery(sql2)[0][0] > 0 and
+                        fibRetracement[0][i] in self.tradableLvl):
                     self.writeAdvice(fibRetracement, largeData, i)                        
-                    if fibRetracement[0][i] in self.tradableLvl:
-                        #calculate positive percentage in 0-100% for sl and tp
-                        takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
-                        stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
-                        self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
-    
+                    #calculate positive percentage in 0-100% for sl and tp
+                    takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
+                    stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
+                    self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
+
         self.timescale.databaseClose()
 
