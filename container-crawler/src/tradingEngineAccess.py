@@ -18,7 +18,7 @@ class tradingAccess:
         orderString = ("python3 ./execute_orders.py" +
                 " --symbol " + symbol +
                 " --buy_type market" +
-                " --total 0.1" +
+                " --total 1" +
                 " --profit " + str(tpp) +
                 " --loss " + str(slp) +
                 " &>/dev/null &")
@@ -59,10 +59,10 @@ class tradingAccess:
         for i in loopRange:
             if (float(tick['askPrice']) > fibRetracement[2][i] and
             float(tick['askPrice']) < fibRetracement[3][i]):
-                #check if advice has been given in the last 10 minutes for the pair
-                sql = ("SELECT count(*) FROM table001 WHERE symbol LIKE '" + 
-                        tick['symbol'] + "' AND time > NOW() - INTERVAL '15 minutes'" +
-                        " AND takeprofit is not null;")
+                #check if there is still an open trade
+                sql = ("SELECT count(*) FROM table001 WHERE takeprofit is not null" +
+                      " and resultpercent is null;")
+                #check if this isnt the atl in the past 9 + 1 hours
                 sql2 = ("SELECT count(*) FROM table001 WHERE symbol LIKE '" +
                         tick['symbol'] + "' AND time > NOW() - INTERVAL '10 hours'" +
                         " AND time < NOW() - INTERVAL '1 hour'" +

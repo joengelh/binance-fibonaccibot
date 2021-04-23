@@ -1,3 +1,5 @@
+library(RPostgres)
+
 #connect to timescaledb
 con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
                  host = "192.168.2.8",
@@ -19,7 +21,8 @@ fR$northLevel <- NA
 
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
-                     WHERE resultpercent IS NOT NULL;")
+                     WHERE resultpercent IS NOT NULL
+                        and fiblevel >= 1;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 

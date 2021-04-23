@@ -1,3 +1,5 @@
+library(RPostgres)
+
 #connect to timescaledb
 con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
                  host = "192.168.2.8",
