@@ -16,6 +16,7 @@ The open source repository binance python profit
 [go to github](https://github.com/UPetit/python-binance-profit)
 is used in the crawler microservice.
 
+```bash
 .
 ├── app
 │   ├── client.py
@@ -38,6 +39,7 @@ is used in the crawler microservice.
 │   │   └── tools.cpython-38.pyc
 │   └── tools.py
 └── crawler.py
+```
 
 ## Components
 
