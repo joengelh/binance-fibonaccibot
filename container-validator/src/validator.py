@@ -30,11 +30,11 @@ def runValidation():
         " resultpercent IS NULL " +
         " AND takeprofit IS NOT NULL;")
     bA = pd.DataFrame(timescale.sqlQuery(sql))
-    bA[0] = pd.to_numeric(bA[0])
-    bA[2] = pd.to_numeric(bA[2])
-    bA[3] = pd.to_numeric(bA[3])
-    bA[4] = pd.to_numeric(bA[4])
     if len(bA) > 0:
+        bA[0] = pd.to_numeric(bA[0])
+        bA[2] = pd.to_numeric(bA[2])
+        bA[3] = pd.to_numeric(bA[3])
+        bA[4] = pd.to_numeric(bA[4])
         for i, row in bA.iterrows():
             sql = ("select id, askprice from table001" + " where id > '" + str(bA[0][i]) +
                     "' and symbol = '" + str(bA[1][i]) + "';")
