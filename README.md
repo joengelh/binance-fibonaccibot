@@ -54,7 +54,9 @@ fibonacci-validator|profit calculator||
 # Tools
 for monitoring the RScripts:
 * ``fibLvlValidator.R``
+
 * ``plotValidator.R``
+![grafik](https://user-images.githubusercontent.com/73387330/116047232-290bfa00-a674-11eb-9be0-ca638d47aed4.png)
 
 can be used.
 
