@@ -11,8 +11,6 @@ class tradingAccess:
         #read fibonacci retracements  from json
         with open('fibLvl.json') as file:
             self.fibLvl = json.load(file)
-        with open('tradableLvl.json') as file:
-            self.tradableLvl = json.load(file)
 
     def ocoOrder(self, symbol, slp, tpp):
         orderString = ("python3 ./execute_orders.py" +
@@ -69,7 +67,7 @@ class tradingAccess:
                         " AND askprice <= '" + str(tick['askPrice']) + "';")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
                         self.timescale.sqlQuery(sql2)[0][0] > 0 and
-                        fibRetracement[0][i] in self.tradableLvl):
+                        fibRetracement[0][i] >= 1):
                     self.writeAdvice(fibRetracement, largeData, i)                        
                     #calculate positive percentage in 0-100% for sl and tp
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
