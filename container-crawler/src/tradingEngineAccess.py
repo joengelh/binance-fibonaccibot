@@ -24,7 +24,7 @@ class tradingAccess:
                 " &>/dev/null &")
         print("===================================")
         print(orderString)
-        #os.system(orderString)
+        os.system(orderString)
 
     def writeAdvice(self, fib, large, i):
         sql = ("UPDATE table001 SET " +
