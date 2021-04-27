@@ -16,7 +16,7 @@ class tradingAccess:
         orderString = ("python3 ./execute_orders.py" +
                 " --symbol " + symbol +
                 " --buy_type market" +
-                " --total 1" +
+                " --total 0.1" +
                 " --profit " + str(tpp) +
                 " --loss " + str(slp) +
                 " &>/dev/null &")
@@ -38,7 +38,8 @@ class tradingAccess:
     def runCalculation(self, tick):
         self.timescale = timescaledbAccess.timescaleAccess()
         sql = ("SELECT * FROM table001 WHERE symbol LIKE '" + tick['symbol'] + 
-            "' AND time > NOW() - INTERVAL '10 hours';")
+            "' AND time > NOW() - INTERVAL '12 hours" + 
+            "' AND time < NOW() - INTERVAL '2 hours;")
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
         #convert columns id and askprice to float
         largeData[10] = largeData[10].apply(pd.to_numeric, downcast='float', errors='coerce')
@@ -60,13 +61,7 @@ class tradingAccess:
                 #check if there is still an open trade
                 sql = ("SELECT count(*) FROM table001 WHERE takeprofit is not null" +
                       " and resultpercent is null;")
-                #check if this isnt the atl in the past 9 + 1 hours
-                sql2 = ("SELECT count(*) FROM table001 WHERE symbol LIKE '" +
-                        tick['symbol'] + "' AND time > NOW() - INTERVAL '10 hours'" +
-                        " AND time < NOW() - INTERVAL '1 hour'" +
-                        " AND askprice <= '" + str(tick['askPrice']) + "';")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
-                        self.timescale.sqlQuery(sql2)[0][0] > 0 and
                         fibRetracement[0][i] >= 1):
                     self.writeAdvice(fibRetracement, largeData, i)                        
                     #calculate positive percentage in 0-100% for sl and tp

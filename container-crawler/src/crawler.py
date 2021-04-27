@@ -42,7 +42,8 @@ def crawl():
     tickers = client.get_ticker()
     #get count to determine if lengh is sufficient
     count = timescale.sqlQuery("""SELECT count(*) FROM table001 
-            WHERE time > NOW() - INTERVAL '10 hours' and symbol LIKE 'CAKEBNB';""")
+            WHERE time > NOW() - INTERVAL '12 hours' 
+            and time < NOW() - INTERVAL '11 hours""")
     for i in range(len(tickers)):
         intermDict = {}
         intermDict['askPrice'] = float(tickers[i]['askPrice'])
@@ -52,7 +53,7 @@ def crawl():
            len(intermDict['symbol']) < 11 and
            intermDict['askPrice'] > 0):
             timescale.insertRow(intermDict)
-            if (count[0][0] > 450 and
+            if (count[0][0] > 0 and
                 liveTrading == True):
                 trader.runCalculation(intermDict)
     timescale.databaseClose()
