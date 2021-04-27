@@ -19,27 +19,13 @@ fR$fibLevel <- NA
 fR$southLevel <- NA
 fR$northLevel <- NA
 
-#################################logics#################################
-
-#get list of buy advice instances
-sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
-                     WHERE resultpercent IS NOT NULL
-                        AND corvalue >= '0.5'
-                        AND corvalue <= '0.8'
-                        AND fiblevel >= '0.5';")
-validated <- dbFetch(sqlQuery)
-dbClearResult(sqlQuery)
-
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
                      WHERE resultpercent IS NOT NULL;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
-###############################end logics################################################
-
 for (i in unique(validated$fiblevel)){
-  #calculate 100er result
   interm <- validated[validated$fiblevel == i,]
   capital <- 10000
   for (move in interm$resultpercent){
