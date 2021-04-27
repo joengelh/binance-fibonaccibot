@@ -1,7 +1,3 @@
-FROM python:3
+FROM nginx
 
-ADD ./src/ /
-
-RUN pip3 install -r /requirements.txt 
-
-CMD ["python", "/crawler.py"]
+COPY ./src/ /usr/share/nginx/html
