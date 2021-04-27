@@ -46,7 +46,6 @@ def crawl():
     for i in range(len(tickers)):
         intermDict = {}
         intermDict['askPrice'] = float(tickers[i]['askPrice'])
-        intermDict['bidPrice'] = float(tickers[i]['bidPrice'])
         intermDict['symbol'] = tickers[i]['symbol']
         #filter for only coins relevant for the bot
         if (intermDict['symbol'].endswith('BNB') and
