@@ -28,6 +28,12 @@ services:
    - .env
    depends_on:
    - db
+  webui:
+   build: ./container-webui
+   container_name: fibonacci-webui
+   restart: unless-stopped
+   env_file:
+   - .env
 
 volumes: 
   fibonacci-timescaledb:
