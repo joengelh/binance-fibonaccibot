@@ -12,10 +12,11 @@ class tradingAccess:
         with open('fibLvl.json') as file:
             self.fibLvl = json.load(file)
 
-    def ocoOrder(self, symbol, slp, tpp):
+    def ocoOrder(self, symbol, price, slp, tpp):
         orderString = ("python3 ./execute_orders.py" +
                 " --symbol " + symbol +
-                " --buy_type market" +
+                " --price " + price +
+                " --buy_type limit" +
                 " --total 1" +
                 " --profit " + str(tpp) +
                 " --loss " + str(slp) +
@@ -72,7 +73,7 @@ class tradingAccess:
                     #calculate positive percentage in 0-100% for sl and tp
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
                     stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
-                    self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
+                    self.ocoOrder(tick['symbol'], tick['bidPrice'],stopLossPercent, takeProfitPercent)
 
         self.timescale.databaseClose()
 
