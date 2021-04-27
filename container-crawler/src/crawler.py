@@ -41,9 +41,9 @@ def crawl():
     client = Client(apiKey, apiSecret, {'timeout':600})
     tickers = client.get_ticker()
     #get count to determine if lengh is sufficient
-    count = timescale.sqlQuery("SELECT count(*) FROM table001" +
-            " WHERE time > NOW() - INTERVAL '12 hours'" + 
-            " and time < NOW() - INTERVAL '11 hours;")
+    count = timescale.sqlQuery("SELECT count(*) FROM table001 " +
+    " WHERE time > NOW() - INTERVAL '12 hours'" + 
+    " and time < NOW() - INTERVAL '11 hours';")
     for i in range(len(tickers)):
         intermDict = {}
         intermDict['askPrice'] = float(tickers[i]['askPrice'])
