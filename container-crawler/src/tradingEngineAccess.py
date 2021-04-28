@@ -38,7 +38,7 @@ class tradingAccess:
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(large[10].corr(large[1])) +
                             "', startId = '" + str(large[10].min()) +
-                            "', stopId = '" + str(large[10].max()) +
+                            "', midId = '" + str(large[10].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "' WHERE id IN(SELECT max(id) FROM table001);")
         self.timescale.sqlUpdate(sql)
