@@ -5,6 +5,7 @@
 	"stopLoss": 0.1, 
 	"fibLevel":0.1, 
 	"startId":1,
+	"stopId":1,
 	"resultPercent":-0.1,
 	"corValue": -0.1,
 	"stopId":1

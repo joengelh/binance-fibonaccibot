@@ -2,6 +2,8 @@
 import json
 import pandas as pd
 import os
+from dotenv import load_dotenv
+from envs import env
 
 #import classes from ./ folder
 import timescaledbAccess
@@ -36,16 +38,16 @@ class tradingAccess:
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(large[10].corr(large[1])) +
                             "', startId = '" + str(large[10].min()) +
+                            "', stopId = '" + str(large[10].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
-                            "' WHERE id = '" + str(large[10].max()) +
-                            "';")
+                            "' WHERE id IN(SELECT max(id) FROM table001);")
         self.timescale.sqlUpdate(sql)
 
     def runCalculation(self, tick):
         self.timescale = timescaledbAccess.timescaleAccess()
         sql = ("SELECT * FROM table001 WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '12 hours" + 
-            "' AND time < NOW() - INTERVAL '2 hours;")
+            "' AND time < NOW() - INTERVAL '2 hours';")
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
         #convert columns id and askprice to float
         largeData[10] = largeData[10].apply(pd.to_numeric, downcast='float', errors='coerce')

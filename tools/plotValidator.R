@@ -47,7 +47,7 @@ for (i in 1:nrow(validated)){
   sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"'
   and id >= '", validated$startid[i], "'
-  and id <= '", validated$id[i], "';", sep = "")
+  and id <= '", validated$stopid[i], "';", sep = "")
   sqlQuery <- dbSendQuery(con, sqlString)
   largeData <- dbFetch(sqlQuery)
   dbClearResult(sqlQuery)

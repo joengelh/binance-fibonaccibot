@@ -19,14 +19,14 @@ with open('databaseColumns.json') as file:
 #read env vars
 load_dotenv()
 
-try:                                                                                apiSecret=env('apiSecret')
+try:
+    apiSecret=env('apiSecret')
     apiKey=env('apiKey')
 except KeyError:
     print("No env variables set.")
     sys.exit(1)
 
 #initiate connection to database
-
 def initiateTable():
     timescale = timescaledbAccess.timescaleAccess()
     timescale.tableCreate(cols)
