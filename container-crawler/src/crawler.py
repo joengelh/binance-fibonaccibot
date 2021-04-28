@@ -19,10 +19,8 @@ with open('databaseColumns.json') as file:
 #read env vars
 load_dotenv()
 
-try:                                                                                       
-    apiSecret=env('apiSecret')
+try:                                                                                apiSecret=env('apiSecret')
     apiKey=env('apiKey')
-    liveTrading=env('liveTrading')
 except KeyError:
     print("No env variables set.")
     sys.exit(1)
@@ -53,8 +51,7 @@ def crawl():
            len(intermDict['symbol']) < 11 and
            intermDict['askPrice'] > 0):
             timescale.insertRow(intermDict)
-            if (count[0][0] > 0 and
-                liveTrading == True):
+            if count[0][0] > 0:
                 trader.runCalculation(intermDict)
     timescale.databaseClose()
 

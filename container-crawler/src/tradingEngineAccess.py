@@ -11,6 +11,12 @@ class tradingAccess:
         #read fibonacci retracements  from json
         with open('fibLvl.json') as file:
             self.fibLvl = json.load(file)
+        #read if live trading is enabled
+        try:
+            self.liveTrading=env('liveTrading')
+        except KeyError:
+            print("No env variables set.")
+            sys.exit(1)
 
     def ocoOrder(self, symbol, price, slp, tpp):
         orderString = ("python3 ./execute_orders.py" +
@@ -63,11 +69,12 @@ class tradingAccess:
                       " and resultpercent is null;")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
                         fibRetracement[0][i] >= 1):
-                    self.writeAdvice(fibRetracement, largeData, i)                        
-                    #calculate positive percentage in 0-100% for sl and tp
-                    takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
-                    stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
-                    self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
+                    self.writeAdvice(fibRetracement, largeData, i)
+                    if self.liveTrading == True:
+                        #calculate positive percentage in 0-100% for sl and tp
+                        takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
+                        stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
+                        self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
 
         self.timescale.databaseClose()
 
