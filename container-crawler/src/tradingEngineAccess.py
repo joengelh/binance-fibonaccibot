@@ -67,7 +67,7 @@ class tradingAccess:
         for i in loopRange:
             if (float(tick['askPrice']) > fibRetracement[2][i] and
             float(tick['askPrice']) < fibRetracement[3][i]):
-                corValue = large[0].corr(large[1])
+                corValue = largeData[0].corr(largeData[1])
                 self.writeAdvice(fibRetracement, largeData, i, corValue)
                 #check if there is still an open trade
                 sql = ("SELECT count(*) FROM table001 WHERE takeprofit is not null" +
