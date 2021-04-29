@@ -36,21 +36,22 @@ class tradingAccess:
         sql = ("UPDATE table001 SET " +
                             " takeProfit = '" + str(fib[2][i+2]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
-                            "', corValue = '" + str(large[10].corr(large[1])) +
-                            "', startId = '" + str(large[10].min()) +
-                            "', midId = '" + str(large[10].max()) +
+                            "', corValue = '" + str(large[0].corr(large[1])) +
+                            "', startId = '" + str(large[0].min()) +
+                            "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "' WHERE id IN(SELECT max(id) FROM table001);")
+        print(sql)
         self.timescale.sqlUpdate(sql)
 
     def runCalculation(self, tick):
         self.timescale = timescaledbAccess.timescaleAccess()
-        sql = ("SELECT * FROM table001 WHERE symbol LIKE '" + tick['symbol'] + 
+        sql = ("SELECT id, askprice FROM table001 WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '12 hours" + 
             "' AND time < NOW() - INTERVAL '2 hours';")
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
         #convert columns id and askprice to float
-        largeData[10] = largeData[10].apply(pd.to_numeric, downcast='float', errors='coerce')
+        largeData[0] = largeData[0].apply(pd.to_numeric, downcast='float', errors='coerce')
         largeData[1] = largeData[1].apply(pd.to_numeric, downcast='float', errors='coerce')
         #calculate diff
         diff = largeData[1].max() - largeData[1].min()
