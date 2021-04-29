@@ -64,7 +64,7 @@ class tradingAccess:
         #check if there is a reason to buy
         loopRange = range(1, len(fibRetracement) -2)
         for i in loopRange:
-            if (fibRetracement[0][i] >= 1 and
+            if (fibRetracement[0][i] > 1 and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
                 corValue = largeData[0].corr(largeData[1])
@@ -73,7 +73,6 @@ class tradingAccess:
                 sql = ("SELECT count(*) FROM table001 WHERE takeprofit is not null" +
                       " and resultpercent is null;")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
-                        fibRetracement[0][i] > 1 and
                         self.liveTrading == True and
                         corValue >= 0.33):
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
