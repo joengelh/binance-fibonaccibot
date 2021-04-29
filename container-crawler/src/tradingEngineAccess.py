@@ -32,16 +32,15 @@ class tradingAccess:
         print(orderString)
         os.system(orderString)
 
-    def writeAdvice(self, fib, large, i):
+    def writeAdvice(self, fib, large, i, cor):
         sql = ("UPDATE table001 SET " +
                             " takeProfit = '" + str(fib[2][i+2]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
-                            "', corValue = '" + str(large[0].corr(large[1])) +
+                            "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "' WHERE id IN(SELECT max(id) FROM table001);")
-        print(sql)
         self.timescale.sqlUpdate(sql)
 
     def runCalculation(self, tick):
