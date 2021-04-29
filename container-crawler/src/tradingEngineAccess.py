@@ -64,8 +64,9 @@ class tradingAccess:
         #check if there is a reason to buy
         loopRange = range(1, len(fibRetracement) -2)
         for i in loopRange:
-            if (float(tick['askPrice']) > fibRetracement[2][i] and
-            float(tick['askPrice']) < fibRetracement[3][i]):
+            if (fibRetracement[0][i] >= 1 and
+                    float(tick['askPrice']) > fibRetracement[2][i] and
+                    float(tick['askPrice']) < fibRetracement[3][i]):
                 corValue = largeData[0].corr(largeData[1])
                 self.writeAdvice(fibRetracement, largeData, i, corValue)
                 #check if there is still an open trade
