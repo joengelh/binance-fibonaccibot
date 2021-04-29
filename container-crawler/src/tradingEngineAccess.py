@@ -67,13 +67,15 @@ class tradingAccess:
         for i in loopRange:
             if (float(tick['askPrice']) > fibRetracement[2][i] and
             float(tick['askPrice']) < fibRetracement[3][i]):
-                self.writeAdvice(fibRetracement, largeData, i)
+                corValue = large[0].corr(large[1])
+                self.writeAdvice(fibRetracement, largeData, i, corValue)
                 #check if there is still an open trade
                 sql = ("SELECT count(*) FROM table001 WHERE takeprofit is not null" +
                       " and resultpercent is null;")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
-                        fibRetracement[0][i] >= 1 and
-                        self.liveTrading == True):
+                        fibRetracement[0][i] > 1 and
+                        self.liveTrading == True and
+                        corValue >= 0.33):
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
                     stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
                     self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
