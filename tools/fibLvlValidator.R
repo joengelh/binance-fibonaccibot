@@ -21,8 +21,7 @@ fR$northLevel <- NA
 
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL 
-                        and corvalue > '0.33'
-                        and fiblevel > '1';")
+                        and corvalue bewteen '0.33' and '0.5;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
@@ -52,4 +51,5 @@ for (i in unique(validated$fiblevel)){
   print(paste("unsuccess n: ", unsuccesscount))
 }
 print(paste("total corvalue resultpercent cor: ", cor(validated$resultpercent, validated$corvalue)))
-dbDisconnect(con) 
+dbDisconnect(con)
+
