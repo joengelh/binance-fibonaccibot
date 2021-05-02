@@ -55,7 +55,7 @@ def runValidation():
                 elif len(tpData) > 0:
                     calculateResult(tpData, bA, i)
                 else:
-                    print("waiting for more data")
+                    pass
     timescale.databaseClose()
 
 #check if result has been reached every minute
