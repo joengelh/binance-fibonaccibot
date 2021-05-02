@@ -74,7 +74,8 @@ class tradingAccess:
                       " and resultpercent is null;")
                 if (self.timescale.sqlQuery(sql)[0][0] < 1 and
                         self.liveTrading == True and
-                        corValue >= 0.33):
+                        fibRetracement[0][i] > 1.3 and
+                        corValue <= -0.9):
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
                     stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
                     self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
