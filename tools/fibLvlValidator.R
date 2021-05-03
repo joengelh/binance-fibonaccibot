@@ -20,8 +20,9 @@ fR$southLevel <- NA
 fR$northLevel <- NA
 
 #get list of buy advice instances
-sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL 
-                        and corvalue bewteen '0.33' and '0.5;")
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL;")
+                        #and corvalue <= '-0.9';")
+                        #and corvalue <= '-0.75' and corvalue  >= '-0.9';")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
@@ -31,6 +32,7 @@ for (i in unique(validated$fiblevel)){
   for (move in interm$resultpercent){
     capital <- capital + move
   }
+  plot(interm$resultpercent, interm$corvalue, main = i)
   print(paste("==================", i,"=================="))
   print(paste("trades: ", length(interm$symbol)))
   print(paste("mean percent: ", mean(interm$resultpercent)))
@@ -39,6 +41,7 @@ for (i in unique(validated$fiblevel)){
   print(paste("corvalue resultpercent cor: ", cor(interm$resultpercent, interm$corvalue)))
   successcount <- 0
   unsuccesscount <- 0
+  print(unique(interm$symbol))
   for (row in interm$resultpercent){
     if (row > 0){
       successcount <- successcount +1
@@ -52,4 +55,3 @@ for (i in unique(validated$fiblevel)){
 }
 print(paste("total corvalue resultpercent cor: ", cor(validated$resultpercent, validated$corvalue)))
 dbDisconnect(con)
-
