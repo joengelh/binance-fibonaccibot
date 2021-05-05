@@ -64,7 +64,7 @@ class tradingAccess:
         #check if there is a reason to buy
         loopRange = range(1, len(fibRetracement) -2)
         sql = ("SELECT count(*) FROM table001 WHERE takeprofit is not null" +
-            " and resultpercent is null and corValue < '-0.9' and fiblevel > '1.3';")
+            " and resultpercent is null and corValue <= '-0.9' and fiblevel >= '1.3';")
         corValue = largeData[0].corr(largeData[1])
         for i in loopRange:
             if (fibRetracement[0][i] > 1 and
@@ -73,6 +73,7 @@ class tradingAccess:
                 self.writeAdvice(fibRetracement, largeData, i, corValue)
                 if (self.liveTrading == True and
                     corValue <= -0.9 and
+                    fibRetracement[0] > 1.3):
                     self.timescale.sqlQuery(sql)[0][0] < 1):
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
                     stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
