@@ -20,7 +20,7 @@ class tradingAccess:
             print("No env variables set.")
             sys.exit(1)
 
-    def ocoOrder(self, symbol, price, slp, tpp):
+    def ocoOrder(self, symbol, slp, tpp):
         orderString = ("python3 ./execute_orders.py" +
                 " --symbol " + symbol +
                 " --buy_type market" +
@@ -63,7 +63,10 @@ class tradingAccess:
             fibRetracement[3] = fibRetracement[1] * 1.0005
         #check if there is a reason to buy
         loopRange = range(1, len(fibRetracement) -2)
+        #see of currently an open trade exists
         sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null;"
+        openTrades = self.timescale.sqlQuery(sql)[0][0]
+        #get current correlation of price and id
         corValue = largeData[0].corr(largeData[1])
         for i in loopRange:
             if (fibRetracement[0][i] > 1.3 and
@@ -71,7 +74,7 @@ class tradingAccess:
                 float(tick['askPrice']) < fibRetracement[3][i]):
                 self.writeAdvice(fibRetracement, largeData, i, corValue)
                 if (self.liveTrading == True and
-                    self.timescale.sqlQuery(sql)[0][0] < 1):
+                    openTrades == 0):
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
                     stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
                     self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
