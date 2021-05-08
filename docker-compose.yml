@@ -29,19 +29,18 @@ services:
    depends_on:
    - db
   webui:
-   image: nginx:latest
+   image: node:latest
    container_name: fibonacci-webui
    restart: unless-stopped
+   user: "node"
+   working_dir: /home/node/app
    env_file:
    - .env
    ports:
    - "8080:80"
-   environment:
-   - NGINX_HOST=binance-fibonaccibot.de
-   - NGINX_PORT=80
    volumes: 
-   - ./container-webui/src:/usr/share/nginx/html
-   - ./container-webui/images:/usr/share/nginx/html
+   - ./container-webui/src:/home/node/app
+   command: "npm start"
 
 
 volumes: 
