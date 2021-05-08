@@ -70,11 +70,11 @@ class tradingAccess:
         corValue = largeData[0].corr(largeData[1])
         for i in loopRange:
             if (fibRetracement[0][i] > 1.3 and
+                openTrades == 0 and
                 float(tick['askPrice']) > fibRetracement[2][i] and
                 float(tick['askPrice']) < fibRetracement[3][i]):
                 self.writeAdvice(fibRetracement, largeData, i, corValue)
-                if (self.liveTrading == True and
-                    openTrades == 0):
+                if self.liveTrading == True:
                     takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
                     stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
                     self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
