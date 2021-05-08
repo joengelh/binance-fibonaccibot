@@ -40,7 +40,8 @@ services:
    - NGINX_HOST=binance-fibonaccibot.de
    - NGINX_PORT=80
    volumes: 
-   - ./container-webui:/usr/share/nginx/html
+   - ./container-webui/src:/usr/share/nginx/html
+   - ./container-webui/images:/usr/share/nginx/html
 
 
 volumes: 
