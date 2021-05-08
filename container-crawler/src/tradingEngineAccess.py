@@ -71,7 +71,8 @@ class tradingAccess:
         for i in loopRange:
             if (fibRetracement[0][i] > 1.3 and
                 float(tick['askPrice']) > fibRetracement[2][i] and
-                float(tick['askPrice']) < fibRetracement[3][i]):
+                float(tick['askPrice']) < fibRetracement[3][i] and
+                corValue <= -0.9):
                 self.writeAdvice(fibRetracement, largeData, i, corValue)
                 if (self.liveTrading == True and
                     openTrades == 0):
