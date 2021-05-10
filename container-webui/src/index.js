@@ -5,7 +5,7 @@ const express = require('express');
 const Binance = require('node-binance-api');
 const app = express();
 
-// serve stativ index.html
+// serve static index.html
 app.listen(13000, () => console.log('listening on port 13000'));
 app.use(express.static('../public'));
 
@@ -19,7 +19,7 @@ binance.balance((error, balances) => {
 	  console.info("BNB balance: ", balances.BNB.available);
 });
 
-// get ammounts of executed trades
+// load databse connection vars from environment
 const client = new Client({
 	  user: process.env.dbUser,
 	  host: process.env.dbHost,
@@ -27,6 +27,8 @@ const client = new Client({
 	  password: process.env.POSTGRES_PASSWORD,
 	  port: process.env.dbPort,
 })
+
+// query database using string recieved from client
 client.connect()
 client.query('SELECT * from table001 where takeprofit is not null and resultpercent is null;', (err, res) => {
 	  console.log(res.rowCount)
