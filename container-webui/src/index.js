@@ -16,7 +16,7 @@ const binance = new Binance().options({
 });
 
 // get current BNB balance from account
-app.get('/balance', (request, response) => {
+app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
 	    console.log("BNB balance: ", balances.BNB.available);
@@ -33,7 +33,7 @@ const client = new Client({
 	  port: process.env.dbPort,
 })
 
-// query database using string recieved from client
+// query database for open trades
 client.connect()
 client.query('SELECT * from table001 where takeprofit is not null and resultpercent is null;', (err, res) => {
 	  console.log(res.rowCount)

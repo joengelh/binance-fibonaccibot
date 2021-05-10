@@ -56,13 +56,16 @@
         <h1>Binance Fibonacci Trading Bot</h1>
 	<img src="./logo.png" width="100%" height="25%"/>
         <h3>Free Assets under management</h3>
+	<p id="amount"></p>
 	<script>
 	    async function getAssets() {
 		    const response = await fetch('/assets');
 		    const data = await response.json();
 		    console.log(data);
+		    document.getElementById("amount").innerHTML = data + " BNB.";
+		    };
+	    getAssets();
 	</script>
-	<p>X BNB</p>
 	<h3>Trades Open/Succesful/Closed</h3>
 	<p>Y</p>
 	<h3>Mean Result Percent</h3>
