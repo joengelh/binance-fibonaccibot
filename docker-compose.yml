@@ -29,21 +29,18 @@ services:
    depends_on:
    - db
   webui:
-   image: node:latest
+   build: ./container-webui
    container_name: fibonacci-webui
    restart: unless-stopped
    network_mode: "host"
-   user: "node"
-   working_dir: /home/node/app
+   user: root
+   working_dir: /root
    env_file:
    - .env
    depends_on:
    - db
    ports:
    - "13000:80"
-   volumes: 
-   - ./container-webui/src:/home/node/app
-   - ./container-webui/public:/home/node/app
    command: "npm start"
 
 
