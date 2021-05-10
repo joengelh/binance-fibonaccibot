@@ -32,7 +32,6 @@ services:
    build: ./container-webui
    container_name: fibonacci-webui
    restart: unless-stopped
-   user: root
    env_file:
    - .env
    depends_on:
