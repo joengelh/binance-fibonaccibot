@@ -9,14 +9,19 @@ const app = express();
 app.listen(13000, () => console.log('listening on port 13000'));
 app.use(express.static('../public'));
 
-// get current BNB balance from account
+// load binance connection vars from environment
 const binance = new Binance().options({
 	  APIKEY: process.env.apiKey,
 	  APISECRET: process.env.apiSecret
 });
-binance.balance((error, balances) => {
-	  if ( error ) return console.error(error);
-	  console.info("BNB balance: ", balances.BNB.available);
+
+// get current BNB balance from account
+app.get('/balance', (request, response) => {
+	binance.balance((error, balances) => {
+	    if ( error ) return console.error(error);
+	    console.log("BNB balance: ", balances.BNB.available);
+	    response.json(balances.BNB.available)
+	});
 });
 
 // load databse connection vars from environment

@@ -40,6 +40,7 @@ services:
    - "8080:80"
    volumes: 
    - ./container-webui/src:/home/node/app
+   - ./container-webui/public:/home/node/app
    command: "npm start"
 
 
