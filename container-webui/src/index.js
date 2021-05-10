@@ -7,7 +7,7 @@ const app = express();
 
 // serve static index.html
 app.listen(13000, () => console.log('listening on port 13000'));
-app.use(express.static('../public'));
+app.use(express.static('./public'));
 
 // load binance connection vars from environment
 const binance = new Binance().options({

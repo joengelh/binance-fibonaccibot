@@ -4,7 +4,8 @@
   "description": "webui docker continer for binance-fibonacci bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./index.js"
   },
   "keywords": [
     "binance",
