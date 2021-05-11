@@ -1,21 +1,14 @@
-FROM debian:latest
+FROM mhart/alpine-node:12
 
-COPY ./src/ /root
+RUN apk add --no-cache tini
+ENTRYPOINT ["/sbin/tini", "--"]
 
-#stop ubuntu from annoying the fuck out me
-ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /app
+COPY ./src/ .
 
-#install api python module
-RUN apt-get update && \
-    apt-get install -y \
-        nodejs
+RUN apk add --no-cache make gcc g++ python3
 
-#clean up sh***
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN npm ci --prod
 
-#expose port 22
-EXPOSE 13000
+CMD ["node", "index.js"]
 
-#run ssh service  forever
-CMD ["nodejs", "/root/index.js"] 
