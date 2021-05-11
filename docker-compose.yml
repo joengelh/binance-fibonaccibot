@@ -32,13 +32,13 @@ services:
    build: ./container-webui
    container_name: fibonacci-webui
    restart: unless-stopped
+   network_mode: "host"
    env_file:
    - .env
    depends_on:
    - db
    ports:
    - "13000:13000"
-   - "10001:22"
 
 volumes: 
   fibonacci-timescaledb:

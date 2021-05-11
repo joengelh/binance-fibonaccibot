@@ -6,8 +6,12 @@ const Binance = require('node-binance-api');
 const app = express();
 
 // serve static index.html
-app.listen(13000, () => console.log('listening on port 13000'));
+app.use(function(req, res, next) {
+    res.setHeader("Content-Security-Policy", "default-src *  data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval' 'unsafe-dynamic'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * data: blob: 'unsafe-inline';font-src * data: blob: 'unsafe-inline';");
+    return next();
+});
 app.use(express.static('./public'));
+app.listen(13000, () => console.log('listening on port 13000'));
 
 // load binance connection vars from environment
 const binance = new Binance().options({
