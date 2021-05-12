@@ -48,8 +48,9 @@ is used in the crawler microservice.
 Component|Function|Ports|Volumes
 ---|---|---|---
 fibonacci-db|timescale database|5432|fibonacci-volume
-fibonacci-crawler |trading logic||
+fibonacci-crawler|trading logic||
 fibonacci-validator|profit calculator||
+fibonacci-webui|result display|13000|
 
 # Tools
 for monitoring the RScripts:
