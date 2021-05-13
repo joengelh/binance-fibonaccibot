@@ -39,14 +39,15 @@ app.get('/openTrades', (request, response) => {
 		            password: process.env.POSTGRES_PASSWORD,
 		            port: process.env.dbPort
 		        });
+	client.connect();
 	client
 	.query(text)
 	.then(res => { 
 	        console.log(res.rows[0]['count'])
 		response.json(res.rows[0]['count']) 
+	        client.end();
 	})
 	.catch(e => console.error(e.stack))
-	client.end;
 });
 
 // api to recieve mean result percent
@@ -60,12 +61,13 @@ app.get('/meanResult', (request, response) => {
 		            password: process.env.POSTGRES_PASSWORD,
 		            port: process.env.dbPort
 		        });
+	client.connect();
 	client
 	.query(text)
 	.then(res => { 
 	        console.log(res.rows[0]['avg'])
 		response.json(res.rows[0]['avg']) 
+	        client.end();
 	})
 	.catch(e => console.error(e.stack))
-	client.end;
 });
