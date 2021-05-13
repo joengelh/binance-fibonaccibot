@@ -2,6 +2,9 @@
 Just a fun exercise to see if fibonacci retracement levels and linear regression predicts the value of cryptocurrencies to one antoher. Have fun =) 
 
 ## Architecture
+
+![architecture](https://user-images.githubusercontent.com/73387330/118108067-d6567000-b3df-11eb-8ad4-33075a3a6499.PNG)
+
 The Trading bot comes as a microservices architecture launched via docker-compose.
 Docker compose can be installed using the ansible Role 
 [go to github](https://github.com/joengelh/ansible-kvm/tree/main/roles/docker-compose)
