@@ -48,8 +48,6 @@ app.get('/openTrades', (request, response) => {
 	})
 	.catch(e => console.error(e.stack))
 	client.end;
-
-//	client.query('SELECT avg(resultpercent) FROM table001;', (err, res) => {
 });
 
 // api to recieve mean result percent
@@ -72,5 +70,4 @@ app.get('/meanResult', (request, response) => {
 	})
 	.catch(e => console.error(e.stack))
 	client.end;
-
 });
