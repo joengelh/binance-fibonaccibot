@@ -60,8 +60,6 @@ initiateTable()
 
 #write price ticker to database every full minute
 schedule.every().minute.at(":00").do(crawl)
-schedule.every().minute.at(":20").do(crawl)
-schedule.every().minute.at(":40").do(crawl)
 
 #repeat
 while True:
