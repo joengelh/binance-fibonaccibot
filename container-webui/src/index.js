@@ -39,7 +39,6 @@ app.get('/openTrades', (request, response) => {
 		            password: process.env.POSTGRES_PASSWORD,
 		            port: process.env.dbPort
 		        });
-	client.connect();
 	client
 	.query(text)
 	.then(res => { 
@@ -61,7 +60,6 @@ app.get('/meanResult', (request, response) => {
 		            password: process.env.POSTGRES_PASSWORD,
 		            port: process.env.dbPort
 		        });
-	client.connect();
 	client
 	.query(text)
 	.then(res => { 
