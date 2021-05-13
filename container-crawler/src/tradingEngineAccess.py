@@ -64,7 +64,7 @@ class tradingAccess:
         #check if there is a reason to buy
         loopRange = range(1, len(fibRetracement) -2)
         #see of currently an open trade exists
-        sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null;"
+        sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null;"
         openTrades = self.timescale.sqlQuery(sql)[0][0]
         #get current correlation of price and id
         corValue = largeData[0].corr(largeData[1])
