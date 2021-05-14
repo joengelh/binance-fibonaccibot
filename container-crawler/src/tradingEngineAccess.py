@@ -68,6 +68,7 @@ class tradingAccess:
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
             if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
+                self.liveTrading == True and
                 float(tick['askPrice']) > fibRetracement[2][1] and
                 float(tick['askPrice']) < fibRetracement[3][1]):
                 self.writeAdvice(fibRetracement, largeData, corValue)
