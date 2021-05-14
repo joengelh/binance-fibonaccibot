@@ -51,7 +51,6 @@ class tradingAccess:
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
         if len(largeData) >= 1:    
             #convert columns id and askprice to float
-            print(tick['symbol'])
             largeData = largeData.apply(pd.to_numeric, errors='coerce')
             #calculate diff
             diff = largeData[1].max() - largeData[1].min()
