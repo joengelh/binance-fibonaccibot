@@ -65,12 +65,11 @@ class tradingAccess:
         loopRange = range(1, len(fibRetracement) -2)
         #see of currently an open trade exists
         sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null;"
-        openTrades = self.timescale.sqlQuery(sql)[0][0]
         #get current correlation of price and id
         corValue = largeData[0].corr(largeData[1])
         for i in loopRange:
             if (fibRetracement[0][i] > 1.3 and
-                openTrades == 0 and
+                int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
                 float(tick['askPrice']) > fibRetracement[2][i] and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 corValue <= -0.9):
