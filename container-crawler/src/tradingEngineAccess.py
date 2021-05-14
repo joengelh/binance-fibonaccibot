@@ -67,8 +67,7 @@ class tradingAccess:
             corValue = largeData[0].corr(largeData[1])
             if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
                 float(tick['askPrice']) > fibRetracement[2][1] and
-                float(tick['askPrice']) < fibRetracement[3][1] and
-                corValue <= -0.9):
+                float(tick['askPrice']) < fibRetracement[3][1]):
                 self.writeAdvice(fibRetracement, largeData, fibRetracement[0][1], corValue)
                 if self.liveTrading == True:
                     takeProfitPercent = (fibRetracement[2][1+2] / float(tick['askPrice']) -1) * 100
