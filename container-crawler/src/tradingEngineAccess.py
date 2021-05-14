@@ -23,7 +23,8 @@ class tradingAccess:
     def ocoOrder(self, tick, sl, tp):
         orderString = ("python3 ./execute_orders.py" +
                 " --symbol " + str(tick['symbol']) +
-                " --buy_type market" +
+                " --buy_type limit" +
+                " --price " + str(tick['askPrice']) +
                 " --total 0.1" +
                 " --profit " + str((tp / float(tick['askPrice']) - 1) * -100) +
                 " --loss " + str((sl / float(tick['askPrice']) - 1) * -100) +
