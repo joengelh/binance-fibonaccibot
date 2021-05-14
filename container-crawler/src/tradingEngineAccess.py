@@ -50,8 +50,8 @@ class tradingAccess:
             "' AND time < NOW() - INTERVAL '2 hours';")
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
         #convert columns id and askprice to float
-        largeData[0] = largeData[0].apply(pd.to_numeric, downcast='float', errors='coerce')
-        largeData[1] = largeData[1].apply(pd.to_numeric, downcast='float', errors='coerce')
+        print(tick['symbol'])
+        largeData = largeData.apply(pd.to_numeric, errors='coerce')
         #calculate diff
         diff = largeData[1].max() - largeData[1].min()
         # calculate fibRetracements
