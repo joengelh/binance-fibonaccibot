@@ -49,34 +49,31 @@ class tradingAccess:
             "' AND time > NOW() - INTERVAL '12 hours" + 
             "' AND time < NOW() - INTERVAL '2 hours';")
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
-        #convert columns id and askprice to float
-        print(tick['symbol'])
-        largeData = largeData.apply(pd.to_numeric, errors='coerce')
-        #calculate diff
-        diff = largeData[1].max() - largeData[1].min()
-        # calculate fibRetracements
-        fibRetracement = pd.DataFrame(self.fibLvl)
-        maxAsk = largeData[1].max()
-        for lvl in fibRetracement:
-            fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
-            fibRetracement[2] = fibRetracement[1] * 0.9995
-            fibRetracement[3] = fibRetracement[1] * 1.0005
-        #check if there is a reason to buy
-        loopRange = range(1, len(fibRetracement) -2)
-        #see of currently an open trade exists
-        sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null;"
-        #get current correlation of price and id
-        corValue = largeData[0].corr(largeData[1])
-        for i in loopRange:
-            if (fibRetracement[0][i] > 1.3 and
-                int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
-                float(tick['askPrice']) > fibRetracement[2][i] and
-                float(tick['askPrice']) < fibRetracement[3][i] and
+        if len(largeData) >= 1:    
+            #convert columns id and askprice to float
+            print(tick['symbol'])
+            largeData = largeData.apply(pd.to_numeric, errors='coerce')
+            #calculate diff
+            diff = largeData[1].max() - largeData[1].min()
+            # calculate fibRetracements
+            fibRetracement = pd.DataFrame(self.fibLvl)
+            maxAsk = largeData[1].max()
+            for lvl in fibRetracement:
+                fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
+                fibRetracement[2] = fibRetracement[1] * 0.9995
+                fibRetracement[3] = fibRetracement[1] * 1.0005
+            #see of currently an open trade exists
+            sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null;"
+            #get current correlation of price and id
+            corValue = largeData[0].corr(largeData[1])
+            if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
+                float(tick['askPrice']) > fibRetracement[2][1] and
+                float(tick['askPrice']) < fibRetracement[3][1] and
                 corValue <= -0.9):
-                self.writeAdvice(fibRetracement, largeData, i, corValue)
+                self.writeAdvice(fibRetracement, largeData, fibRetracement[0][1], corValue)
                 if self.liveTrading == True:
-                    takeProfitPercent = (fibRetracement[2][i+2] / float(tick['askPrice']) -1) * 100
-                    stopLossPercent = (fibRetracement[2][i-1] / float(tick['askPrice']) - 1) * -100
+                    takeProfitPercent = (fibRetracement[2][1+2] / float(tick['askPrice']) -1) * 100
+                    stopLossPercent = (fibRetracement[2][1-1] / float(tick['askPrice']) - 1) * -100
                     self.ocoOrder(tick['symbol'], stopLossPercent, takeProfitPercent)
         self.timescale.databaseClose()
 
