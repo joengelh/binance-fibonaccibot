@@ -72,6 +72,6 @@ class tradingAccess:
                 float(tick['askPrice']) > fibRetracement[2][1] and
                 float(tick['askPrice']) < fibRetracement[3][1]):
                 self.writeAdvice(fibRetracement, largeData, corValue)
-                self.ocoOrder(tick, fibRetracement[3][0], fibRetracement[2][3])
+                self.ocoOrder(tick, fibRetracement[2][0], fibRetracement[2][3])
         self.timescale.databaseClose()
 
