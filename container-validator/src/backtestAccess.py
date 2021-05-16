@@ -48,14 +48,14 @@ class backAccess:
                     slData = validated[validated[1] <= self.bA[3][i]]
                     if (len(slData) > 0 and len(slData) > 0 and
                         slData[0].min() < tpData[0].min()):
-                        calculateResult(slData, i)
+                        self.calculateResult(slData, i)
                     elif (len(slData) > 0 and len(slData) > 0 and
                         slData[0].min() > tpData[0].min()):
-                        calculateResult(tpData, i)
+                        self.calculateResult(tpData, i)
                     elif len(slData) > 0:
-                        calculateResult(slData, i)
+                        self.calculateResult(slData, i)
                     elif len(tpData) > 0:
-                        calculateResult(tpData, i)
+                        self.calculateResult(tpData, i)
                     else:
                         pass
         self.timescale.databaseClose()
