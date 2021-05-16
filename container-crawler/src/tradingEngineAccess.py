@@ -22,16 +22,17 @@ class tradingAccess:
             sys.exit(1)
 
     def ocoOrder(self, tick, sl, tp):
-        orderString = ("python3 ./execute_orders.py" +
-                " --symbol " + str(tick['symbol']) +
-                " --buy_type market" +
-                " --total " + str(self.liveVolume) +
-                " --profit " + str((tp / float(tick['askPrice']) - 1) * 100) +
-                " --loss " + str((sl / float(tick['askPrice']) - 1) * -100) +
-                " &>/dev/null &")
-        print("===================================")
-        print(orderString)
-        os.system(orderString)
+        if self.liveTrading == True:    
+            orderString = ("python3 ./execute_orders.py" +
+                    " --symbol " + str(tick['symbol']) +
+                    " --buy_type market" +
+                    " --total " + str(self.liveVolume) +
+                    " --profit " + str((tp / float(tick['askPrice']) - 1) * 100) +
+                    " --loss " + str((sl / float(tick['askPrice']) - 1) * -100) +
+                    " &>/dev/null &")
+            print("===================================")
+            print(orderString)
+            os.system(orderString)
 
     def writeAdvice(self, fib, large, cor):
         sql = ("UPDATE table001 SET " +
@@ -68,7 +69,6 @@ class tradingAccess:
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
             if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
-                self.liveTrading == True and
                 float(tick['askPrice']) > fibRetracement[2][1] and
                 float(tick['askPrice']) < fibRetracement[3][1]):
                 self.writeAdvice(fibRetracement, largeData, corValue)
