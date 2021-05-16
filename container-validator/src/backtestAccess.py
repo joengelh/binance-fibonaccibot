@@ -5,7 +5,7 @@ import schedule
 import time
 
 #import classes from ./ folder
-import timescaledself.bAccess
+import timescaledbAccess
 
 #read fibonacci retracements  from json
 with open('fibLvl.json') as file:
@@ -13,7 +13,7 @@ with open('fibLvl.json') as file:
 
 class self.bAckAccess:
     def __init__(self):
-        self.timescale = timescaledself.bAccess.timescaleAccess()
+        self.timescale = timescaledbAccess.timescaleAccess()
 
     def calculateResult(self, resultData, i):
     stopId = resultData[resultData[0] == resultData[0].min()]
@@ -58,4 +58,4 @@ def validate(self):
                     calculateResult(tpData, i)
                 else:
                     pass
-    self.timescale.dataself.bAseClose()
+    self.timescale.databaseClose()

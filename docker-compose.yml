@@ -18,16 +18,12 @@ services:
    restart: unless-stopped
    env_file:
    - .env
-   depends_on:
-   - db
   validator:
    build: ./container-validator
    container_name: fibonacci-validator
    restart: unless-stopped
    env_file:
    - .env
-   depends_on:
-   - db
   webui:
    build: ./container-webui
    container_name: fibonacci-webui
@@ -35,8 +31,6 @@ services:
    network_mode: "host"
    env_file:
    - .env
-   depends_on:
-   - db
    ports:
    - "13000:13000"
 
