@@ -1,7 +1,6 @@
 psycopg2
 environs
 pydantic
-python-dotenv
 pandas
 envs
 schedule

@@ -4,12 +4,9 @@ import sys
 import os
 import itertools
 from envs import env
-from dotenv import load_dotenv
 
 class timescaleAccess:
     def __init__(self):
-        # import .env
-        load_dotenv()
         #read env vars
         try:
             dbName=env("dbName")
