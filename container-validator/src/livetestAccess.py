@@ -20,7 +20,7 @@ class liveAccess:
         #connect to binance to get current balance
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
-    def validate():
+    def validate(self):
         sql = ("SELECT id, askprice" +
             " FROM table001 WHERE" +
             " resultpercent IS NULL " +

@@ -26,17 +26,16 @@ class tradingAccess:
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
     def ocoOrder(self, tick, sl, tp):
-        if self.liveTrading == True:    
-            orderString = ("python3 ./execute_orders.py" +
-                    " --symbol " + str(tick['symbol']) +
-                    " --buy_type market" +
-                    " --total " + str(self.liveVolume) +
-                    " --profit " + str((tp / float(tick['askPrice']) - 1) * 100) +
-                    " --loss " + str((sl / float(tick['askPrice']) - 1) * -100) +
-                    " &>/dev/null &")
-            print("===================================")
-            print(orderString)
-            os.system(orderString)
+        orderString = ("python3 ./execute_orders.py" +
+                " --symbol " + str(tick['symbol']) +
+                " --buy_type market" +
+                " --total " + str(self.liveVolume) +
+                " --profit " + str((tp / float(tick['askPrice']) - 1) * 100) +
+                " --loss " + str((sl / float(tick['askPrice']) - 1) * -100) +
+                " &>/dev/null &")
+        print("===================================")
+        print(orderString)
+        os.system(orderString)
 
     def writeAdvice(self, fib, i, large, cor):
         sql = ("UPDATE table001 SET " +
@@ -74,9 +73,10 @@ class tradingAccess:
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
             for i in range(1,3):
-                if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
+                if ((int(self.timescale.sqlQuery(sql)[0][0]) == 0 or self.liveTrading == False) and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
                         self.writeAdvice(fibRetracement, i, largeData, corValue)
-                        self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+2])
+                        if self.liveTrading == True:
+                            self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+2])
         self.timescale.databaseClose()
