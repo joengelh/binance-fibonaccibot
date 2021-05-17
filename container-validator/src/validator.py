@@ -1,6 +1,7 @@
 #import modules
 import schedule
 import time
+from envs import env
 
 #import own classes
 import backtestAccess
