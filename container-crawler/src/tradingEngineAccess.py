@@ -1,5 +1,6 @@
 #import modules
 import json
+from binance.client import Client
 import pandas as pd
 import os
 from dotenv import load_dotenv
@@ -17,9 +18,13 @@ class tradingAccess:
         try:
             self.liveTrading=env("liveTrading", 'False').lower() in ('true', '1', 't')
             self.liveVolume=env("liveVolume")
+            self.apiSecret=env('apiSecret')
+            self.apiKey=env('apiKey')
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
+        #connect to binance to get current balance
+        self.client = Client(self.apiKey, self.apiSecret, {'timeout':600})
 
     def ocoOrder(self, tick, sl, tp):
         if self.liveTrading == True:    
@@ -42,6 +47,7 @@ class tradingAccess:
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][1]) +
+                            "', managedAssets = '" + str(self.client.get_asset_balance(asset='BNB')) +
                             "' WHERE id IN(SELECT max(id) FROM table001);")
         self.timescale.sqlUpdate(sql)
 

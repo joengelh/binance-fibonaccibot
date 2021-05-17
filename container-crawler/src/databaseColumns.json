@@ -8,5 +8,6 @@
 	"stopId":1,
 	"midId":1,
 	"resultPercent":-0.1,
-	"corValue": -0.1
+	"corValue": -0.1,
+	"managedAssets": 0.1
 }
