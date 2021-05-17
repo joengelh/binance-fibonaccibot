@@ -20,28 +20,29 @@ class liveAccess:
         #connect to binance to get current balance
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
-def calculateResult(resultData, bA, i):
-    stopId = resultData[resultData[0] == resultData[0].min()]
-    percentChange = ((stopId[1] - bA[4][i]) / bA[4][i]) * 100
-    sql = ("UPDATE table001 SET" +
-        " resultpercent = '" + str(float(percentChange)) +
-        "', stopid = '" + str(float(stopId[0])) +
-        "' WHERE id = '" + str(bA[0][i]) +
-        "';")
-    timescale.sqlUpdate(sql)
-
-def validate():
-    sql = ("SELECT id, askprice" +
-        " FROM table001 WHERE" +
-        " resultpercent IS NULL " +
-        " AND takeprofit IS NOT NULL;")
-    bA = pd.DataFrame(self.timescale.sqlQuery(sql))
-    bA = bA.apply(pd.to_numeric, errors='coerce')
-    #check if trade has been closed
-    if (len(bA) > 0 and
-        len(client.get_open_orders() == 0):
-        #get assets under management at the point of trade opening and current.
-        
-        
+    def validate():
+        sql = ("SELECT id, askprice" +
+            " FROM table001 WHERE" +
+            " resultpercent IS NULL " +
+            " AND takeprofit IS NOT NULL;")
+        bA = pd.DataFrame(self.timescale.sqlQuery(sql))
+        bA = bA.apply(pd.to_numeric, errors='coerce')
+        #check if trade has been closed
+        if (len(bA) > 0 and
+            len(self.client.get_open_orders() == 0):
+                percentChange = (self.client.get_asset_balance(asset='BNB')['free'] - bA[managedassets]) / self.liveVolume
+                #get max id
+                sql = ("select symbol from table001 where id = '" + str(bA[0]) + "';")
+                symbol = pd.DataFrame(timescale.sqlQuery(sql))
+                sql = ("select max(id) from table001 where symbol = '" + str(symbol[0][0]) + "';")
+                maxId = pd.DataFrame(timescale.sqlQuery(sql))
+                sql = ("UPDATE table001 SET" +
+                " resultpercent = '" + str(percentChange) +
+                "', stopid = max(id)" +
+                " WHERE id = '" + str(maxId[0][0]) +
+                "';")
+                timescale.sqlUpdate(sql)
+                timescale.databaseClose()
+        else: pass
             
-    timescale.databaseClose()
+        
