@@ -1,8 +1,8 @@
 #import modules
 import json
+from binance.client import Client
 import pandas as pd
-import schedule
-import time
+from envs import env
 
 #import classes from ./ folder
 import timescaledbAccess
@@ -12,9 +12,13 @@ class liveAccess:
         self.timescale = timescaledbAccess.timescaleAccess()
         try:
             self.liveVolume=env("liveVolume")
+            apiSecret=env('apiSecret')
+            apiKey=env('apiKey')
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
+        #connect to binance to get current balance
+        self.client = Client(apiKey, apiSecret, {'timeout':600})
 
 def calculateResult(resultData, bA, i):
     stopId = resultData[resultData[0] == resultData[0].min()]
@@ -33,8 +37,11 @@ def validate():
         " AND takeprofit IS NOT NULL;")
     bA = pd.DataFrame(self.timescale.sqlQuery(sql))
     bA = bA.apply(pd.to_numeric, errors='coerce')
+    #check if trade has been closed
     if (len(bA) > 0 and
-        timescale):
-        for i, row in bA.iterrows():
+        len(client.get_open_orders() == 0):
+        #get assets under management at the point of trade opening and current.
+        
+        
             
     timescale.databaseClose()
