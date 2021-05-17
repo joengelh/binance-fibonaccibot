@@ -38,14 +38,14 @@ class tradingAccess:
             print(orderString)
             os.system(orderString)
 
-    def writeAdvice(self, fib, large, cor):
+    def writeAdvice(self, fib, i, large, cor):
         sql = ("UPDATE table001 SET " +
-                            " takeProfit = '" + str(fib[2][1+2]) +
-                            "', stopLoss = '" + str(fib[2][1-1]) +
+                            " takeProfit = '" + str(fib[2][i+2]) +
+                            "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
-                            "', fibLevel = '" + str(fib[0][1]) +
+                            "', fibLevel = '" + str(fib[0][i]) +
                             "', managedAssets = '" + str(self.client.get_asset_balance(asset='BNB')['free']) +
                             "' WHERE id IN(SELECT max(id) FROM table001);")
         self.timescale.sqlUpdate(sql)
@@ -73,10 +73,10 @@ class tradingAccess:
             #get current correlation of price and id
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
-            if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
-                float(tick['askPrice']) > fibRetracement[2][1] and
-                float(tick['askPrice']) < fibRetracement[3][1]):
-                self.writeAdvice(fibRetracement, largeData, corValue)
-                self.ocoOrder(tick, fibRetracement[2][0], fibRetracement[2][3])
+            for i in range(1,3):
+                if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
+                    float(tick['askPrice']) > fibRetracement[2][i] and
+                    float(tick['askPrice']) < fibRetracement[3][i]):
+                        self.writeAdvice(fibRetracement, i, largeData, corValue)
+                        self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+2])
         self.timescale.databaseClose()
-
