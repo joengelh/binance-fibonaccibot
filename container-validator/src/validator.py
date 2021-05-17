@@ -14,11 +14,9 @@ def validator():
         print("No env variables set.")
         sys.exit(1)
     if liveTrading == True:
-        print("live trading enabled")
         liveTest = livetestAccess.liveAccess()
         liveTest.validate()
     else:
-        print("live trading disabled")
         backTest = backtestAccess.backAccess()
         backTest.validate()
 
