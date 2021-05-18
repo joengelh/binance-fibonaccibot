@@ -21,7 +21,7 @@ class liveAccess:
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
     def validate(self):
-        sql = ("SELECT id, askprice" +
+        sql = ("SELECT id, askprice, managedassets" +
             " FROM table001 WHERE" +
             " resultpercent IS NULL " +
             " AND takeprofit IS NOT NULL;")
@@ -30,16 +30,18 @@ class liveAccess:
         #check if trade has been closed
         if (len(bA) > 0 and
             len(self.client.get_open_orders()) == 0):
-                percentChange = (self.client.get_asset_balance(asset='BNB')['free'] - bA[managedassets]) / self.liveVolume
+                percentChange = (float(self.client.get_asset_balance(asset='BNB')['free']) - bA[2][0]) / float(self.liveVolume)
                 #get max id
-                sql = ("select symbol from table001 where id = '" + str(bA[0]) + "';")
+                sql = ("select symbol from table001 where id = '" + str(bA[0][0]) + "';")
                 symbol = pd.DataFrame(self.timescale.sqlQuery(sql))
                 sql = ("select max(id) from table001 where symbol = '" + str(symbol[0][0]) + "';")
                 maxId = pd.DataFrame(self.timescale.sqlQuery(sql))
+                print(maxId)
+                #update db to include stopId and resultpercent
                 sql = ("UPDATE table001 SET" +
                 " resultpercent = '" + str(percentChange) +
-                "', stopid = max(id)" +
-                " WHERE id = '" + str(maxId[0][0]) +
+                "', stopid = '" + str(maxId) +
+                "' WHERE id = '" + str(bA[0][0]) +
                 "';")
                 self.timescale.sqlUpdate(sql)
                 self.timescale.databaseClose()
