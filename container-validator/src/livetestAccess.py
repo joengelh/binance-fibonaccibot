@@ -29,7 +29,7 @@ class liveAccess:
         bA = bA.apply(pd.to_numeric, errors='coerce')
         #check if trade has been closed
         if (len(bA) > 0 and
-            len(self.client.get_open_orders() == 0)):
+            self.client.get_open_orders() == 0):
                 percentChange = (self.client.get_asset_balance(asset='BNB')['free'] - bA[managedassets]) / self.liveVolume
                 #get max id
                 sql = ("select symbol from table001 where id = '" + str(bA[0]) + "';")
