@@ -46,7 +46,7 @@ class tradingAccess:
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', managedAssets = '" + str(self.client.get_asset_balance(asset='BNB')['free']) +
-                            "' WHERE id IN(SELECT max(id) FROM table001);")
+                            "' WHERE id = '" + str(large[0].max()) + "';")
         self.timescale.sqlUpdate(sql)
 
     def runCalculation(self, tick):
