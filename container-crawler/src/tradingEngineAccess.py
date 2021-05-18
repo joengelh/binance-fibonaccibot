@@ -72,11 +72,10 @@ class tradingAccess:
             #get current correlation of price and id
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
-            for i in range(1,2):
+            for i in range(1,3):
                 if ((int(self.timescale.sqlQuery(sql)[0][0]) == 0 or self.liveTrading == False) and
                     float(tick['askPrice']) > fibRetracement[2][i] and
-                    float(tick['askPrice']) < fibRetracement[3][i] and
-                    corValue >= -0.5):
+                    float(tick['askPrice']) < fibRetracement[3][i]):
                         self.writeAdvice(fibRetracement, i, largeData, corValue)
                         if self.liveTrading == True:
                             self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+2])
