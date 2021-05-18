@@ -13,6 +13,7 @@ Docker compose can be installed using the ansible Role
 
 After cloning the repository from GitHub using ``git clone https://github.com/joengelh/binance-fibonaccibot.git`` copy the .env.sample file to .env and fill in your information.
 
+```bash
 apiKey=YOUR_API_KEY        = your binance api key
 apiSecret=YOUR_API_SECRET  = your binance api secret
 dbName=postgres            = set to preferences or leave default
@@ -22,6 +23,7 @@ dbHost=localhost           = set to preferences or leave default
 dbPort=5432                = set to preferences or leave default
 liveTrading=false          = enable or disable live trading, while the backtesting method is not as accurate
 liveVolume=1               = ammount of BNB used per signal
+```
 
 Thereafter the service can be started using ``docker-compose up -d --build``
 and stopped using ``docker-compose down``.
