@@ -20,11 +20,7 @@ def validator():
         backTest = backtestAccess.backAccess()
         backTest.validate()
 
-schedule.every().minute.at(":00").do(validator)
-schedule.every().minute.at(":10").do(validator)
-schedule.every().minute.at(":20").do(validator)
-schedule.every().minute.at(":30").do(validator)
-schedule.every().minute.at(":50").do(validator)
+schedule.every().minute.at(":45").do(validator)
 
 while True:
     schedule.run_pending()
