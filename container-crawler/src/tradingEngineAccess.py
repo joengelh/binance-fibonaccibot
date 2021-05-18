@@ -72,7 +72,7 @@ class tradingAccess:
             #get current correlation of price and id
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
-            for i in range(1,3):
+            for i in range(1,2):
                 if ((int(self.timescale.sqlQuery(sql)[0][0]) == 0 or self.liveTrading == False) and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
