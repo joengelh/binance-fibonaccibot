@@ -20,7 +20,7 @@ fR$southLevel <- NA
 fR$northLevel <- NA
 
 #get list of buy advice instances
-sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL;")
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL and corvalue >= -0.25;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
