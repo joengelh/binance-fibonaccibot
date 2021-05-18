@@ -40,7 +40,7 @@ class liveAccess:
                 #update db to include stopId and resultpercent
                 sql = ("UPDATE table001 SET" +
                 " resultpercent = '" + str(percentChange) +
-                "', stopid = '" + str(maxId) +
+                "', stopid = '" + str(bA[0][0]) +
                 "' WHERE id = '" + str(bA[0][0]) +
                 "';")
                 self.timescale.sqlUpdate(sql)
