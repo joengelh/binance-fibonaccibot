@@ -33,16 +33,16 @@ class liveAccess:
                 percentChange = (self.client.get_asset_balance(asset='BNB')['free'] - bA[managedassets]) / self.liveVolume
                 #get max id
                 sql = ("select symbol from table001 where id = '" + str(bA[0]) + "';")
-                symbol = pd.DataFrame(timescale.sqlQuery(sql))
+                symbol = pd.DataFrame(self.timescale.sqlQuery(sql))
                 sql = ("select max(id) from table001 where symbol = '" + str(symbol[0][0]) + "';")
-                maxId = pd.DataFrame(timescale.sqlQuery(sql))
+                maxId = pd.DataFrame(self.timescale.sqlQuery(sql))
                 sql = ("UPDATE table001 SET" +
                 " resultpercent = '" + str(percentChange) +
                 "', stopid = max(id)" +
                 " WHERE id = '" + str(maxId[0][0]) +
                 "';")
-                timescale.sqlUpdate(sql)
-                timescale.databaseClose()
+                self.timescale.sqlUpdate(sql)
+                self.timescale.databaseClose()
         else: pass
             
         
