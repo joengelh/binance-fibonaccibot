@@ -31,10 +31,8 @@ class tradingAccess:
                 " --buy_type market" +
                 " --total " + str(self.liveVolume) +
                 " --profit " + str((tp / float(tick['askPrice']) - 1) * 100) +
-                " --loss " + str((sl / float(tick['askPrice']) - 1) * -100) +
-                " &>/dev/null &")
+                " --loss " + str((sl / float(tick['askPrice']) - 1) * -100))
         print("===================================")
-        print(orderString)
         os.system(orderString)
 
     def writeAdvice(self, fib, i, large, cor):
@@ -46,7 +44,7 @@ class tradingAccess:
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', managedAssets = '" + str(self.client.get_asset_balance(asset='BNB')['free']) +
-                            "' WHERE id = '" + str(large[0].max()) + "';")
+                            "' WHERE id IN(SELECT max(id) FROM table001);")
         self.timescale.sqlUpdate(sql)
 
     def runCalculation(self, tick):
@@ -76,7 +74,7 @@ class tradingAccess:
                 if ((int(self.timescale.sqlQuery(sql)[0][0]) == 0 or self.liveTrading == False) and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
-                        self.writeAdvice(fibRetracement, i, largeData, corValue)
                         if self.liveTrading == True:
                             self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+2])
+                        self.writeAdvice(fibRetracement, i, largeData, corValue)
         self.timescale.databaseClose()
