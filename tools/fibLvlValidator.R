@@ -8,7 +8,7 @@ con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
 
 #declare fibonacci levels
 fR <- data.frame(
-  retracement = c(1.618,1.382,1.236,1,0.786,
+  retracement = c(2,1.618,1.382,1,0.786,
                   0.618,0.5,0.382,0.236,0),
   lineColor = c('red', 'blue', 'green',
                 'yellow', 'brown', 'turquoise3',
@@ -20,7 +20,7 @@ fR$southLevel <- NA
 fR$northLevel <- NA
 
 #get list of buy advice instances
-sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL and corvalue >= -0.25;")
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 WHERE resultpercent IS NOT NULL;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
