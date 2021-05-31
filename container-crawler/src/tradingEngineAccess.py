@@ -37,7 +37,7 @@ class tradingAccess:
 
     def writeAdvice(self, fib, i, large, cor):
         sql = ("UPDATE table001 SET " +
-                            " takeProfit = '" + str(fib[2][i+2]) +
+                            " takeProfit = '" + str(fib[2][i+3]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
@@ -70,11 +70,11 @@ class tradingAccess:
             #get current correlation of price and id
             corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
-            for i in range(1,3):
+            for i in range(1,2):
                 if ((int(self.timescale.sqlQuery(sql)[0][0]) == 0 or self.liveTrading == False) and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
                         if self.liveTrading == True:
-                            self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+2])
+                            self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+3])
                         self.writeAdvice(fibRetracement, i, largeData, corValue)
         self.timescale.databaseClose()
