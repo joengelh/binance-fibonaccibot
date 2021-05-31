@@ -4,7 +4,6 @@ services:
   db:
    image: timescale/timescaledb:latest-pg12
    container_name: fibonacci-timescaledb
-   network_mode: "host"
    volumes: 
    - fibonacci-timescaledb:/var/lib/postgresql
    restart: always
@@ -33,7 +32,6 @@ services:
    build: ./container-webui
    container_name: fibonacci-webui
    restart: unless-stopped
-   network_mode: "host"
    env_file:
    - .env
    depends_on:
