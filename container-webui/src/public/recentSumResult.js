@@ -1,7 +1,7 @@
 async function getHistory() {
-	const meanResultResponse = await fetch('/recentSumResult');
-	const meanResultData = await meanResultResponse.json();
-	console.log(meanResultData);
-	document.getElementById("recentSumResult").innerHTML = meanResultData;
+	const resultResponse = await fetch('/recentSumResult');
+	const resultData = await resultResponse.json();
+	console.log(resultData);
+	document.getElementById("recentSumResult").innerHTML = resultData;
 };
 getHistory();
