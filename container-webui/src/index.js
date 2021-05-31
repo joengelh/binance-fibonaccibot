@@ -24,7 +24,7 @@ app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
 	    console.log("BNB balance: ", balances.BNB.available);
-	    response.json(balances.BNB.available)
+	    response.json(balances.BNB.available.toFixed(4))
 	});
 });
 
@@ -45,8 +45,8 @@ app.get('/openTrades', (request, response) => {
 	client
 	.query(text)
 	.then(res => { 
-	    console.log(res.rows[0]['count'])
-		response.json(res.rows[0]['count']) 
+	    console.log(res.rows[0]['count'].toFixed(4))
+		response.json(res.rows[0]['count'].toFixed(4)) 
 	    client.end();
 	})
 	.catch(e => console.error(e.stack))
@@ -56,7 +56,7 @@ app.get('/openTrades', (request, response) => {
 app.get('/recentSumResult',(request, response) => {
 	// create empty dict
 	var dict = {};
-	const text = `SELECT sum(resultpercent) FROM table001 where 
+	const text = `SELECT sum(resultpercent FROM table001 where 
 	time > now() - interval '24 hours';`
 	const client = new Client({
 		user: process.env.dbUser,
@@ -69,8 +69,8 @@ app.get('/recentSumResult',(request, response) => {
 	client
 	.query(text)
 	.then(res => {
-		console.log(res.rows[0]['sum'])
-		response.json(res.rows[0]['sum'])
+		console.log(res.rows[0]['sum'].toFixed(4))
+		response.json(res.rows[0]['sum'].toFixed(4))
 		client.end();
 		})
 	.catch(e => console.error(e.stack))
@@ -93,8 +93,8 @@ app.get('/sumResult', (request, response) => {
 	client
 	.query(text)
 	.then(res => {
-		console.log(res.rows[0]['sum'])
-		response.json(res.rows[0]['sum']) 
+		console.log(res.rows[0]['sum'].toFixed(4))
+		response.json(res.rows[0]['sum'].toFixed(4)) 
 	    client.end();
 		})
 	.catch(e => console.error(e.stack))
