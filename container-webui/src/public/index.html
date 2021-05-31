@@ -54,18 +54,30 @@
     
 </head>
 <body>
+
     <div class='wrapper'>
         <h1>Binance Fibonacci Trading Bot</h1>
 	<img src="./logo.png" width="100%" height="25%"/>
-        <h3>Free Assets under management</h3>
-	<p id="amount"></p>
-	<h3>Open Trades</h3>
-	<p id="open"></p>
-	<h3>Sum Result Percent</h3>
-	<p id="mean"></p>
     </div>
+
+    <div style="width: 100%; overflow: hidden;">
+        <div style="width: 50%; float: left; text-align: center;">
+            <h3>Free Assets under management</h3>
+            <p id="amount"></p>
+            <h3>Open Trades</h3>
+            <p id="open"></p>
+        </div>
+        <div style="margin-left: 0%; text-align: center;"> 
+            <h3>Sum Result Percent</h3>
+            <p id="sum"></p>
+            <h3>Recent  Sum Result Percent (24h)</h3>
+            <p id="recentSumResult"></p>
+        </div>
+   </div>
+
     <script src="./assets.js"></script>
     <script src="./openTrades.js"></script>
-    <script src="./meanResult.js"></script>
+    <script src="./sumResult.js"></script>
+    <script src="./recentSumResult.js"></script>
 </body>
 </html>
