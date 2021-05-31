@@ -55,7 +55,7 @@ app.get('/meanResult', (request, response) => {
 	// create empty dict
 	var dict = {};
 	// check for open trades
-        const text = 'SELECT avg(resultpercent) FROM table001;'
+        const text = 'SELECT sum(resultpercent) FROM table001;'
         const client = new Client({
 		            user: process.env.dbUser,                                                                  host: process.env.dbHost,                                                                  database: process.env.dbName,
 		            password: process.env.POSTGRES_PASSWORD,
