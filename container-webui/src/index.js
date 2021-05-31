@@ -65,8 +65,8 @@ app.get('/meanResult', (request, response) => {
 	client
 	.query(text)
 	.then(res => { 
-	        console.log(res.rows[0]['avg'])
-		response.json(res.rows[0]['avg']) 
+	        console.log(res.rows[0]['sum'])
+		response.json(res.rows[0]['sum']) 
 	        client.end();
 	})
 	.catch(e => console.error(e.stack))
