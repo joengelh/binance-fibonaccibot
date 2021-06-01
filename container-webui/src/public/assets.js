@@ -1,7 +1,6 @@
 async function getAssets() {
 	const assetsResponse = await fetch('/assets');
 	const assetsData = await assetsResponse.json();
-	console.log(assetsData);
-	document.getElementById("amount").innerHTML = assetsData + " BNB";
+	document.getElementById("amount").innerHTML = parseFloat(assetsData).toPrecision(3) + " BNB";
 };
 getAssets();
