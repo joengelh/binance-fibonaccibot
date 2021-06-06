@@ -2,6 +2,7 @@ async function getHistory() {
 	const meanResultResponse = await fetch('/sumResult');
 	const meanResultData = await meanResultResponse.json();
 	document.getElementById("sum").innerHTML = parseFloat(meanResultData).toPrecision(3) + " %";
-	setTimeout( getHistory, 5000 );
 };
+
 getHistory();
+setInterval(getHistory, 5000);
