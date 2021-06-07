@@ -72,7 +72,7 @@ class tradingAccess:
             # open trade and write advice if no trade is open yet
             for i in range(1,2):
                 if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
-                    corValue >= 1 and
+                    corValue >= 0.1 and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
                         if self.liveTrading == True:
