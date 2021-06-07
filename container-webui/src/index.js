@@ -23,7 +23,6 @@ const binance = new Binance().options({
 app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-	    console.log("BNB balance: ", balances.BNB.available);
 	    response.json(balances.BNB.available)
 	});
 });
@@ -45,9 +44,8 @@ app.get('/openTrades', (request, response) => {
 	client
 	.query(text)
 	.then(res => { 
-	    console.log(res.rows[0]['count'])
 		response.json(res.rows[0]['count']) 
-	    client.end();
+		client.end();
 	})
 	.catch(e => console.error(e.stack))
 });
@@ -69,7 +67,6 @@ app.get('/recentSumResult',(request, response) => {
 	client
 	.query(text)
 	.then(res => {
-		console.log(res.rows[0]['sum'])
 		response.json(res.rows[0]['sum'])
 		client.end();
 		})
@@ -93,7 +90,6 @@ app.get('/sumResult', (request, response) => {
 	client
 	.query(text)
 	.then(res => {
-		console.log(res.rows[0]['sum'])
 		response.json(res.rows[0]['sum']) 
 	    client.end();
 		})
