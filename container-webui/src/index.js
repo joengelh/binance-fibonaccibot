@@ -23,7 +23,6 @@ const binance = new Binance().options({
 app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-	    console.log("BNB balance: ", balances.BNB.available);
 	    response.json(balances.BNB.available)
 	});
 });
@@ -35,39 +34,64 @@ app.get('/openTrades', (request, response) => {
 	// check for open trades
         const text = 'SELECT count(*) from table001 where takeprofit is not null and resultpercent is null;'
         const client = new Client({
-		            user: process.env.dbUser,                                                                  host: process.env.dbHost,                                                                  database: process.env.dbName,
-		            password: process.env.POSTGRES_PASSWORD,
-		            port: process.env.dbPort
-		        });
+			user: process.env.dbUser,
+			host: process.env.dbHost,
+			database: process.env.dbName,
+			password: process.env.POSTGRES_PASSWORD,
+			port: process.env.dbPort
+			});
 	client.connect();
 	client
 	.query(text)
 	.then(res => { 
-	        console.log(res.rows[0]['count'])
 		response.json(res.rows[0]['count']) 
-	        client.end();
+		client.end();
 	})
 	.catch(e => console.error(e.stack))
 });
 
-// api to recieve mean result percent
-app.get('/meanResult', (request, response) => {
+// api to recieve sum result percent of past 24h
+app.get('/recentSumResult',(request, response) => {
 	// create empty dict
 	var dict = {};
-	// check for open trades
-        const text = 'SELECT avg(resultpercent) FROM table001;'
-        const client = new Client({
-		            user: process.env.dbUser,                                                                  host: process.env.dbHost,                                                                  database: process.env.dbName,
-		            password: process.env.POSTGRES_PASSWORD,
-		            port: process.env.dbPort
-		        });
+	const text = `SELECT sum(resultpercent) FROM table001 where 
+	time > now() - interval '24 hours';`
+	const client = new Client({
+		user: process.env.dbUser,
+		host: process.env.dbHost,
+		database: process.env.dbName,
+		password: process.env.POSTGRES_PASSWORD,
+		port: process.env.dbPort
+		});
 	client.connect();
 	client
 	.query(text)
-	.then(res => { 
-	        console.log(res.rows[0]['avg'])
-		response.json(res.rows[0]['avg']) 
-	        client.end();
-	})
+	.then(res => {
+		response.json(res.rows[0]['sum'])
+		client.end();
+		})
+	.catch(e => console.error(e.stack))
+});
+
+// api to recieve sum result percent
+app.get('/sumResult', (request, response) => {
+	// create empty dict
+	var dict = {};
+	// check for open trades
+        const text = 'SELECT sum(resultpercent) FROM table001;'
+        const client = new Client({
+		user: process.env.dbUser,
+		host: process.env.dbHost,
+		database: process.env.dbName,
+		password: process.env.POSTGRES_PASSWORD,
+		port: process.env.dbPort
+		});
+	client.connect();
+	client
+	.query(text)
+	.then(res => {
+		response.json(res.rows[0]['sum']) 
+	    client.end();
+		})
 	.catch(e => console.error(e.stack))
 });
