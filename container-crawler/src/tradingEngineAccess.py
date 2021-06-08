@@ -65,16 +65,16 @@ class tradingAccess:
                 fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
                 fibRetracement[2] = fibRetracement[1] * 0.9995
                 fibRetracement[3] = fibRetracement[1] * 1.0005
-            #see of currently an open trade exists for symbol
-            sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null and symbol like '" + tick['symbol'] + "';"
-            #get current correlation of price and id
-            corValue = largeData[0].corr(largeData[1])
             # open trade and write advice if no trade is open yet
             for i in range(1,4):
+                #see of currently an open trade exists for symbol
+                sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null and symbol like '" + tick['symbol'] + "' and fiblevel = '" + str(fibRetracement[0][i]) + "';"
                 if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
                         if self.liveTrading == True:
                             self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+1])
+                        #get current correlation of price and id
+                        corValue = largeData[0].corr(largeData[1])
                         self.writeAdvice(fibRetracement, i, largeData, corValue)
         self.timescale.databaseClose()
