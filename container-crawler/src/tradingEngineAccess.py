@@ -37,7 +37,7 @@ class tradingAccess:
 
     def writeAdvice(self, fib, i, large, cor):
         sql = ("UPDATE table001 SET " +
-                            " takeProfit = '" + str(fib[2][i+3]) +
+                            " takeProfit = '" + str(fib[2][i+1]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
