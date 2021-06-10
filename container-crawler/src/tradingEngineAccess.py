@@ -68,7 +68,7 @@ class tradingAccess:
             # open trade and write advice if no trade is open yet
             for i in range(1,4):
                 #see of currently an open trade exists for symbol
-                sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null and symbol like '" + tick['symbol'] + "' and fiblevel = '" + str(fibRetracement[0][i]) + "';"
+                sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null and symbol like '" + tick['symbol'] + "';"
                 if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):
