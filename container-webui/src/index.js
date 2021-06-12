@@ -23,7 +23,7 @@ const binance = new Binance().options({
 app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-	    response.json(parseFloat(balances.process.env.baseCurrency.available).toPrecision(3) + " " + process.env.baseCurrency)
+	    response.json(parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
 	});
 });
 
