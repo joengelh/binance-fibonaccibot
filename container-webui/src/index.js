@@ -19,11 +19,11 @@ const binance = new Binance().options({
 	  APISECRET: process.env.apiSecret
 });
 
-// get current BNB balance from account
+// get current baseCurrency balance from account
 app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-	    response.json(balances.BNB.available)
+	    response.json(balances.process.env.baseCurrency.available)
 	});
 });
 

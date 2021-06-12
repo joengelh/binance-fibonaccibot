@@ -1,7 +1,9 @@
+require('dotenv').config()
+
 async function getAssets() {
 	const assetsResponse = await fetch('/assets');
 	const assetsData = await assetsResponse.json();
-	document.getElementById("amount").innerHTML = parseFloat(assetsData).toPrecision(3) + " BNB";
+	document.getElementById("amount").innerHTML = parseFloat(assetsData).toPrecision(3) + " " + process.env.baseCurrency;
 };
 
 getAssets();

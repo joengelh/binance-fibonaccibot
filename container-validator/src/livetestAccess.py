@@ -14,6 +14,7 @@ class liveAccess:
             self.liveVolume=env("liveVolume")
             apiSecret=env('apiSecret')
             apiKey=env('apiKey')
+            baseCurrency=env('baseCurrency')
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
@@ -30,7 +31,7 @@ class liveAccess:
         #check if trade has been closed
         if (len(bA) > 0 and
             len(self.client.get_open_orders()) == 0):
-                percentChange = ((float(self.client.get_asset_balance(asset='BNB')['free']) - bA[2][0]) / float(self.liveVolume)) * 100 - 100
+                percentChange = ((float(self.client.get_asset_balance(asset=baseCurrency)['free']) - bA[2][0]) / float(self.liveVolume)) * 100 - 100
                 #get max id
                 sql = ("select symbol from table001 where id = '" + str(bA[0][0]) + "';")
                 symbol = pd.DataFrame(self.timescale.sqlQuery(sql))

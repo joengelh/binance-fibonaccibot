@@ -22,6 +22,7 @@ load_dotenv()
 try:
     apiSecret=env('apiSecret')
     apiKey=env('apiKey')
+    baseCurrency=env('baseCurrency')
 except KeyError:
     print("No env variables set.")
     sys.exit(1)
@@ -47,7 +48,7 @@ def crawl():
         intermDict['askPrice'] = float(tickers[i]['askPrice'])
         intermDict['symbol'] = tickers[i]['symbol']
         #filter for only coins relevant for the bot
-        if (intermDict['symbol'].endswith('BNB') and
+        if (intermDict['symbol'].endswith(baseCurrency) and
            len(intermDict['symbol']) < 11 and
            intermDict['askPrice'] > 0):
             timescale.insertRow(intermDict)

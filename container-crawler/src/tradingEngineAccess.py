@@ -19,6 +19,7 @@ class tradingAccess:
             self.liveVolume=env("liveVolume")
             apiSecret=env('apiSecret')
             apiKey=env('apiKey')
+            baseCurrency=env('baseCurrency')
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
@@ -43,7 +44,7 @@ class tradingAccess:
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
-                            "', managedAssets = '" + str(self.client.get_asset_balance(asset='BNB')['free']) +
+                            "', managedAssets = '" + str(self.client.get_asset_balance(asset=baseCurrency)['free']) +
                             "' WHERE id IN(SELECT max(id) FROM table001);")
         self.timescale.sqlUpdate(sql)
 

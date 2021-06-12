@@ -22,7 +22,8 @@ POSTGRES_PASSWORD=password = set to preferences or leave default
 dbHost=localhost           = set to preferences or leave default
 dbPort=5432                = set to preferences or leave default
 liveTrading=false          = enable or disable live trading, while the backtesting method is not as accurate
-liveVolume=1               = ammount of BNB used per signal
+liveVolume=1               = ammount of base currency used per signal
+baseCurrency               = base currency to grow
 ```
 
 Thereafter the service can be started using ``docker-compose up -d --build``
