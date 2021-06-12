@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 async function getAssets() {
 	const assetsResponse = await fetch('/assets');
 	const assetsData = await assetsResponse.json();
