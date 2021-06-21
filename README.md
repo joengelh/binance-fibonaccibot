@@ -18,6 +18,7 @@ apiKey=YOUR_API_KEY        = your binance api key
 apiSecret=YOUR_API_SECRET  = your binance api secret
 dbName=postgres            = set to preferences or leave default
 dbUser=postgres            = set to preferences or leave default
+dbTable=table001           = set to preferences or leave default
 POSTGRES_PASSWORD=password = set to preferences or leave default
 dbHost=localhost           = set to preferences or leave default
 dbPort=5432                = set to preferences or leave default

@@ -5,4 +5,4 @@ async function getHistory() {
 };
 
 getHistory();
-setInterval(getHistory, 5000);
+setInterval(getHistory, 10000);

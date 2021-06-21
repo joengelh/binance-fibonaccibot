@@ -14,6 +14,7 @@ class timescaleAccess:
             POSTGRES_PASSWORD=env("POSTGRES_PASSWORD")
             dbHost=env("dbHost")
             dbPort=env("dbPort")
+            self.dbTable=env("dbTable")
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
@@ -38,9 +39,9 @@ class timescaleAccess:
         self.columns = ', '.join(str(x).replace('/', '_') for x in dict4sql.keys())
         self.values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dict4sql.values())
 
-    def tableCreate(self, writeDict, tableName = "table001"):
+    def tableCreate(self, writeDict):
         #create table if not exists
-        dbHeader = "CREATE TABLE IF NOT EXISTS " + str(tableName) + " (\n"
+        dbHeader = "CREATE TABLE IF NOT EXISTS " + self.dbTable + " (\n"
         dbContent = ""
         for key, value in writeDict.items():
             if isinstance(value, bool):
@@ -55,17 +56,17 @@ class timescaleAccess:
         try:
             self.cur.execute(dbHeader + dbContent + dbEnd)
         except:
-            print("was not able to create table " + str(tableName) + " if not exists")
+            print("was not able to create table " + self.dbTable + " if not exists")
         
         #make hypertable from table
-        sql = "SELECT create_hypertable('" + str(tableName) + "','time');"
+        sql = "SELECT create_hypertable('" + self.dbTable + "','time');"
         try:
             self.cur.execute(sql)
         except:
-            print("table " + str(tableName) + " is already hypertable")
+            print("table " + self.dbTable + " is already hypertable")
 
-    def insertColumns(self, WriteCol, tableName = "table001"):
-        dbHeader = "ALTER TABLE " + str(tableName) + " (\n"
+    def insertColumns(self, WriteCol):
+        dbHeader = "ALTER TABLE " + self.dbTable + " (\n"
         dbContent = ""
         for key, value in writeCol.items():
             if isinstance(value, bool):
@@ -80,7 +81,7 @@ class timescaleAccess:
         try:
             self.cur.execute(dbHeader + dbContent + dbEnd)
         except:
-            print("was not able to add column " + str(tableName) + " if not exists")
+            print("was not able to add column " + self.dbTable + " if not exists")
     
     def sqlUpdate(self, sql):
         try:
@@ -96,10 +97,10 @@ class timescaleAccess:
             print("error in query")
         return result
 
-    def insertRow(self, writeDict, tableName = "table001"):
+    def insertRow(self, writeDict):
         self.dict2sql(writeDict)
         #append dict as row to table
-        sql = "INSERT INTO %s ( %s, time) VALUES ( %s, NOW() );" % (tableName, self.columns, self.values)
+        sql = "INSERT INTO %s ( %s, time) VALUES ( %s, NOW() );" % (self.dbTable, self.columns, self.values)
         try:
             self.cur.execute(sql)
         except (Exception, psycopg2.Error)as error:

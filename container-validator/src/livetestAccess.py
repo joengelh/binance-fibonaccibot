@@ -14,7 +14,8 @@ class liveAccess:
             self.liveVolume=env("liveVolume")
             apiSecret=env('apiSecret')
             apiKey=env('apiKey')
-            baseCurrency=env('baseCurrency')
+            self.baseCurrency=env('baseCurrency')
+            self.dbTable=end('dbTable')
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
@@ -23,7 +24,7 @@ class liveAccess:
 
     def validate(self):
         sql = ("SELECT id, askprice, managedassets" +
-            " FROM table001 WHERE" +
+            " FROM " + self.dbTable + " WHERE" +
             " resultpercent IS NULL " +
             " AND takeprofit IS NOT NULL;")
         bA = pd.DataFrame(self.timescale.sqlQuery(sql))
@@ -31,15 +32,15 @@ class liveAccess:
         #check if trade has been closed
         if (len(bA) > 0 and
             len(self.client.get_open_orders()) == 0):
-                percentChange = ((float(self.client.get_asset_balance(asset=baseCurrency)['free']) - bA[2][0]) / float(self.liveVolume)) * 100 - 100
+                percentChange = ((float(self.client.get_asset_balance(asset=self.baseCurrency)['free']) - bA[2][0]) / float(self.liveVolume)) * 100 - 100
                 #get max id
-                sql = ("select symbol from table001 where id = '" + str(bA[0][0]) + "';")
+                sql = ("select symbol from " + self.dbTable + " where id = '" + str(bA[0][0]) + "';")
                 symbol = pd.DataFrame(self.timescale.sqlQuery(sql))
-                sql = ("select max(id) from table001 where symbol = '" + str(symbol[0][0]) + "';")
+                sql = ("select max(id) from " + self.dbTable + " where symbol = '" + str(symbol[0][0]) + "';")
                 maxId = pd.DataFrame(self.timescale.sqlQuery(sql))
                 print(maxId)
                 #update db to include stopId and resultpercent
-                sql = ("UPDATE table001 SET" +
+                sql = ("UPDATE " + self.dbTable + " SET" +
                 " resultpercent = '" + str(percentChange) +
                 "', stopid = '" + str(bA[0][0]) +
                 "' WHERE id = '" + str(bA[0][0]) +

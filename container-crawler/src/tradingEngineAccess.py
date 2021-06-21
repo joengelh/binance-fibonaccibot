@@ -19,6 +19,7 @@ class tradingAccess:
             self.liveVolume=env("liveVolume")
             apiSecret=env('apiSecret')
             apiKey=env('apiKey')
+            self.dbTable=env('dbTable')
             self.baseCurrency=env('baseCurrency')
         except KeyError:
             print("No env variables set.")
@@ -37,7 +38,7 @@ class tradingAccess:
         os.system(orderString)
 
     def writeAdvice(self, fib, i, large, cor):
-        sql = ("UPDATE table001 SET " +
+        sql = ("UPDATE " + self.dbTable + "SET " +
                             " takeProfit = '" + str(fib[2][i+1]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
@@ -45,12 +46,13 @@ class tradingAccess:
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', managedAssets = '" + str(self.client.get_asset_balance(asset=self.baseCurrency)['free']) +
-                            "' WHERE id IN(SELECT max(id) FROM table001);")
+                            "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.timescale.sqlUpdate(sql)
 
     def runCalculation(self, tick):
         self.timescale = timescaledbAccess.timescaleAccess()
-        sql = ("SELECT id, askprice FROM table001 WHERE symbol LIKE '" + tick['symbol'] + 
+        sql = ("SELECT id, askprice FROM " + self.dbTable + 
+            "WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '12 hours" + 
             "' AND time < NOW() - INTERVAL '2 hours';")
         largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
@@ -69,7 +71,9 @@ class tradingAccess:
             # open trade and write advice if no trade is open yet
             for i in range(1,4):
                 #see of currently an open trade exists for symbol
-                sql = "SELECT count(*) FROM table001 WHERE takeprofit is not null and resultpercent is null and symbol like '" + tick['symbol'] + "';"
+                sql = ("SELECT count(*) FROM " + self.dbTable + 
+                        " WHERE takeprofit is not null and resultpercent is null and" + 
+                        " symbol like '" + tick['symbol'] + "';"
                 if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
                     float(tick['askPrice']) > fibRetracement[2][i] and
                     float(tick['askPrice']) < fibRetracement[3][i]):

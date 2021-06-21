@@ -22,6 +22,7 @@ load_dotenv()
 try:
     apiSecret=env('apiSecret')
     apiKey=env('apiKey')
+    dbTable=env('dbTable')
     baseCurrency=env('baseCurrency')
 except KeyError:
     print("No env variables set.")
@@ -40,7 +41,7 @@ def crawl():
     client = Client(apiKey, apiSecret, {'timeout':600})
     tickers = client.get_ticker()
     #get count to determine if lengh is sufficient
-    count = timescale.sqlQuery("SELECT count(*) FROM table001 " +
+    count = timescale.sqlQuery("SELECT count(*) FROM " + dbTable +
     " WHERE time > NOW() - INTERVAL '12 hours'" + 
     " and time < NOW() - INTERVAL '11 hours';")
     for i in range(len(tickers)):
