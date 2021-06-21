@@ -19,11 +19,11 @@ const binance = new Binance().options({
 	  APISECRET: process.env.apiSecret
 });
 
-// get current BNB balance from account
+// get current baseCurrency balance from account
 app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-	    response.json(balances.BNB.available)
+	    response.json(parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
 	});
 });
 
@@ -32,8 +32,8 @@ app.get('/openTrades', (request, response) => {
 	// create empty dict
 	var dict = {};
 	// check for open trades
-        const text = 'SELECT count(*) from ' + process.env.dbTable.toString() + ' where takeprofit is not null and resultpercent is null;'
-        const client = new Client({
+        const text = 'SELECT count(*) from ' + process.env.dbTable + ' where takeprofit is not null and resultpercent is null;'
+	const client = new Client({
 			user: process.env.dbUser,
 			host: process.env.dbHost,
 			database: process.env.dbName,
@@ -54,7 +54,7 @@ app.get('/openTrades', (request, response) => {
 app.get('/recentSumResult',(request, response) => {
 	// create empty dict
 	var dict = {};
-	const text = 'SELECT sum(resultpercent) FROM ' + process.env.dbTable.toString() + 
+	const text = 'SELECT sum(resultpercent) FROM ' + process.env.dbTable +
 		` where time > now() - interval '24 hours';`
 	const client = new Client({
 		user: process.env.dbUser,
@@ -78,8 +78,8 @@ app.get('/sumResult', (request, response) => {
 	// create empty dict
 	var dict = {};
 	// check for open trades
-        const text = 'SELECT sum(resultpercent) FROM ' + process.env.dbTable.toString() + ';'
-        const client = new Client({
+        const text = 'SELECT sum(resultpercent) FROM ' + process.env.dbTable + ';'
+	const client = new Client({
 		user: process.env.dbUser,
 		host: process.env.dbHost,
 		database: process.env.dbName,

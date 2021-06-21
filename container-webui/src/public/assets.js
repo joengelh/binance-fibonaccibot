@@ -1,8 +1,8 @@
 async function getAssets() {
 	const assetsResponse = await fetch('/assets');
 	const assetsData = await assetsResponse.json();
-	document.getElementById("amount").innerHTML = parseFloat(assetsData).toPrecision(3) + " BNB";
+	document.getElementById("amount").innerHTML = assetsData;
 };
 
 getAssets();
-setInterval(getAssets, 10000);
+setInterval(getAssets, 5000);
