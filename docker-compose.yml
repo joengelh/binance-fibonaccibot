@@ -7,10 +7,21 @@ services:
    volumes: 
    - fibonacci-timescaledb:/var/lib/postgresql
    restart: always
-   env_file:
-   - .env
+   environment:
+   - POSTGRES_PASSWORD=password
    ports:
    - 5432:5432
+  cache:
+   image: redis:latest
+   command: redis-server --requirepass password
+   container_name: fibonacci-redis
+   restart: always
+   environment:
+   - REDIS_REPLICATION_MODE=master
+   ports:
+   - 6379:6379
+   volumes:
+   - $PWD/container-redis/src/redis.conf:/usr/local/etc/redis/redis.conf
   crawler:
    build: ./container-crawler
    container_name: fibonacci-crawler
@@ -36,6 +47,7 @@ services:
    - .env
    depends_on:
    - db
+   - cache
    ports:
    - "13000:13000"
 
