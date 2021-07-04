@@ -5,7 +5,7 @@ services:
    image: timescale/timescaledb:latest-pg12
    container_name: fibonacci-timescaledb
    volumes: 
-   - fibonacci-timescaledb:/var/lib/postgresql
+   - fibonacci-timescaledb:/var/lib/postgresql/data
    restart: always
    environment:
    - POSTGRES_PASSWORD=password
