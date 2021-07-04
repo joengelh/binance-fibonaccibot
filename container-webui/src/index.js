@@ -1,3 +1,11 @@
+redisClient.on("error", function(error) {
+	  console.error(error);
+});
+
+client.auth('password');
+client.set("result", "400", redis.print);
+client.get("result", redis.print);
+
 // import modules
 require('dotenv').config();
 const { Client } = require('pg');
@@ -5,6 +13,8 @@ const express = require('express');
 const yn = require('yn');
 const Binance = require('node-binance-api');
 const app = express();
+const redis = require("redis");
+const redisClient = redis.createClient();
 
 // serve static index.html
 app.use(function(req, res, next) {
