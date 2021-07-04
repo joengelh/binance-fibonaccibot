@@ -1,11 +1,3 @@
-redisClient.on("error", function(error) {
-	  console.error(error);
-});
-
-client.auth('password');
-client.set("result", "400", redis.print);
-client.get("result", redis.print);
-
 // import modules
 require('dotenv').config();
 const { Client } = require('pg');
@@ -30,40 +22,71 @@ const binance = new Binance().options({
 	  APISECRET: process.env.apiSecret
 });
 
-// get current baseCurrency balance from account
-app.get('/assets', (request, response) => {
+// load redis connection vars from environment
+redisClient.on("error", function(error) {
+	console.error(error);
+});
+redisClient.auth(process.env.POSTGRES_PASSWORD);
+
+// start caching intermediate results every minute
+var minutes = 5, the_interval = minutes * 60 * 1000;
+setInterval(function() {
+
+	// cache assets
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-		response.json(parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
+		redisClient.set("assets", parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
 	});
-});
 
-// api to recieve dict wit open trades
-app.get('/openTrades', (request, response) => {
-	// create empty dict
+	// cache openTrades
 	var dict = {};
-	// check for open trades
-        const text = 'SELECT count(*) from ' + process.env.dbTable.toString() + ' where takeprofit is not null and resultpercent is null;'
-        const client = new Client({
-			user: process.env.dbUser,
-			host: process.env.dbHost,
-			database: process.env.dbName,
-			password: process.env.POSTGRES_PASSWORD,
-			port: process.env.dbPort
-			});
+	const text = 'SELECT count(*) from ' + process.env.dbTable.toString() + ' where takeprofit is not null and resultpercent is null;'
+	const client = new Client({
+		user: process.env.dbUser,
+		host: process.env.dbHost,
+		database: process.env.dbName,
+		password: process.env.POSTGRES_PASSWORD,
+		port: process.env.dbPort
+		});
 	client.connect();
 	client
 	.query(text)
 	.then(res => { 
-		response.json(res.rows[0]['count']) 
+		redisClient.set("openTrades", parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + answer) 
 		client.end();
 	})
 	.catch(e => console.error(e.stack))
-});
 
-// api to recieve sum result percent of past 24h
-app.get('/recentSumResult',(request, response) => {
-	// create empty dict
+	// cache sumResult
+	var dict = {};
+	var text = "";
+	var answer = "";
+	if (yn(process.env.liveTrading)) {
+		text = 'SELECT sum((resultpercent/100) * positioncost) FROM ' + 
+		process.env.dbTable.toString() + ';'
+		answer = process.env.baseCurrency
+	} else {
+		text = 'SELECT sum(resultpercent) FROM ' + 
+		process.env.dbTable.toString() + ';'
+		answer = "%"
+	}
+        const client = new Client({
+		user: process.env.dbUser,
+		host: process.env.dbHost,
+		database: process.env.dbName,
+		password: process.env.POSTGRES_PASSWORD,
+		port: process.env.dbPort
+		});
+	client.connect();
+	client
+	.query(text)
+	.then(res => {
+		redisClient.set("sumResult", parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + answer)
+	    client.end();
+		})
+	.catch(e => console.error(e.stack))
+
+	// cache recentSumResult
 	var dict = {};
 	var recentText = "";
 	var recentAnswer = "";
@@ -92,41 +115,28 @@ app.get('/recentSumResult',(request, response) => {
 	client
 	.query(recentText)
 	.then(res => {
-		response.json(parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + recentAnswer)
+		redisClient.set("openTrades", parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + recentAnswer)
 		client.end();
 		})
 	.catch(e => console.error(e.stack))
+}, the_interval);
+
+// get current baseCurrency balance from account
+app.get('/assets', (request, response) => {
+	response.json(redisClient.get("assets"))
+});
+
+// api to recieve dict wit open trades
+app.get('/openTrades', (request, response) => {
+	response.json(redisClient.get("openTrades"))
+});
+
+// api to recieve sum result percent of past 24h
+app.get('/recentSumResult',(request, response) => {
+	response.json(redisClient.get("recentSumResult"))
 });
 
 // api to recieve sum result percent
 app.get('/sumResult', (request, response) => {
-	// create empty dict
-	var dict = {};
-	var text = "";
-	var answer = "";
-	// check for open trades
-	if (yn(process.env.liveTrading)) {
-		text = 'SELECT sum((resultpercent/100) * positioncost) FROM ' + 
-		process.env.dbTable.toString() + ';'
-		answer = process.env.baseCurrency
-	} else {
-		text = 'SELECT sum(resultpercent) FROM ' + 
-		process.env.dbTable.toString() + ';'
-		answer = "%"
-	}
-        const client = new Client({
-		user: process.env.dbUser,
-		host: process.env.dbHost,
-		database: process.env.dbName,
-		password: process.env.POSTGRES_PASSWORD,
-		port: process.env.dbPort
-		});
-	client.connect();
-	client
-	.query(text)
-	.then(res => {
-		response.json(parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + answer)
-	    client.end();
-		})
-	.catch(e => console.error(e.stack))
+	response.json(redisClient.get("sumResult"))
 });
