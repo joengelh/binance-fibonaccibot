@@ -3,7 +3,7 @@ Just a fun exercise to see if fibonacci retracement levels and simple correlatio
 
 ## Architecture
 
-![architecture](https://user-images.githubusercontent.com/73387330/118108067-d6567000-b3df-11eb-8ad4-33075a3a6499.PNG)
+![Architecure](https://user-images.githubusercontent.com/73387330/124386558-4e079380-dcdb-11eb-8086-5b215f754e32.png)
 
 The Trading bot comes as a microservices architecture launched via docker-compose.
 Docker compose can be installed using the ansible Role 
