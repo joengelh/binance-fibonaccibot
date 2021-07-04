@@ -34,8 +34,8 @@ var minutes = 1, the_interval = minutes * 60 * 1000;
 setInterval(function() {
 	// cache assets
 	binance.balance((error, balances) => {
-	    if ( error ) return console.error(error);
-		redisClient.set("assets", balances[process.env.baseCurrency].available.toPrecision(3) + " " + process.env.baseCurrency)
+		if ( error ) return console.error(error);
+		redisClient.set("assets", Math.round(parseFloat(balances[process.env.baseCurrency].available)*1000)/1000 + " " + process.env.baseCurrency);
 	});
 }, the_interval);
 
@@ -86,7 +86,7 @@ setInterval(function() {
 	client
 	.query(text)
 	.then(res => {
-		redisClient.set("sumResult", res.rows[0]['sum'].toPrecision(3) + " " + answer)
+		redisClient.set("sumResult", Math.round(parseFloat(res.rows[0]['sum'])*1000)/1000 + " " + answer)
 	    client.end();
 		})
 	.catch(e => console.error(e.stack))
@@ -122,7 +122,7 @@ setInterval(function() {
 	client
 	.query(recentText)
 	.then(res => {
-		redisClient.set("recentSumResult", res.rows[0]['sum'].toPrecision(3) + " " + recentAnswer)
+		redisClient.set("recentSumResult", Math.round(parseFloat(res.rows[0]['sum'])*1000)/1000 + " " + recentAnswer)
 		client.end();
 		})
 	.catch(e => console.error(e.stack))
