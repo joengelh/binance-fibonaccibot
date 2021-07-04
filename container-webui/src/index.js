@@ -6,7 +6,6 @@ const yn = require('yn');
 const Binance = require('node-binance-api');
 const app = express();
 const redis = require("redis");
-const redisClient = redis.createClient();
 
 // serve static index.html
 app.use(function(req, res, next) {
@@ -23,21 +22,25 @@ const binance = new Binance().options({
 });
 
 // load redis connection vars from environment
-redisClient.on("error", function(error) {
-	console.error(error);
+const redisClient = redis.createClient({
+	    host: process.env.dbHost,
+	    password: process.env.POSTGRES_PASSWORD
 });
-redisClient.auth(process.env.POSTGRES_PASSWORD);
 
-// start caching intermediate results every minute
-var minutes = 5, the_interval = minutes * 60 * 1000;
+// declare cache refresh minutes
+var minutes = 1, the_interval = minutes * 60 * 1000;
+
+// cache assets every 5 minutes
 setInterval(function() {
-
 	// cache assets
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-		redisClient.set("assets", parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
+		redisClient.set("assets", balances[process.env.baseCurrency].available.toPrecision(3) + " " + process.env.baseCurrency)
 	});
+}, the_interval);
 
+// cache openTrades every 5 minutes
+setInterval(function() {
 	// cache openTrades
 	var dict = {};
 	const text = 'SELECT count(*) from ' + process.env.dbTable.toString() + ' where takeprofit is not null and resultpercent is null;'
@@ -52,12 +55,14 @@ setInterval(function() {
 	client
 	.query(text)
 	.then(res => { 
-		redisClient.set("openTrades", parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + answer) 
+		redisClient.set("openTrades", res.rows[0]['count']) 
 		client.end();
 	})
 	.catch(e => console.error(e.stack))
+}, the_interval);
 
-	// cache sumResult
+// cache sumResult
+setInterval(function() {
 	var dict = {};
 	var text = "";
 	var answer = "";
@@ -81,12 +86,14 @@ setInterval(function() {
 	client
 	.query(text)
 	.then(res => {
-		redisClient.set("sumResult", parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + answer)
+		redisClient.set("sumResult", res.rows[0]['sum'].toPrecision(3) + " " + answer)
 	    client.end();
 		})
 	.catch(e => console.error(e.stack))
+}, the_interval);
 
-	// cache recentSumResult
+// cache recentSumResult
+setInterval(function() {
 	var dict = {};
 	var recentText = "";
 	var recentAnswer = "";
@@ -115,7 +122,7 @@ setInterval(function() {
 	client
 	.query(recentText)
 	.then(res => {
-		redisClient.set("openTrades", parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + recentAnswer)
+		redisClient.set("recentSumResult", res.rows[0]['sum'].toPrecision(3) + " " + recentAnswer)
 		client.end();
 		})
 	.catch(e => console.error(e.stack))
@@ -123,20 +130,32 @@ setInterval(function() {
 
 // get current baseCurrency balance from account
 app.get('/assets', (request, response) => {
-	response.json(redisClient.get("assets"))
+	redisClient.get('assets', (err, reply) => {
+		if (err) throw err;
+		response.json({ data: reply })
+	});
 });
 
 // api to recieve dict wit open trades
 app.get('/openTrades', (request, response) => {
-	response.json(redisClient.get("openTrades"))
+	redisClient.get('openTrades', (err, reply) => {
+		if (err) throw err;
+		response.json({ data: reply })
+	});
 });
 
 // api to recieve sum result percent of past 24h
 app.get('/recentSumResult',(request, response) => {
-	response.json(redisClient.get("recentSumResult"))
+        redisClient.get('recentSumResult', (err, reply) => {
+		if (err) throw err;
+		response.json({ data: reply })
+	});
 });
 
 // api to recieve sum result percent
 app.get('/sumResult', (request, response) => {
-	response.json(redisClient.get("sumResult"))
+        redisClient.get('sumResult', (err, reply) => {
+		if (err) throw err;
+		response.json({ data: reply })
+	});
 });
