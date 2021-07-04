@@ -71,6 +71,7 @@ fibonacci-db|timescale database|5432|fibonacci-volume
 fibonacci-crawler|trading logic||
 fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
+fibonacci-cache|redis database|6379|
 
 # Tools
 for monitoring the RScripts:
