@@ -1,7 +1,8 @@
 // import modules
-require('dotenv').config()
-const { Client } = require('pg')
+require('dotenv').config();
+const { Client } = require('pg');
 const express = require('express');
+const yn = require('yn');
 const Binance = require('node-binance-api');
 const app = express();
 
@@ -23,7 +24,7 @@ const binance = new Binance().options({
 app.get('/assets', (request, response) => {
 	binance.balance((error, balances) => {
 	    if ( error ) return console.error(error);
-	    response.json(parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
+		response.json(parseFloat(balances[process.env.baseCurrency].available).toPrecision(3) + " " + process.env.baseCurrency)
 	});
 });
 
@@ -32,8 +33,8 @@ app.get('/openTrades', (request, response) => {
 	// create empty dict
 	var dict = {};
 	// check for open trades
-        const text = 'SELECT count(*) from ' + process.env.dbTable + ' where takeprofit is not null and resultpercent is null;'
-	const client = new Client({
+        const text = 'SELECT count(*) from ' + process.env.dbTable.toString() + ' where takeprofit is not null and resultpercent is null;'
+        const client = new Client({
 			user: process.env.dbUser,
 			host: process.env.dbHost,
 			database: process.env.dbName,
@@ -54,8 +55,22 @@ app.get('/openTrades', (request, response) => {
 app.get('/recentSumResult',(request, response) => {
 	// create empty dict
 	var dict = {};
-	const text = 'SELECT sum(resultpercent) FROM ' + process.env.dbTable +
-		` where time > now() - interval '24 hours';`
+	var recentText = "";
+	var recentAnswer = "";
+	if (yn(process.env.liveTrading)) {
+		recentText = 'select sum((resultpercent/100) * positioncost) from ' + 
+		process.env.dbTable.toString() +
+		' where stopid > (select min(id) from ' + 
+		process.env.dbTable.toString() +	
+		' where "time" > now() - interval \'24 hours\');'
+		recentAnswer = process.env.baseCurrency
+	}
+	else {
+		recentText = 'select sum(resultpercent) from ' + 
+		process.env.dbTable.toString() +
+		' where "time" > now() - interval \'24 hours\';'
+		recentAnswer = "%"
+	}
 	const client = new Client({
 		user: process.env.dbUser,
 		host: process.env.dbHost,
@@ -65,9 +80,9 @@ app.get('/recentSumResult',(request, response) => {
 		});
 	client.connect();
 	client
-	.query(text)
+	.query(recentText)
 	.then(res => {
-		response.json(res.rows[0]['sum'])
+		response.json(parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + recentAnswer)
 		client.end();
 		})
 	.catch(e => console.error(e.stack))
@@ -77,9 +92,19 @@ app.get('/recentSumResult',(request, response) => {
 app.get('/sumResult', (request, response) => {
 	// create empty dict
 	var dict = {};
+	var text = "";
+	var answer = "";
 	// check for open trades
-        const text = 'SELECT sum(resultpercent) FROM ' + process.env.dbTable + ';'
-	const client = new Client({
+	if (yn(process.env.liveTrading)) {
+		text = 'SELECT sum((resultpercent/100) * positioncost) FROM ' + 
+		process.env.dbTable.toString() + ';'
+		answer = process.env.baseCurrency
+	} else {
+		text = 'SELECT sum(resultpercent) FROM ' + 
+		process.env.dbTable.toString() + ';'
+		answer = "%"
+	}
+        const client = new Client({
 		user: process.env.dbUser,
 		host: process.env.dbHost,
 		database: process.env.dbName,
@@ -90,7 +115,7 @@ app.get('/sumResult', (request, response) => {
 	client
 	.query(text)
 	.then(res => {
-		response.json(res.rows[0]['sum']) 
+		response.json(parseFloat(res.rows[0]['sum']).toPrecision(3) + " " + answer)
 	    client.end();
 		})
 	.catch(e => console.error(e.stack))

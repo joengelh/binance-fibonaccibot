@@ -5,4 +5,4 @@ async function getAssets() {
 };
 
 getAssets();
-setInterval(getAssets, 5000);
+setInterval(getAssets, 10000);
