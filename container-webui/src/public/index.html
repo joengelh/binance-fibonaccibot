@@ -26,6 +26,31 @@
             --text-color: rgb(98, 166, 255);
         }
 
+        #container {
+        width: 960px;
+        margin: 0 auto;
+        }
+
+        #primary {
+        float: left;
+        width: 25%;
+        }
+
+        #secondary {
+        float: left;
+        width: 25%;
+        }
+
+        #tertiary {
+        float: left;
+        width: 25%;
+        }
+
+        #quaternary {
+        float: left;
+        width: 25%;
+        }
+
         body {
             font-family: 'Open Sans', sans-serif;
 	    font-size: large;
@@ -52,27 +77,37 @@
         }
 
     </style>
-    
 </head>
 <body>
-
     <div class='wrapper'>
-        <h1>Binance Fibonacci Trading Bot</h1>
+        <h1>Fibonacci Bot</h1>
 	<img src="./logo.png" width="100%" height="25%"/>
     </div>
 
-    <div style="width: 100%; overflow: hidden;">
-        <div style="width: 50%; float: left; text-align: center;">
+    <div id="container">
+        <div id="primary">
             <h3>Free Spot</h3>
             <p id="amount"></p>
             <h3>Open Trades</h3>
             <p id="open"></p>
         </div>
-        <div style="margin-left: 0%; text-align: center;"> 
+        <div id="secondary"> 
             <h3>Sum Result</h3>
             <p id="sum"></p>
             <h3>24h Sum Result</h3>
             <p id="recentSumResult"></p>
+        </div>
+        <div id="tertiary">
+            <h3>Simulated Avg</h3>
+            <p id="simulatedAvg"></p>
+            <h3>Simulated Sum</h3>
+            <p id="simulatedSum"></p>
+        </div>
+        <div id="quaternary">
+            <h3>Simulated Winners</h3>
+            <p id="simulatedWinner"></p>
+            <h3>Simulated Losers</h3>
+            <p id="simulatedLoser"></p>
         </div>
    </div>
 
@@ -80,5 +115,9 @@
     <script src="./openTrades.js"></script>
     <script src="./sumResult.js"></script>
     <script src="./recentSumResult.js"></script>
+    <script src="./simulatedSum.js"></script>
+    <script src="./simulatedAvg.js"></script>
+    <script src="./simulatedLoser.js"></script>
+    <script src="./simulatedWinner.js"></script>
 </body>
 </html>

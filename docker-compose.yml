@@ -2,22 +2,25 @@ version: '3'
 
 services:
   db:
-   image: timescale/timescaledb:latest-pg12
-   container_name: fibonacci-timescaledb
-   volumes: 
-   - fibonacci-timescaledb:/var/lib/postgresql/data
+   image: postgres
+   container_name: fibonacci-db
    restart: always
-   environment:
-   - POSTGRES_PASSWORD=password
+   env_file:
+   - .envdb
    ports:
    - 5432:5432
+   volumes:
+   - /private/db:/var/lib/postgresql/data:rw
+   - ./container-db/initdb.d:/docker-entrypoint-initdb.d
   cache:
-   image: redis:latest
+   image: redis
    command: redis-server --requirepass password
    container_name: fibonacci-redis
    restart: always
    environment:
    - REDIS_REPLICATION_MODE=master
+   depends_on:
+   - db
    ports:
    - 6379:6379
   crawler:
@@ -25,29 +28,25 @@ services:
    container_name: fibonacci-crawler
    restart: unless-stopped
    env_file:
-   - .env
+   - .envall
    depends_on:
    - db
-  validator:
-   build: ./container-validator
-   container_name: fibonacci-validator
+  predictor:
+   build: ./container-predictor
+   container_name: fibonacci-predictor
    restart: unless-stopped
    env_file:
-   - .env
+   - .envall
    depends_on:
    - db
-   - crawler
+   - cache
   webui:
    build: ./container-webui
    container_name: fibonacci-webui
    restart: unless-stopped
    env_file:
-   - .env
+   - .envall
    depends_on:
-   - db
    - cache
    ports:
    - "13000:13000"
-
-volumes: 
-  fibonacci-timescaledb:

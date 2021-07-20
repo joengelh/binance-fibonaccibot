@@ -37,6 +37,7 @@ setInterval(function() {
 		if ( error ) return console.error(error);
 		redisClient.set("assets", Math.round(parseFloat(balances[process.env.baseCurrency].available)*1000)/1000 + " " + process.env.baseCurrency);
 	});
+		redisClient.expire("assets", 100);
 }, the_interval);
 
 // cache openTrades every 5 minutes
@@ -55,7 +56,8 @@ setInterval(function() {
 	client
 	.query(text)
 	.then(res => { 
-		redisClient.set("openTrades", res.rows[0]['count']) 
+		redisClient.set("openTrades", res.rows[0]['count']);
+		redisClient.expire("openTrades", 100);
 		client.end();
 	})
 	.catch(e => console.error(e.stack))
@@ -86,7 +88,8 @@ setInterval(function() {
 	client
 	.query(text)
 	.then(res => {
-		redisClient.set("sumResult", Math.round(parseFloat(res.rows[0]['sum'])*1000)/1000 + " " + answer)
+		redisClient.set("sumResult", Math.round(parseFloat(res.rows[0]['sum'])*100)/100 + " " + answer);
+		redisClient.expire("sumResult", 100);
 	    client.end();
 		})
 	.catch(e => console.error(e.stack))
@@ -122,7 +125,8 @@ setInterval(function() {
 	client
 	.query(recentText)
 	.then(res => {
-		redisClient.set("recentSumResult", Math.round(parseFloat(res.rows[0]['sum'])*1000)/1000 + " " + recentAnswer)
+		redisClient.set("recentSumResult", Math.round(parseFloat(res.rows[0]['sum'])*100)/100 + " " + recentAnswer);
+		redisClient.expire("recentSumResult", 100);
 		client.end();
 		})
 	.catch(e => console.error(e.stack))
@@ -131,6 +135,22 @@ setInterval(function() {
 // get current baseCurrency balance from account
 app.get('/assets', (request, response) => {
 	redisClient.get('assets', (err, reply) => {
+		if (err) throw err;
+		response.json({ data: reply })
+	});
+});
+
+// query redis for simulated average
+app.get('/simulatedAvg', (request, response) => {
+	redisClient.get('simulatedAvg', (err, reply) => {
+		if (err) throw err;
+		response.json({ data: reply })
+	});
+});
+
+// query redis for simulated sum
+app.get('/simulatedSum', (request, response) => {
+	redisClient.get('simulatedSum', (err, reply) => {
 		if (err) throw err;
 		response.json({ data: reply })
 	});
@@ -157,5 +177,21 @@ app.get('/sumResult', (request, response) => {
         redisClient.get('sumResult', (err, reply) => {
 		if (err) throw err;
 		response.json({ data: reply })
+	});
+});
+
+// api to recieve sum result percent
+app.get('/simulatedLoser', (request, response) => {
+	redisClient.get('simulatedLoser', (err, reply) => {
+	if (err) throw err;
+	response.json({ data: reply })
+	});
+});
+
+// api to recieve sum result percent
+app.get('/simulatedWinner', (request, response) => {
+	redisClient.get('simulatedWinner', (err, reply) => {
+	if (err) throw err;
+	response.json({ data: reply })
 	});
 });

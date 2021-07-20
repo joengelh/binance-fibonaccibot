@@ -1,7 +1,7 @@
-## Introduction
+# Introduction
 Just a fun exercise to see if fibonacci retracement levels and simple correlation can predict the value of cryptocurrencies to one antoher. Have fun =) 
 
-## Architecture
+# Architecture
 
 ![Architecture](https://user-images.githubusercontent.com/73387330/126316678-e61b56c9-fec3-4656-b824-8f0424467b6e.PNG)
 
@@ -9,7 +9,7 @@ The Trading bot comes as a microservices architecture launched via docker-compos
 Docker compose can be installed using the ansible Role 
 [go to github](https://github.com/joengelh/ansible-kvm/tree/main/roles/docker-compose)
 
-## Preparation
+# Preparation
 
 After cloning the repository from GitHub using ``git clone https://github.com/joengelh/binance-fibonaccibot.git`` copy the .env.sample file to .env and fill in your information.
 
@@ -61,13 +61,13 @@ is used in the crawler microservice.
 └── crawler.py
 ```
 
-## Components
+# Components
 
  The bot consists of the following components:
 
 Component|Function|Ports|Volumes
 ---|---|---|---
-fibonacci-db|timescale database|5432|fibonacci-volume
+fibonacci-db|postgres database|5432|fibonacci-volume
 fibonacci-crawler|trading logic||
 fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
@@ -85,3 +85,20 @@ for monitoring the RScripts:
 
 can be used.
 
+# backup & restore
+
+## backup
+
+```bash
+sudo docker-compose stop crawler
+udo docker exec -i fibonacci-db /bin/bash -c "PGPASSWORD=password pg_dump --username postgres postgres" > dump.sql
+sudo docker-compose down
+```
+
+## restore
+
+```bash
+sudo docker-compose up -d db
+sudo docker exec -i fibonacci-db /bin/bash -c "PGPASSWORD=password psql --username postgres postgres" < dump.sql
+sudo docker-compose up -d
+```
