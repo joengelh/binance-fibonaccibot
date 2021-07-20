@@ -21,6 +21,7 @@ class predictAccess:
             self.baseCurrency=env("baseCurrency")
             self.liveTrading=env("liveTrading", 'False').lower() in ('true', '1', 't')
             self.brokerFees=env('brokerFees')
+            self.liveVolume=env('liveVolume')
             self.POSTGRES_PASSWORD=env('POSTGRES_PASSWORD')
             self.dbHost=env('dbHost')
         except KeyError:
@@ -85,7 +86,7 @@ class predictAccess:
                 r.setex(
                     "simulatedSum",
                     timedelta(minutes=15),
-                    value=str(sum(resultPercent)) + self.baseCurrency
+                    value=str((sum(resultPercent)/100) * self.liveVolume) + self.baseCurrency
                 )
             else:
                 r.setex(
