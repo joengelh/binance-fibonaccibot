@@ -90,9 +90,7 @@ can be used.
 ## backup
 
 ```bash
-sudo docker-compose stop crawler
-udo docker exec -i fibonacci-db /bin/bash -c "PGPASSWORD=password pg_dump --username postgres postgres" > dump.sql
-sudo docker-compose down
+sudo docker exec -i fibonacci-db /bin/bash -c "PGPASSWORD=password pg_dump --username postgres postgres" > dump.sql
 ```
 
 ## restore
