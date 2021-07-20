@@ -74,6 +74,21 @@ fibonacci-webui|result display|13000|
 fibonacci-cache|redis database|6379|
 fibonacci-predictor|calculating present trades performance||
 
+# Webui
+
+The Webui Displays Information about the Bot´s performance.
+
+![webui](https://user-images.githubusercontent.com/73387330/126381039-73b11a7c-c865-4141-8fe9-85e90f201614.PNG)
+
+* <strong>Free Spot</strong> gives an information about how buch selected base currency is still available to open more positions.
+* <strong>Open Trades</strong> displays the amount of trades opened and not closed yet.
+* <strong>Sum Result</strong> can either show how much base currency has been earned yet in live mode or how many percent growth based on the selected volume has been gained, taking the markets spread and trading fees, aswell as market movements into account.
+* <strong>24h Sum Result</strong> can either show how much base currency has been earned in the past 24h in live mode or how many percent growth based on the selected volume has been gained, taking the markets spread and trading fees, aswell as market movements into account.
+* <strong>Simulated Avg</strong> shows by how many percent points all open positions are in profit/loss when they would be closed immediately.
+* <strong>Simulated Sum</strong> shows how much base currency would be earned if all open positions would be closed immediately.
+* <strong>Simulated Winners</strong> counts the open positions in profit at the moment.
+* <strong>Simulated Losers</strong> counts the open positions out of profit at the moment.
+
 # Tools
 for monitoring the RScripts:
 * ``fibLvlValidator.R``
