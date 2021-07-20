@@ -72,6 +72,7 @@ fibonacci-crawler|trading logic||
 fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
 fibonacci-cache|redis database|6379|
+fibonacci-predictor|calculating present trades performance||
 
 # Tools
 for monitoring the RScripts:
