@@ -82,7 +82,7 @@ fibonacci-predictor|calculating present trades performance||
 
 The Webui Displays Information about the Bot´s performance.
 
-![webui](https://user-images.githubusercontent.com/73387330/126381039-73b11a7c-c865-4141-8fe9-85e90f201614.PNG)
+![webui](https://user-images.githubusercontent.com/73387330/126383737-6fe6adb0-d59f-4f50-9d74-a9c5377e03b3.PNG)
 
 * <strong>Free Spot</strong> gives an information about how buch selected base currency is still available to open more positions.
 * <strong>Open Trades</strong> displays the amount of trades opened and not closed yet.
