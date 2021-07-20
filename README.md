@@ -67,7 +67,7 @@ is used in the crawler microservice.
 
 Component|Function|Ports|Volumes
 ---|---|---|---
-fibonacci-db|postgres database|5432|fibonacci-volume
+fibonacci-db|postgres database|5432|/private/db:/var/lib/postgresql/data:rw<br>./container-db/initdb.d:/docker-entrypoint-initdb.d
 fibonacci-crawler|trading logic||
 fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
