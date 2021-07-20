@@ -1,6 +1,7 @@
 # Introduction
 Just a fun exercise to see if fibonacci retracement levels and simple correlation can predict the value of cryptocurrencies to one antoher. Have fun =) 
 
+
 # Architecture
 
 ![Architecture](https://user-images.githubusercontent.com/73387330/126355336-bb26ca90-64ae-466f-80f5-0afdcf79b0e4.PNG)
@@ -8,6 +9,7 @@ Just a fun exercise to see if fibonacci retracement levels and simple correlatio
 The Trading bot comes as a microservices architecture launched via docker-compose.
 Docker compose can be installed using the ansible Role 
 [go to github](https://github.com/joengelh/ansible-kvm/tree/main/roles/docker-compose)
+
 
 # Preparation
 
@@ -61,6 +63,7 @@ is used in the crawler microservice.
 └── crawler.py
 ```
 
+
 # Components
 
  The bot consists of the following components:
@@ -73,6 +76,7 @@ fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
 fibonacci-cache|redis database|6379|
 fibonacci-predictor|calculating present trades performance||
+
 
 # Webui
 
@@ -89,6 +93,7 @@ The Webui Displays Information about the Bot´s performance.
 * <strong>Simulated Winners</strong> counts the open positions in profit at the moment.
 * <strong>Simulated Losers</strong> counts the open positions out of profit at the moment.
 
+
 # Tools
 for monitoring the RScripts:
 * ``fibLvlValidator.R``
@@ -99,6 +104,7 @@ for monitoring the RScripts:
 ![grafik](https://user-images.githubusercontent.com/73387330/116047232-290bfa00-a674-11eb-9be0-ca638d47aed4.png)
 
 can be used.
+
 
 # backup & restore
 
