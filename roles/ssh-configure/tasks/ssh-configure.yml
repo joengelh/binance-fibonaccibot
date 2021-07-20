@@ -1,0 +1,6 @@
+---
+- name: place ssh config file
+  template:
+    src: ssh_config
+    dest: /etc/ssh/ssh_config
+

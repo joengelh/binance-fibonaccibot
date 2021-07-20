@@ -1,0 +1,3 @@
+---
+- include_tasks: packages-install.yml
+- include_tasks: service-start.yml

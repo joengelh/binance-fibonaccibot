@@ -1,0 +1,22 @@
+---
+- name: place cronjobs 
+  cron:
+    name: "{{ item.name }}"
+    weekday: "1-5"
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    user: "{{ item.user }}"
+    job: "{{ item.job }}"
+    cron_file: "{{ item.name }}"
+    state: present
+  loop:
+  - name: "mailadvisorBackup"
+    user: "{{ user }}"
+    minute: "11"
+    hour: "03"
+    job: "sudo docker exec -i fibonacci-db /bin/bash -c \"PGPASSWORD={{ dbPassword }} pg_dump --username {{ dbUser }} {{ db }}\" > {{ backupPath }}/sqlBackup`date +\\%Y_\\%m_\\%d`.sq"
+  - name: "mailadvisorBackupCleaner"
+    user: "{{ user }}"
+    minute: "11"
+    hour: "04"
+    job: "sudo find {{ backupPath }}/* -mtime +10 -type d -exec rm -rf {} \\; >> {{ logPath }}/fibonacciBackupCleaner.log 2>&1"

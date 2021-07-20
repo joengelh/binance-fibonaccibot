@@ -1,0 +1,11 @@
+---
+- name: install mailadvisor
+  hosts: total
+  become: yes
+  roles:
+  - ../roles/user-add
+  - ../roles/ssh-configure
+  - ../roles/docker-install
+  - ../roles/docker-compose
+  - ../roles/firewall-configure
+  - ../roles/cron-place
