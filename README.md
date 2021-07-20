@@ -114,6 +114,8 @@ can be used.
 sudo docker exec -i fibonacci-db /bin/bash -c "PGPASSWORD=password pg_dump --username postgres postgres" > dump.sql
 ```
 
+The backup process can also be automated using the Ansible Role: <strong>cron-place</strong>.
+
 ## restore
 
 ```bash
