@@ -6,12 +6,20 @@ services:
    container_name: fibonacci-db
    restart: always
    env_file:
-   - .envdb
+   - .env
    ports:
    - 5432:5432
    volumes:
    - /private/db:/var/lib/postgresql/data:rw
    - ./container-db/initdb.d:/docker-entrypoint-initdb.d
+  telegram:
+   build: ./container-telegram
+   container_name: fibonacci-telegram
+   restart: always
+   env_file:
+   - .env
+   depends_on:
+   - cache
   cache:
    image: redis
    command: redis-server --requirepass password
@@ -28,7 +36,7 @@ services:
    container_name: fibonacci-crawler
    restart: unless-stopped
    env_file:
-   - .envall
+   - .env
    depends_on:
    - db
   predictor:
@@ -36,7 +44,7 @@ services:
    container_name: fibonacci-predictor
    restart: unless-stopped
    env_file:
-   - .envall
+   - .env
    depends_on:
    - db
    - cache
@@ -45,7 +53,7 @@ services:
    container_name: fibonacci-webui
    restart: unless-stopped
    env_file:
-   - .envall
+   - .env
    depends_on:
    - cache
    ports:

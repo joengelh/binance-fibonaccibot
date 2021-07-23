@@ -1,0 +1,4 @@
+environs
+envs
+redis
+python-telegram-bot
