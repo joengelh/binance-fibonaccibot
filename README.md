@@ -33,38 +33,6 @@ baseCurrency               = base currency to grow
 Thereafter the service can be started using ``docker-compose up -d --build``
 and stopped using ``docker-compose down``.
 
-
-# Used Ressources
-The open source repository binance python profit
-[go to github](https://github.com/UPetit/python-binance-profit)
-is used in the crawler microservice.
-
-```bash
-.
-├── app
-│   ├── client.py
-│   ├── entities.py
-│   ├── object_values
-│   │   ├── args.py
-│   │   ├── base.py
-│   │   ├── filters.py
-│   │   ├── orders.py
-│   │   ├── __pycache__
-│   │   │   ├── args.cpython-38.pyc
-│   │   │   ├── base.cpython-38.pyc
-│   │   │   ├── filters.cpython-38.pyc
-│   │   │   ├── orders.cpython-38.pyc
-│   │   │   └── symbol.cpython-38.pyc
-│   │   └── symbol.py
-│   ├── __pycache__
-│   │   ├── client.cpython-38.pyc
-│   │   ├── entities.cpython-38.pyc
-│   │   └── tools.cpython-38.pyc
-│   └── tools.py
-└── crawler.py
-```
-
-
 # Components
 
  The bot consists of the following components:
@@ -72,7 +40,6 @@ is used in the crawler microservice.
 Component|Function|Ports|Volumes
 ---|---|---|---
 fibonacci-db|postgres database|5432|/private/db:/var/lib/postgresql/data:rw<br>./container-db/initdb.d:/docker-entrypoint-initdb.d
-fibonacci-crawler|trading logic||
 fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
 fibonacci-cache|redis database|6379|
