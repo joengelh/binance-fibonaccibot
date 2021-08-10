@@ -1,0 +1,5 @@
+dbName <- "postgres"
+dbUser <- "postgres"
+POSTGRES_PASSWORD <- "password"
+dbHost <- "192.168.2.15"
+dbPort <- "5432"

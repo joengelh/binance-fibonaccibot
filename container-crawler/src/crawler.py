@@ -8,10 +8,11 @@ from dotenv import load_dotenv
 import schedule
 import time
 from envs import env
-
+ 
 #import classes from ./ folder
-import timescaledbAccess
+import postgresdbAccess
 import tradingEngineAccess
+import validationAccess
 
 with open('databaseColumns.json') as file:
     cols = json.load(file)
@@ -30,38 +31,80 @@ except KeyError:
 
 #initiate connection to database
 def initiateTable():
-    timescale = timescaledbAccess.timescaleAccess()
-    timescale.tableCreate(cols)
-    timescale.databaseClose()
+    postgres = postgresdbAccess.postgresAccess()
+    postgres.tableCreate(cols)
+    postgres.databaseClose()
     print("SUCCESS: initialteTable()")
 
+def buildPairDict(tickers, i):
+    columns = {}
+    columns['symbol'] = tickers[i]['symbol']
+    columns['priceChange'] = float(tickers[i]['priceChange'])
+    columns['priceChangePercent'] = float(tickers[i]['priceChangePercent'])
+    columns['weightedAvgPrice'] = float(tickers[i]['weightedAvgPrice'])
+    columns['prevClosePrice'] = float(tickers[i]['prevClosePrice'])
+    columns['lastPrice'] = float(tickers[i]['lastPrice'])
+    columns['lastQty'] = float(tickers[i]['lastQty'])
+    columns['bidPrice'] = float(tickers[i]['bidPrice'])
+    columns['bidQty'] = float(tickers[i]['bidQty'])
+    columns['askPrice'] = float(tickers[i]['askPrice'])
+    columns['askQty'] = float(tickers[i]['askQty'])
+    columns['askQty'] = float(tickers[i]['askQty'])
+    columns['openPrice'] = float(tickers[i]['openPrice'])
+    columns['highPrice'] = float(tickers[i]['highPrice'])
+    columns['lowPrice'] = float(tickers[i]['lowPrice'])
+    columns['volume'] = float(tickers[i]['volume'])
+    columns['quoteVolume'] = float(tickers[i]['quoteVolume'])
+    return columns
+
 def crawl():
-    timescale = timescaledbAccess.timescaleAccess()
+    #initiate own classes
+    postgres = postgresdbAccess.postgresAccess()
     trader = tradingEngineAccess.tradingAccess()
+    test = validationAccess.liveAccess()
+    #connect to binance
     client = Client(apiKey, apiSecret, {'timeout':600})
+    #wait for api to not die
+    time.sleep(1)
+    #get current market data
     tickers = client.get_ticker()
-    #get count to determine if lengh is sufficient
-    count = timescale.sqlQuery("SELECT count(*) FROM " + dbTable +
-    " WHERE time > NOW() - INTERVAL '12 hours'" + 
-    " and time < NOW() - INTERVAL '11 hours';")
+    #get counts
+    countLen = postgres.sqlQuery("SELECT count(*) FROM " + dbTable +
+    " WHERE time < NOW() - INTERVAL '33 hours';")
+    countOpen = postgres.sqlQuery("SELECT count(*)" +
+    " FROM " + dbTable + " WHERE" +
+    " resultpercent IS NULL" +
+    " AND takeprofit IS NOT NULL;")
     for i in range(len(tickers)):
-        intermDict = {}
-        intermDict['askPrice'] = float(tickers[i]['askPrice'])
-        intermDict['symbol'] = tickers[i]['symbol']
+        intermDict = buildPairDict(tickers, i)
+        #dont write data when not usable
+        if not (intermDict['symbol'].endswith('BNB') or
+            intermDict['symbol'].endswith('BTC') or
+            intermDict['symbol'].endswith('ADA') or
+            intermDict['symbol'].endswith('ETH')):
+            continue
+        if (intermDict['askPrice'] <= 0 and
+            len(intermDict['symbol']) > 10):
+            continue
+        #write intermDict to database
+        postgres.insertRow(intermDict)
         #filter for only coins relevant for the bot
+        #and check if enough data has been gathered
         if (intermDict['symbol'].endswith(baseCurrency) and
-           len(intermDict['symbol']) < 11 and
-           intermDict['askPrice'] > 0):
-            timescale.insertRow(intermDict)
-            if count[0][0] > 0:
-                trader.runCalculation(intermDict)
-    timescale.databaseClose()
+            countLen[0][0] > 0):
+            #run caluclation
+            trader.runCalculation(intermDict)
+    #check if any trades meet the conditions to be closed yet
+    if countOpen[0][0] > 0:
+        test.validate()
+    #close database connection
+    postgres.databaseClose()
 
 #create table once on startup, if not exists
 initiateTable()
 
 #write price ticker to database every full minute
-schedule.every().minute.at(":00").do(crawl)
+schedule.every().minute.at(":50").do(crawl)
 
 #repeat
 while True:

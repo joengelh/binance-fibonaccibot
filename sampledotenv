@@ -1,0 +1,14 @@
+apiKey=
+apiSecret=
+dbName=postgres
+dbTable=table001
+dbUser=postgres
+POSTGRES_PASSWORD=password
+dbHost=
+dbPort=5432
+liveTrading=true
+liveVolume=1
+tradingActive=true
+brokerFees=0.0750
+baseCurrency=BNB
+botToken=

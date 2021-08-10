@@ -1,6 +1,20 @@
 {
 	"symbol": "yes",
-	"askPrice": 0.1, 
+	"priceChange": -0.1,
+	"priceChangePercent": -0.1,
+	"weightedAvgPrice": 0.1,
+	"prevClosePrice": 0.1,
+	"lastPrice": 0.1,
+	"lastQty": 0.1,
+	"bidPrice": 0.1,
+	"bidQty": 0.1,
+	"askPrice": 0.1,
+	"askQty": 0.1,
+	"openPrice": 0.1,
+	"highPrice": 0.1,
+	"lowPrice": 0.1,
+	"volume": 0.1,
+	"quoteVolume": 0.1,
 	"takeProfit": 0.1, 
 	"stopLoss": 0.1, 
 	"fibLevel":0.1, 
@@ -9,5 +23,5 @@
 	"midId":1,
 	"resultPercent":-0.1,
 	"corValue": -0.1,
-	"managedAssets": 0.1
+	"positionCost": 0.1
 }

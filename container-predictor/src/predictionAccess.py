@@ -20,8 +20,8 @@ class predictAccess:
             self.dbTable=env("dbTable")
             self.baseCurrency=env("baseCurrency")
             self.liveTrading=env("liveTrading", 'False').lower() in ('true', '1', 't')
-            self.brokerFees=env('brokerFees')
-            self.liveVolume=env('liveVolume')
+            self.brokerFees=float(env('brokerFees'))
+            self.liveVolume=float(env('liveVolume'))
             self.POSTGRES_PASSWORD=env('POSTGRES_PASSWORD')
             self.dbHost=env('dbHost')
         except KeyError:
@@ -60,7 +60,10 @@ class predictAccess:
     def simulate(self):
         #initiate db connection
         postgres = postgresdbAccess.postgresAccess()
-        r = redis.Redis(host=self.dbHost, port=6379, db=0, password=self.POSTGRES_PASSWORD)
+        r = redis.Redis(host=self.dbHost, 
+            port=6379, 
+            db=0, 
+            password=self.POSTGRES_PASSWORD)
         #initiate resultpercent var
         resultPercent = []
         #get unique simbol list
@@ -76,33 +79,33 @@ class predictAccess:
                     " symbol = '" + row[0] +
                     "' ORDER BY id DESC LIMIT 1;")
                 stopId = pd.DataFrame(postgres.sqlQuery(sql))
-                resultPercent.append(((float(stopId[0][0]) - float(row[1])) / float(row[1])) * 100 - self.brokerFees * 2.55)
+                resultPercent.append(((float(stopId[0][0]) - float(row[1])) / float(row[1])) * 100 - self.brokerFees * 3.5)
             r.setex(
                 "simulatedAvg",
                 timedelta(minutes=15),
-                value=str(sum(resultPercent)/len(resultPercent)) + " %"
+                value=str(round(sum(resultPercent)/len(resultPercent), 2)) + " %"
             )
             if self.liveTrading:    
                 r.setex(
                     "simulatedSum",
                     timedelta(minutes=15),
-                    value=str((sum(resultPercent)/100) * self.liveVolume) + self.baseCurrency
+                    value=str(round(sum(resultPercent)/100 * self.liveVolume, 2)) + " " + self.baseCurrency
                 )
             else:
                 r.setex(
                     "simulatedSum",
                     timedelta(minutes=15),
-                    value=str(sum(resultPercent)) + " %"
+                    value=str(round(sum(resultPercent)), 2) + " %"
                 )
             r.setex(
                 "simulatedWinner",
                 timedelta(minutes=15),
-                value=sum(i > 0 for i in resultPercent)
+                value=round(sum(i > 0 for i in resultPercent), 2)
             )  
             r.setex(
                 "simulatedLoser",
                 timedelta(minutes=15),
-                value=sum(i < 0 for i in resultPercent)
+                value=round(sum(i < 0 for i in resultPercent), 2)
             )
         else:
             self.reset(r)

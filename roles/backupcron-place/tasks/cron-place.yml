@@ -14,7 +14,7 @@
     user: "{{ user }}"
     minute: "11"
     hour: "03"
-    job: "sudo docker exec -i fibonacci-db /bin/bash -c \"PGPASSWORD={{ dbPassword }} pg_dump --username {{ dbUser }} {{ db }}\" > {{ backupPath }}/sqlBackup`date +\\%Y_\\%m_\\%d`.sq"
+    job: "sudo docker exec -i fibonacci-db /bin/bash -c \"PGPASSWORD={{ dbPassword }} pg_dump --username {{ dbUser }} {{ db }}\" > {{ backupPath }}/sqlBackup`date +\\%Y_\\%m_\\%d`.sql"
   - name: "mailadvisorBackupCleaner"
     user: "{{ user }}"
     minute: "11"

@@ -1,6 +1,6 @@
 library(RPostgres)
 
-#connect to timescaledb
+#connect to postgres
 con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
                  host = "192.168.2.8",
                  user = "postgres",
@@ -8,12 +8,13 @@ con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
 
 #declare fibonacci levels
 fR <- data.frame(
-  retracement = c(2,1.618,1.382,1,0.786,
+  retracement = c(2,1.786,1.618,1.382,1.236,
+                  1,0.786,1.5,
                   0.618,0.5,0.382,0.236,0),
-  lineColor = c('red', 'blue', 'green',
+  lineColor = c('red', 'blue', 'green','blanchedalmond',
                 'yellow', 'brown', 'turquoise3',
-                'orange', 'purple', 
-                'violet', 'goldenrod1')
+                'orange', 'purple', 'chartreuse1', 
+                'violet', 'goldenrod1','forestgreen')
 )
 fR$fibLevel <- NA
 fR$southLevel <- NA
@@ -21,8 +22,7 @@ fR$northLevel <- NA
 
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
-                     WHERE resultpercent IS NOT NULL
-                        and corvalue >= '0.1';")
+                     WHERE resultpercent IS NOT NULL;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
@@ -31,7 +31,7 @@ for (i in 1:nrow(validated)){
   sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"' 
   and id >= '", validated$startid[i], "' 
-  and id <= '", validated$stopid[i] + 30000, "';", sep = "")
+  and id <= '", validated$stopid[i] + 100000, "';", sep = "")
   sqlQuery <- dbSendQuery(con, sqlString)
   plotData <- dbFetch(sqlQuery)
   dbClearResult(sqlQuery)

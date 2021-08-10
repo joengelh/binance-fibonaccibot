@@ -39,15 +39,6 @@ services:
    - .env
    depends_on:
    - db
-  validator:
-   build: ./container-validator
-   container_name: fibonacci-validator
-   restart: unless-stopped
-   env_file:
-   - .env
-   depends_on:
-   - db
-   - crawler
   predictor:
    build: ./container-predictor
    container_name: fibonacci-predictor

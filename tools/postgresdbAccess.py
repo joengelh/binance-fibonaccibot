@@ -5,7 +5,7 @@ import os
 import itertools
 from envs import env
 
-class timescaleAccess:
+class postgresAccess:
     def __init__(self):
         #read env vars
         try:
@@ -32,7 +32,7 @@ class timescaleAccess:
             # Create a cursor to perform database operations
             self.cur = self.connection.cursor()
         except (Exception, Error) as error:
-            print("Error while connecting to TimescaleDB", error)
+            print("Error while connecting to Postgres", error)
             sys.exit(1)
 
     def dict2sql(self, dict4sql):

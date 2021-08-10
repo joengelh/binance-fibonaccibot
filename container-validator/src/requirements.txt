@@ -1,7 +1,0 @@
-python-binance==0.7.9
-psycopg2
-environs
-pydantic
-pandas
-envs
-schedule

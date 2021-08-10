@@ -8,4 +8,4 @@
   - ../roles/docker-install
   - ../roles/docker-compose
   - ../roles/firewall-configure
-  - ../roles/cron-place
+  - ../roles/backupcron-place

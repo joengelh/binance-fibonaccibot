@@ -4,9 +4,10 @@ from binance.client import Client
 import pandas as pd
 import os
 from envs import env
+import time
 
 #import classes from ./ folder
-import timescaledbAccess
+import postgresdbAccess
 
 class tradingAccess:
     def __init__(self):
@@ -17,46 +18,54 @@ class tradingAccess:
         try:
             self.liveTrading=env("liveTrading", 'False').lower() in ('true', '1', 't')
             self.liveVolume=env("liveVolume")
+            self.tradingActive=env("tradingActive", 'False').lower() in ('true', '1', 't')
+            self.dbTable=env("dbTable")
+            self.baseCurrency=env('baseCurrency')
             apiSecret=env('apiSecret')
             apiKey=env('apiKey')
-            self.dbTable=env('dbTable')
-            self.baseCurrency=env('baseCurrency')
         except KeyError:
             print("No env variables set.")
             sys.exit(1)
         #connect to binance to get current balance
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
-    def ocoOrder(self, tick, sl, tp):
-        orderString = ("python3 ./execute_orders.py" +
-                " --symbol " + str(tick['symbol']) +
-                " --buy_type market" +
-                " --total " + str(self.liveVolume) +
-                " --profit " + str((tp / float(tick['askPrice']) - 1) * 100) +
-                " --loss " + str((sl / float(tick['askPrice']) - 1) * -100))
-        print("===================================")
-        os.system(orderString)
-
-    def writeAdvice(self, fib, i, large, cor):
-        sql = ("UPDATE " + self.dbTable + "SET " +
-                            " takeProfit = '" + str(fib[2][i+1]) +
+    def openTrade(self, fib, i, large, cor, tick):
+        if self.liveTrading == True:
+            #wait a bit because otherwise api error
+            time.sleep(0.01)
+            #get assets available before buy
+            assetsBefore = float(self.client.get_asset_balance(asset=self.baseCurrency)['free'])
+            #skip rest of function if funds not sufficient
+            if assetsBefore <= float(self.liveVolume) * 1.1:
+                return
+            #buy
+            self.client.order_market_buy(symbol = tick['symbol'], quoteOrderQty = self.liveVolume)
+            #get assets available after buy after waiting 5 seconds
+            time.sleep(5)
+            assetsAfter = float(self.client.get_asset_balance(asset=self.baseCurrency)['free'])
+            #calculate price
+            positionCost = assetsBefore - assetsAfter
+        else:
+            positionCost = 0
+        #write the advice
+        sql = ("UPDATE " + self.dbTable + " SET " +
+                            " takeProfit = '" + str(fib[3][i+4]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
-                            "', managedAssets = '" + str(self.client.get_asset_balance(asset=self.baseCurrency)['free']) +
+                            "', positionCost = '" + str(positionCost) +
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
-        self.timescale.sqlUpdate(sql)
+        self.postgres.sqlUpdate(sql)
 
     def runCalculation(self, tick):
-        self.timescale = timescaledbAccess.timescaleAccess()
+        self.postgres = postgresdbAccess.postgresAccess()
         sql = ("SELECT id, askprice FROM " + self.dbTable + 
-            "WHERE symbol LIKE '" + tick['symbol'] + 
-            "' AND time > NOW() - INTERVAL '12 hours" + 
-            "' AND time < NOW() - INTERVAL '2 hours';")
-        largeData = pd.DataFrame(self.timescale.sqlQuery(sql))
-        if len(largeData) >= 1:    
+            " WHERE symbol LIKE '" + tick['symbol'] + 
+            "' AND time > NOW() - INTERVAL '33 hours';")
+        largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
+        if len(largeData) > 0:    
             #convert columns id and askprice to float
             largeData = largeData.apply(pd.to_numeric, errors='coerce')
             #calculate diff
@@ -68,18 +77,21 @@ class tradingAccess:
                 fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
                 fibRetracement[2] = fibRetracement[1] * 0.9995
                 fibRetracement[3] = fibRetracement[1] * 1.0005
-            # open trade and write advice if no trade is open yet
-            for i in range(1,4):
-                #see of currently an open trade exists for symbol
-                sql = ("SELECT count(*) FROM " + self.dbTable + 
-                        " WHERE takeprofit is not null and resultpercent is null and" + 
-                        " symbol like '" + tick['symbol'] + "';"
-                if (int(self.timescale.sqlQuery(sql)[0][0]) == 0 and
-                    float(tick['askPrice']) > fibRetracement[2][i] and
-                    float(tick['askPrice']) < fibRetracement[3][i]):
-                        if self.liveTrading == True:
-                            self.ocoOrder(tick, fibRetracement[2][i-1], fibRetracement[2][i+1])
-                        #get current correlation of price and id
-                        corValue = largeData[0].corr(largeData[1])
-                        self.writeAdvice(fibRetracement, i, largeData, corValue)
-        self.timescale.databaseClose()
+            #see of currently an open trade exists
+            sql = ("SELECT count(*) FROM " + self.dbTable + 
+                    """ WHERE takeprofit is not null and resultpercent is null and 
+                    symbol like '""" + tick['symbol'] + "';")
+            #get correlation of id and price
+            corValue = largeData[0].corr(largeData[1])
+            # open trade and execute advice if no trade is open yet,
+            # the correlation is positive
+            # and tradingAcive
+            # or live trading is disabled and no pair in same symbol has been opened
+            for i in [7]:
+                if (self.tradingActive and
+                corValue > 0.5 and
+                int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
+                float(tick['askPrice']) < fibRetracement[3][i] and
+                float(tick['askPrice']) > fibRetracement[2][i]):
+                    self.openTrade(fibRetracement, i, largeData, corValue, tick)
+        self.postgres.databaseClose()
