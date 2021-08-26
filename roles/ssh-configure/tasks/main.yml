@@ -1,2 +1,2 @@
 ---
-- include_tasks: ssh-configure.yml
+- import_tasks: ssh-configure.yml

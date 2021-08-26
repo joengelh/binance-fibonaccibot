@@ -1,2 +1,2 @@
 ---
-- include_tasks: firewall.yml
+- import_tasks: firewall.yml

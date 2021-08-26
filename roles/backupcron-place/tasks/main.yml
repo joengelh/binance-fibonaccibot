@@ -1,3 +1,3 @@
 ---
-- include_tasks: folders-create.yml
-- include_tasks: cron-place.yml
+- import_tasks: folders-create.yml
+- import_tasks: cron-place.yml
