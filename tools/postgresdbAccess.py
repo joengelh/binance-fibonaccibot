@@ -58,13 +58,6 @@ class postgresAccess:
         except:
             print("was not able to create table " + self.dbTable + " if not exists")
         
-        #make hypertable from table
-        sql = "SELECT create_hypertable('" + self.dbTable + "','time');"
-        try:
-            self.cur.execute(sql)
-        except:
-            print("table " + self.dbTable + " is already hypertable")
-
     def insertColumns(self, WriteCol):
         dbHeader = "ALTER TABLE " + self.dbTable + " (\n"
         dbContent = ""
