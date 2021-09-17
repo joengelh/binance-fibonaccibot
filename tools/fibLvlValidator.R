@@ -63,6 +63,11 @@ plot(vA$pricechangepercent, vA$resultpercent,
      main = paste("cor pricechangepercent:", 
      cor(interm$resultpercent, interm$pricechangepercent)))
 abline(h=0, col="blue")
+plot(vA$stdev, vA$resultpercent,
+     main = paste("cor standard deviation:", 
+                  cor(interm$stdev, interm$resultpercent)),
+     xlim = c(0,0.000001))
+abline(h=0, col="blue")
 
 print(paste("success n: ", successcount))
 print(paste("unsuccess n: ", unsuccesscount))
