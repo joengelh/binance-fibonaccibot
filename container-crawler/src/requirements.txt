@@ -1,4 +1,5 @@
 python-binance==0.7.9
+statistics
 psycopg2
 environs
 pydantic

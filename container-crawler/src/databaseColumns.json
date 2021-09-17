@@ -23,5 +23,6 @@
 	"midId":1,
 	"resultPercent":-0.1,
 	"corValue": -0.1,
-	"positionCost": 0.1
+	"positionCost": 0.1,
+	"stdev": 0.1
 }
