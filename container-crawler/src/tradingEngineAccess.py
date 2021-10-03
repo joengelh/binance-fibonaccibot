@@ -5,6 +5,7 @@ import pandas as pd
 import os
 from envs import env
 import time
+import statistics
 
 #import classes from ./ folder
 import postgresdbAccess
@@ -29,7 +30,7 @@ class tradingAccess:
         #connect to binance to get current balance
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
-    def openTrade(self, fib, i, large, cor, tick):
+    def openTrade(self, fib, i, large, cor, tick, stdev):
         if self.liveTrading == True:
             #wait a bit because otherwise api error
             time.sleep(0.01)
@@ -49,13 +50,14 @@ class tradingAccess:
             positionCost = 0
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
-                            " takeProfit = '" + str(fib[3][i+4]) +
-                            "', stopLoss = '" + str(fib[2][i-1]) +
+                            " takeProfit = '" + str(fib[3][i+3]) +
+                            "', stopLoss = '" + str(fib[2][i-2]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', positionCost = '" + str(positionCost) +
+                            "', stdev = '" + str(stdev) +
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
@@ -83,15 +85,19 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
+            #get standard deviation
+            stdev = statistics.stdev(largeData[1])
             # open trade and execute advice if no trade is open yet,
             # the correlation is positive
+            # and standard deviation is greater 0.01
             # and tradingAcive
             # or live trading is disabled and no pair in same symbol has been opened
-            for i in [7]:
+            for i in [8]:
                 if (self.tradingActive and
                 corValue > 0.5 and
+                stdev > 0.01 and
                 int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
-                    self.openTrade(fibRetracement, i, largeData, corValue, tick)
+                    self.openTrade(fibRetracement, i, largeData, corValue, tick, stdev)
         self.postgres.databaseClose()

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import schedule
 import time
 from envs import env
- 
+
 #import classes from ./ folder
 import postgresdbAccess
 import tradingEngineAccess
