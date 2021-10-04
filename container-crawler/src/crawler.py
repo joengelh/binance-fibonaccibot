@@ -104,7 +104,7 @@ def crawl():
 initiateTable()
 
 #write price ticker to database every full minute
-schedule.every().minute.at(":50").do(crawl)
+schedule.every(5).minutes.do(crawl)
 
 #repeat
 while True:

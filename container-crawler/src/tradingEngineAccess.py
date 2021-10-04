@@ -94,8 +94,8 @@ class tradingAccess:
             # or live trading is disabled and no pair in same symbol has been opened
             for i in [8]:
                 if (self.tradingActive and
-                corValue > 0.5 and
-                stdev > 0.01 and
+                corValue < -0.9 and
+                stdev > 0.001 and
                 int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
