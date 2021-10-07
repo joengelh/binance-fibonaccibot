@@ -50,8 +50,8 @@ class tradingAccess:
             positionCost = 0
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
-                            " takeProfit = '" + str(fib[3][i+3]) +
-                            "', stopLoss = '" + str(fib[2][i-2]) +
+                            " takeProfit = '" + str(fib[3][i+4]) +
+                            "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
                             "', midId = '" + str(large[0].max()) +
@@ -92,9 +92,9 @@ class tradingAccess:
             # and standard deviation is greater 0.01
             # and tradingAcive
             # or live trading is disabled and no pair in same symbol has been opened
-            for i in [8]:
+            for i in [7]:
                 if (self.tradingActive and
-                corValue < -0.9 and
+                corValue > 0.5 and
                 stdev > 0.001 and
                 int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
