@@ -19,7 +19,6 @@ class tradingAccess:
         try:
             self.liveTrading=env("liveTrading", 'False').lower() in ('true', '1', 't')
             self.liveVolume=env("liveVolume")
-            self.tradingActive=env("tradingActive", 'False').lower() in ('true', '1', 't')
             self.dbTable=env("dbTable")
             self.baseCurrency=env('baseCurrency')
             apiSecret=env('apiSecret')
@@ -87,16 +86,9 @@ class tradingAccess:
             corValue = largeData[0].corr(largeData[1])
             #get standard deviation
             stdev = statistics.stdev(largeData[1])
-            # open trade and execute advice if no trade is open yet,
-            # the correlation is positive
-            # and standard deviation is greater 0.01
-            # and tradingAcive
-            # or live trading is disabled and no pair in same symbol has been opened
+            #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
-                if (self.tradingActive and
-                corValue > 0.5 and
-                stdev > 0.001 and
-                int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
+                if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, stdev)

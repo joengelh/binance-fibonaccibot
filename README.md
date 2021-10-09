@@ -28,7 +28,6 @@ liveTrading                = enable or disable live trading, while the backtesti
 liveVolume                 = amount of base currency used per signal
 botToken                   = telegram bot token, given by the bot father
 baseCurrency               = base currency to grow
-tradingActive              = should new trades be placed
 brokerFees                 = binance fees depending on VIP status and BNB use
 ```
 
