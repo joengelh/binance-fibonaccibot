@@ -79,7 +79,7 @@ class predictAccess:
                     " symbol = '" + row[0] +
                     "' ORDER BY id DESC LIMIT 1;")
                 stopId = pd.DataFrame(postgres.sqlQuery(sql))
-                resultPercent.append(((float(stopId[0][0]) - float(row[1])) / float(row[1])) * 100 - self.brokerFees * 3.5)
+                resultPercent.append(((float(stopId[0][0]) - float(row[1])) / float(row[1])) * 100 - self.brokerFees * 2)
             r.setex(
                 "simulatedAvg",
                 timedelta(minutes=15),
