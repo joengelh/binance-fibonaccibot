@@ -72,14 +72,13 @@ class tradingAccess:
 
     def runCalculation(self, tick):
         self.postgres = postgresdbAccess.postgresAccess()
-        sql = ("SELECT id, askprice, time FROM " + self.dbTable + 
+        sql = ("SELECT id, askprice FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '33 hours';")
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
         if len(largeData) > 0:    
             #convert columns id and askprice to float
-            largeData[0] = pd.to_numeric(largeData[0])
-            largeData[1] = pd.to_numeric(largeData[1])
+            largeData = pd.to_numeric(largeData, errors="coerce")
             #calculate diff
             diff = largeData[1].max() - largeData[1].min()
             # calculate fibRetracements
@@ -95,9 +94,9 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
-            corvalue1 = self.corConsistency(15, tick)
-            corvalue2 = self.corConsistency(5, tick)
-            corvalue3 = self.corConsistency(1, tick)
+            corValue1 = self.corConsistency(15, tick)
+            corValue2 = self.corConsistency(5, tick)
+            corValue3 = self.corConsistency(1, tick)
             #get standard deviation
             stdev = statistics.stdev(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
@@ -105,9 +104,9 @@ class tradingAccess:
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                     corValue >= 0 and
-                    corvalue1 >= 0 and
-                    corvalue2 >= 0 and
-                    corvalue3 >= 0 and
+                    corValue1 >= 0 and
+                    corValue2 >= 0 and
+                    corValue3 >= 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, stdev)
