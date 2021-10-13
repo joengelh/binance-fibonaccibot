@@ -6,7 +6,6 @@ import os
 from envs import env
 import time
 import statistics
-from datetime import timedelta
 
 #import classes from ./ folder
 import postgresdbAccess
@@ -50,7 +49,7 @@ class tradingAccess:
             positionCost = 0
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
-                            " takeProfit = '" + str(fib[3][i+5]) +
+                            " takeProfit = '" + str(fib[3][i+4]) +
                             "', stopLoss = '" + str(fib[2][i-1]) +
                             "', corValue = '" + str(cor) +
                             "', startId = '" + str(large[0].min()) +
@@ -102,7 +101,7 @@ class tradingAccess:
             #get standard deviation
             stdev = statistics.stdev(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
-            for i in [6]:
+            for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                     corValue >= 0 and
                     corvalue1 >= 0 and
