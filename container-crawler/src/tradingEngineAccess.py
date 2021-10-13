@@ -78,7 +78,7 @@ class tradingAccess:
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
         if len(largeData) > 0:    
             #convert columns id and askprice to float
-            largeData = pd.to_numeric(largeData, errors="coerce")
+            largeData = largeData.apply(pd.to_numeric, errors='coerce')
             #calculate diff
             diff = largeData[1].max() - largeData[1].min()
             # calculate fibRetracements
