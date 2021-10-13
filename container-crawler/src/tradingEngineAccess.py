@@ -6,6 +6,7 @@ import os
 from envs import env
 import time
 import statistics
+from datetime import timedelta
 
 #import classes from ./ folder
 import postgresdbAccess
