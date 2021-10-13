@@ -91,9 +91,9 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
-            corvalue1 = corConsistency(largeData,15)
-            corvalue2 = corConsistency(largeData,5)
-            corvalue3 = corConsistency(largeData,1)
+            corvalue1 = self.corConsistency(largeData,15)
+            corvalue2 = self.corConsistency(largeData,5)
+            corvalue3 = self.corConsistency(largeData,1)
             #get standard deviation
             stdev = statistics.stdev(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
