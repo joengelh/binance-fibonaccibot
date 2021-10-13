@@ -60,7 +60,7 @@ class tradingAccess:
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
-    def corConsistency(self,scale):
+    def corConsistency(self,scale,tick):
         sql = ("SELECT id, askprice, time FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '" + str(scale) + " hours';")
@@ -95,9 +95,9 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
-            corvalue1 = self.corConsistency(15)
-            corvalue2 = self.corConsistency(5)
-            corvalue3 = self.corConsistency(1)
+            corvalue1 = self.corConsistency(15, tick)
+            corvalue2 = self.corConsistency(5, tick)
+            corvalue3 = self.corConsistency(1, tick)
             #get standard deviation
             stdev = statistics.stdev(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
