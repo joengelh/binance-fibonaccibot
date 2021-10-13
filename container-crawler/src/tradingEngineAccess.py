@@ -78,7 +78,7 @@ class tradingAccess:
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
         if len(largeData) > 0:    
             #convert columns id and askprice to float
-            largeData = largeData.apply(pd.to_numeric, errors='coerce')
+            largeData = largeData.apply(pd.to_numeric, errors='coerce', downcast='float')
             #calculate diff
             diff = largeData[1].max() - largeData[1].min()
             # calculate fibRetracements
@@ -100,7 +100,6 @@ class tradingAccess:
             #get standard deviation
             stdev = statistics.stdev(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
-            print(str(corValue) + str(corValue1) + str(corValue2) + str(corValue3))
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                     corValue >= 0 and
