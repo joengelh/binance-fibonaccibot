@@ -58,7 +58,7 @@ class tradingAccess:
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', positionCost = '" + str(positionCost) +
-                            "', stdev = '" + str(statistics["stdev"]) +
+                            "', stDev = '" + str(statistics["stDev"]) +
                             "', kurtosis = '" + str(statistics["kurtosis"]) +
                             "', skewness = '" + str(statistics["skewness"]) +
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
@@ -102,7 +102,7 @@ class tradingAccess:
             corValue2 = self.corConsistency(11, tick)
             #get statistical parameters
             statistics = {}
-            statistics["stdev"] = statistics.stdev(largeData[1])
+            statistics["stDev"] = statistics.stdev(largeData[1])
             statistics["skewness"] = skewness(largeData[1])
             statistics["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
