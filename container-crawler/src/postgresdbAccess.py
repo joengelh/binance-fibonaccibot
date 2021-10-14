@@ -22,10 +22,10 @@ class postgresAccess:
         try:
             # Connect to an existing database
             self.connection = psycopg2.connect(user=dbUser,
-                                          password=POSTGRES_PASSWORD,
-                                          host=dbHost,
-                                          port=dbPort,
-                                          database=dbName)
+                password=POSTGRES_PASSWORD,
+                host=dbHost,
+                port=dbPort,
+                database=dbName)
             #set connection to autocommit
             self.connection.rollback()
             self.connection.autocommit=True

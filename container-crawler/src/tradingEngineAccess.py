@@ -51,17 +51,17 @@ class tradingAccess:
             positionCost = 0
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
-                            " takeProfit = '" + str(fib[3][i+4]) +
-                            "', stopLoss = '" + str(fib[2][i-1]) +
-                            "', corValue = '" + str(cor) +
-                            "', startId = '" + str(large[0].min()) +
-                            "', midId = '" + str(large[0].max()) +
-                            "', fibLevel = '" + str(fib[0][i]) +
-                            "', positionCost = '" + str(positionCost) +
-                            "', stDev = '" + str(statisticsTools["stDev"]) +
-                            "', kurtosis = '" + str(statisticsTools["kurtosis"]) +
-                            "', skew = '" + str(statisticsTools["skew"]) +
-                            "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
+            " takeProfit = '" + str(fib[3][i+4]) +
+            "', stopLoss = '" + str(fib[2][i-1]) +
+            "', corValue = '" + str(cor) +
+            "', startId = '" + str(large[0].min()) +
+            "', midId = '" + str(large[0].max()) +
+            "', fibLevel = '" + str(fib[0][i]) +
+            "', positionCost = '" + str(positionCost) +
+            "', stDev = '" + str(statisticsTools["stDev"]) +
+            "', kurtosis = '" + str(statisticsTools["kurtosis"]) +
+            "', skew = '" + str(statisticsTools["skew"]) +
+            "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
     def corConsistency(self,scale,tick):
