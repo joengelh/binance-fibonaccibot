@@ -98,10 +98,9 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
-            corValue1 = self.corConsistency(15, tick)
-            corValue2 = self.corConsistency(5, tick)
-            corValue3 = self.corConsistency(1, tick)
-            #get standard deviation
+            corValue1 = self.corConsistency(22, tick)
+            corValue2 = self.corConsistency(11, tick)
+            #get statistical parameters
             statistics = {}
             statistics["stdev"] = statistics.stdev(largeData[1])
             statistics["skewness"] = skewness(largeData[1])
@@ -112,7 +111,6 @@ class tradingAccess:
                     corValue >= 0 and
                     corValue1 >= 0 and
                     corValue2 >= 0 and
-                    corValue3 >= 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, statistics)
