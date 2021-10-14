@@ -6,6 +6,8 @@ import os
 from envs import env
 import time
 import statistics
+import numpy as np
+from scipy.stats import kurtosis, skew
 
 #import classes from ./ folder
 import postgresdbAccess
@@ -29,7 +31,7 @@ class tradingAccess:
         #connect to binance to get current balance
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
-    def openTrade(self, fib, i, large, cor, tick, stdev):
+    def openTrade(self, fib, i, large, cor, tick, statistics):
         if self.liveTrading == True:
             #wait a bit because otherwise api error
             time.sleep(0.01)
@@ -56,7 +58,9 @@ class tradingAccess:
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', positionCost = '" + str(positionCost) +
-                            "', stdev = '" + str(stdev) +
+                            "', stdev = '" + str(statistics["stdev"]) +
+                            "', kurtosis = '" + str(statistics["kurtosis"]) +
+                            "', skewness = '" + str(statistics["skewness"]) +
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
@@ -98,7 +102,10 @@ class tradingAccess:
             corValue2 = self.corConsistency(5, tick)
             corValue3 = self.corConsistency(1, tick)
             #get standard deviation
-            stdev = statistics.stdev(largeData[1])
+            statistics = {}
+            statistics["stdev"] = statistics.stdev(largeData[1])
+            statistics["skewness"] = skewness(largeData[1])
+            statistics["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
@@ -108,5 +115,5 @@ class tradingAccess:
                     corValue3 >= 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
-                    self.openTrade(fibRetracement, i, largeData, corValue, tick, stdev)
+                    self.openTrade(fibRetracement, i, largeData, corValue, tick, statistics)
         self.postgres.databaseClose()

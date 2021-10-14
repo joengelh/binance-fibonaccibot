@@ -6,3 +6,5 @@ pydantic
 pandas
 envs
 schedule
+numpy
+scipy

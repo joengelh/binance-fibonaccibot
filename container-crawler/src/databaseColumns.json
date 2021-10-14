@@ -24,5 +24,7 @@
 	"resultPercent":-0.1,
 	"corValue": -0.1,
 	"positionCost": 0.1,
-	"stdev": 0.1
+	"stdev": 0.1,
+	"kurtosis": -0.1,
+	"skewness": -0.1
 }
