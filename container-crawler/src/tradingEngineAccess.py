@@ -60,7 +60,7 @@ class tradingAccess:
                             "', positionCost = '" + str(positionCost) +
                             "', stDev = '" + str(statisticsTools["stDev"]) +
                             "', kurtosis = '" + str(statisticsTools["kurtosis"]) +
-                            "', skewness = '" + str(statisticsTools["skewness"]) +
+                            "', skew = '" + str(statisticsTools["skew"]) +
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
@@ -103,7 +103,7 @@ class tradingAccess:
             #get statistical parameters
             statisticsTools = {}
             statisticsTools["stDev"] = statistics.stdev(largeData[1])
-            statisticsTools["skewness"] = skewness(largeData[1])
+            statisticsTools["skew"] = skew(largeData[1])
             statisticsTools["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
