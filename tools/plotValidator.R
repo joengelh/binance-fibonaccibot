@@ -82,7 +82,8 @@ for (i in 1:nrow(validated)){
                     validated$symbol[i], 
                     validated$id[i], 
                     format(round(validated$resultpercent[i], 2), nsmall = 2),
-                    format(round(validated$corvalue[i], 2), nsmall = 2)))
+                    format(round(validated$corvalue[i], 2), nsmall = 2),
+                    format(round(valdated$kurtosis[i], 2, nsmall = 2))))
   
   #add lines for buy and sell, aswell as fibonacci retracement levels
   abline(v = validated$time[i], col = "red")
