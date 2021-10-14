@@ -31,7 +31,7 @@ class tradingAccess:
         #connect to binance to get current balance
         self.client = Client(apiKey, apiSecret, {'timeout':600})
 
-    def openTrade(self, fib, i, large, cor, tick, statistics):
+    def openTrade(self, fib, i, large, cor, tick, statisticsTools):
         if self.liveTrading == True:
             #wait a bit because otherwise api error
             time.sleep(0.01)
@@ -58,9 +58,9 @@ class tradingAccess:
                             "', midId = '" + str(large[0].max()) +
                             "', fibLevel = '" + str(fib[0][i]) +
                             "', positionCost = '" + str(positionCost) +
-                            "', stDev = '" + str(statistics["stDev"]) +
-                            "', kurtosis = '" + str(statistics["kurtosis"]) +
-                            "', skewness = '" + str(statistics["skewness"]) +
+                            "', stDev = '" + str(statisticsTools["stDev"]) +
+                            "', kurtosis = '" + str(statisticsTools["kurtosis"]) +
+                            "', skewness = '" + str(statisticsTools["skewness"]) +
                             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
@@ -101,10 +101,10 @@ class tradingAccess:
             corValue1 = self.corConsistency(22, tick)
             corValue2 = self.corConsistency(11, tick)
             #get statistical parameters
-            statistics = {}
-            statistics["stDev"] = statistics.stdev(largeData[1])
-            statistics["skewness"] = skewness(largeData[1])
-            statistics["kurtosis"] = kurtosis(largeData[1])
+            statisticsTools = {}
+            statisticsTools["stDev"] = statistics.stdev(largeData[1])
+            statisticsTools["skewness"] = skewness(largeData[1])
+            statisticsTools["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
@@ -113,5 +113,5 @@ class tradingAccess:
                     corValue2 >= 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
                 float(tick['askPrice']) > fibRetracement[2][i]):
-                    self.openTrade(fibRetracement, i, largeData, corValue, tick, statistics)
+                    self.openTrade(fibRetracement, i, largeData, corValue, tick, statisticsTools)
         self.postgres.databaseClose()
