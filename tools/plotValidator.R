@@ -21,14 +21,14 @@ fR$southLevel <- NA
 fR$northLevel <- NA
 
 #get list of buy advice instances
-sqlQuery <- dbSendQuery(con, "SELECT * FROM backtesting 
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
                      WHERE resultpercent IS NOT NULL;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
 for (i in 1:nrow(validated)){
   # get plot data
-  sqlString <-  paste("select * from backtesting 
+  sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"' 
   and id >= '", validated$startid[i], "' 
   and id <= '", validated$stopid[i] + 100000, "';", sep = "")
@@ -37,14 +37,14 @@ for (i in 1:nrow(validated)){
   dbClearResult(sqlQuery)
   
   # get stopid time
-  sqlString <-  paste("select time from backtesting 
+  sqlString <-  paste("select time from table001 
   where id = '", validated$stopid[i], "';", sep = "")
   sqlQuery <- dbSendQuery(con, sqlString)
   stopIdTime <- dbFetch(sqlQuery)
   dbClearResult(sqlQuery)
   
   # re-engineer data present at point of making decision
-  sqlString <-  paste("select * from backtesting 
+  sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"'
   and id >= '", validated$startid[i], "'
   and id <= '", validated$midid[i], "';", sep = "")
@@ -81,9 +81,14 @@ for (i in 1:nrow(validated)){
        main = paste(resChar,
                     validated$symbol[i], 
                     validated$id[i], 
+                    "res: ",
                     format(round(validated$resultpercent[i], 2), nsmall = 2),
+                    "cor: ",
                     format(round(validated$corvalue[i], 2), nsmall = 2),
-                    format(round(valdated$kurtosis[i], 2, nsmall = 2))))
+                    "skew: ",
+                    format(round(validated$skew[i], 2), nsmall = 2),
+                    "kurt: ",
+                    format(round(validated$kurtosis[i], 2), nsmall = 2)))
   
   #add lines for buy and sell, aswell as fibonacci retracement levels
   abline(v = validated$time[i], col = "red")
