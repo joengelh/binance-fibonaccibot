@@ -26,5 +26,5 @@
 	"positionCost": 0.1,
 	"stdev": 0.1,
 	"kurtosis": -0.1,
-	"skewness": -0.1
+	"skew": -0.1
 }
