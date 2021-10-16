@@ -140,7 +140,6 @@ def backtest():
                         if (corValue >= -0.3 and
                             corValue1 >= -0.3 and
                             corValue2 >= -0.3 and
-                            statisticsTools["skew"] <= -0.3 and
                             row[3] > fibRetracement[3][i] and
                             row[3] < fibRetracement[2][i+1]):
                                 openPositions['startId'] = fibDates[0].min()
