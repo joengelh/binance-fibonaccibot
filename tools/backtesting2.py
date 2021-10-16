@@ -137,10 +137,7 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [6]:
                         #check if buy requirements are met
-                        if (corValue >= -0.33 and
-                            corValue1 >= -0.33 and
-                            corValue2 >= -0.33 and
-                            row[3] > fibRetracement[3][i] and
+                        if (row[3] > fibRetracement[3][i] and
                             row[3] < fibRetracement[2][i+1]):
                                 openPositions['startId'] = fibDates[0].min()
                                 openPositions['id'] = row[0]
@@ -157,10 +154,10 @@ def backtest():
     #close database connection
     postgres.databaseClose()
 
-testTables = [{"table":"backtesting","currency":"BNB"},
-             {"table":"backtesting","currency":"BTC"},
-             {"table":"backtesting","currency":"ETH"},
-             {"table":"backtesting","currency":"ADA"}]
+testTables = [{"table":"backtesting2","currency":"BNB"},
+             {"table":"backtesting2","currency":"BTC"},
+             {"table":"backtesting2","currency":"ETH"},
+             {"table":"backtesting2","currency":"ADA"}]
 for iteration in testTables:
     load_dotenv('../.env')
     try:
