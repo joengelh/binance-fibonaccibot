@@ -70,7 +70,7 @@ def crawl():
     tickers = client.get_ticker()
     #get counts
     countLen = postgres.sqlQuery("SELECT count(*) FROM " + dbTable +
-    " WHERE time < NOW() - INTERVAL '33 hours';")
+    " WHERE time < NOW() - INTERVAL '24 hours';")
     countOpen = postgres.sqlQuery("SELECT count(*)" +
     " FROM " + dbTable + " WHERE" +
     " resultpercent IS NULL" +

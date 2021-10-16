@@ -78,7 +78,7 @@ class tradingAccess:
         self.postgres = postgresdbAccess.postgresAccess()
         sql = ("SELECT id, askprice FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
-            "' AND time > NOW() - INTERVAL '33 hours';")
+            "' AND time > NOW() - INTERVAL '24 hours';")
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
         if len(largeData) > 0:    
             #convert columns id and askprice to float
@@ -98,8 +98,8 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
-            corValue1 = self.corConsistency(22, tick)
-            corValue2 = self.corConsistency(11, tick)
+            corValue1 = self.corConsistency(12, tick)
+            corValue2 = self.corConsistency(6, tick)
             #get statistical parameters
             statisticsTools = {}
             statisticsTools["stDev"] = statistics.stdev(largeData[1])
