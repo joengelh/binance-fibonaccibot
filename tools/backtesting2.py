@@ -82,9 +82,9 @@ def backtest():
         bigData[8] = pd.to_numeric(bigData[8], errors='coerce', downcast='float')
         bigData[9] = pd.to_numeric(bigData[9], errors='coerce', downcast='float')
         #get start of timedelta
-        bigData[5] = bigData[1] - timedelta(hours=33)
-        bigData[10] = bigData[1] - timedelta(hours=22)
-        bigData[11] = bigData[1] - timedelta(hours=11)
+        bigData[5] = bigData[1] - timedelta(hours=24)
+        bigData[10] = bigData[1] - timedelta(hours=12)
+        bigData[11] = bigData[1] - timedelta(hours=6)
         #loop over every row
         for index, row in bigData.iterrows():
             before_start_date = bigData[1] <= row[5]
@@ -137,9 +137,9 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [6]:
                         #check if buy requirements are met
-                        if (corValue >= -0.3 and
-                            corValue1 >= -0.3 and
-                            corValue2 >= -0.3 and
+                        if (corValue >= -0.33 and
+                            corValue1 >= -0.33 and
+                            corValue2 >= -0.33 and
                             row[3] > fibRetracement[3][i] and
                             row[3] < fibRetracement[2][i+1]):
                                 openPositions['startId'] = fibDates[0].min()
@@ -157,10 +157,10 @@ def backtest():
     #close database connection
     postgres.databaseClose()
 
-testTables = [{"table":"backtesting2","currency":"BNB"},
-             {"table":"backtesting2","currency":"BTC"},
-             {"table":"backtesting2","currency":"ETH"},
-             {"table":"backtesting2","currency":"ADA"}]
+testTables = [{"table":"backtesting","currency":"BNB"},
+             {"table":"backtesting","currency":"BTC"},
+             {"table":"backtesting","currency":"ETH"},
+             {"table":"backtesting","currency":"ADA"}]
 for iteration in testTables:
     load_dotenv('../.env')
     try:

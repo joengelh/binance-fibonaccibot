@@ -82,9 +82,9 @@ def backtest():
         bigData[8] = pd.to_numeric(bigData[8], errors='coerce', downcast='float')
         bigData[9] = pd.to_numeric(bigData[9], errors='coerce', downcast='float')
         #get start of timedelta
-        bigData[5] = bigData[1] - timedelta(hours=33)
-        bigData[10] = bigData[1] - timedelta(hours=22)
-        bigData[11] = bigData[1] - timedelta(hours=11)
+        bigData[5] = bigData[1] - timedelta(hours=24)
+        bigData[10] = bigData[1] - timedelta(hours=12)
+        bigData[11] = bigData[1] - timedelta(hours=6)
         #loop over every row
         for index, row in bigData.iterrows():
             before_start_date = bigData[1] <= row[5]

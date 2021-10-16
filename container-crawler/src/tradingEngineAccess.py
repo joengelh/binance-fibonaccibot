@@ -111,7 +111,8 @@ class tradingAccess:
                     corValue >= -0.1 and
                     corValue1 >= -0.1 and
                     corValue2 >= -0.1 and
-                    statisticsTools["skew"] < -0.1 and
+                    statisticsTools["skew"] <= -0.1 and
+                    statisticsTools["kurtosis"] <= -0.1 and
                 float(tick['askPrice']) > fibRetracement[3][i] and
                 float(tick['askPrice']) < fibRetracement[2][i+1]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, statisticsTools)
