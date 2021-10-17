@@ -102,23 +102,9 @@ def backtest():
                     fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
                     fibRetracement[2] = fibRetracement[1] * 0.9995
                     fibRetracement[3] = fibRetracement[1] * 1.0005
+               
                 #calculate corvalue
                 corValue = fibDates[0].corr(fibDates[3])
-                before_start_date1 = bigData[1] <= row[5]
-                bigData[10] = bigData[1] - timedelta(hours=15)
-                after_start_date1 = bigData[1] >= row[10]
-                before_end_date1 = bigData[1] <= row[1]
-                between_two_dates1 = after_start_date1 & before_end_date1
-                fibDates1 = bigData.loc[between_two_dates]
-                corValue1 = fibDates1[0].corr(fibDates1[3])
-                
-                before_start_date2 = bigData[1] <= row[5]
-                bigData[11] = bigData[1] - timedelta(hours=5)
-                after_start_date2 = bigData[1] >= row[11]
-                before_end_date2 = bigData[1] <= row[1]
-                between_two_dates2 = after_start_date2 & before_end_date2
-                fibDates2 = bigData.loc[between_two_dates2]
-                corValue2 = fibDates2[0].corr(fibDates2[3])
                 
                 #get statistical parameters
                 statisticsTools = {}
