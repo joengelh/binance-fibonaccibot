@@ -98,8 +98,6 @@ class tradingAccess:
                     symbol like '""" + tick['symbol'] + "';")
             #get correlation of id and price
             corValue = largeData[0].corr(largeData[1])
-            corValue1 = self.corConsistency(12, tick)
-            corValue2 = self.corConsistency(6, tick)
             #get statistical parameters
             statisticsTools = {}
             statisticsTools["stDev"] = statistics.stdev(largeData[1])
@@ -108,11 +106,9 @@ class tradingAccess:
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [6]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
-                    corValue >= -0.1 and
-                    corValue1 >= -0.1 and
-                    corValue2 >= -0.1 and
-                    statisticsTools["skew"] <= -0.1 and
-                    statisticsTools["kurtosis"] <= -0.1 and
+                    corValue >= 0.33 and
+                    statisticsTools["skew"] <= 0.33 and
+                    statisticsTools["kurtosis"] <= 0.33 and
                 float(tick['askPrice']) > fibRetracement[3][i] and
                 float(tick['askPrice']) < fibRetracement[2][i+1]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, statisticsTools)
