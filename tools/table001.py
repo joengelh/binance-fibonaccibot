@@ -123,11 +123,11 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [6]:
                         #check if buy requirements are met
-                        if (corValue >= 0.33 and
-                            statisticsTools["skew"] <= 0.33 and
-                            statisticsTools["kurtosis"] <= 0.33 and
+                        if (corValue > 0.1 and
+                            statisticsTools["skew"] < -0.1 and
+                            statisticsTools["kurtosis"] < -0.1 and
                             row[3] > fibRetracement[3][i] and
-                            row[3] < fibRetracement[2][i+1]):
+                            row[3] < statistics.mean([fibRetracement[2][i+1],fibRetracement[3][i]])):
                                 openPositions['startId'] = fibDates[0].min()
                                 openPositions['id'] = row[0]
                                 openPositions['bidPrice'] = row[4]
@@ -138,8 +138,8 @@ def backtest():
                                 openPositions['stDev'] = statisticsTools["stDev"]
                                 openPositions['skew'] = statisticsTools["skew"]
                                 openPositions['kurtosis'] = statisticsTools["kurtosis"]
-                                openPositions['takeProfit'] = fibRetracement[3][i+4]
-                                openPositions['stopLoss'] = fibRetracement[2][i-1]
+                                openPositions['takeProfit'] = fibRetracement[3][i+3]
+                                openPositions['stopLoss'] = fibRetracement[2][i]
     #close database connection
     postgres.databaseClose()
 
