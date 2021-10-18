@@ -35,6 +35,7 @@ def writeTrade(openPositions, row, postgres):
         "', resultpercent = '" + str(openPositions['resultPercent']) +
         "', stopid = '" + str(openPositions['stopId']) +
         "', skew = '" + str(openPositions['skew']) +
+        "', stdev = '" + str(openPositions['stDev']) +
         "', kurtosis = '" + str(openPositions['kurtosis']) +
         "' WHERE id = '" + str(int(openPositions['id'])) +
         "';")
@@ -83,15 +84,15 @@ def backtest():
         bigData[9] = pd.to_numeric(bigData[9], errors='coerce', downcast='float')
         #get start of timedelta
         bigData[5] = bigData[1] - timedelta(hours=24)
-        bigData[10] = bigData[1] - timedelta(hours=12)
-        bigData[11] = bigData[1] - timedelta(hours=6)
+        #get end of timedelta
+        bigData[10] = bigData[1] - timedelta(hours=10)
         #loop over every row
         for index, row in bigData.iterrows():
             before_start_date = bigData[1] <= row[5]
             if len(bigData.loc[before_start_date]) > 0:
                 #get data for consideration
                 after_start_date = bigData[1] >= row[5]
-                before_end_date = bigData[1] <= row[1]
+                before_end_date = bigData[1] <= row[10]
                 between_two_dates = after_start_date & before_end_date
                 fibDates = bigData.loc[between_two_dates]
                 diff = fibDates[3].max() - fibDates[3].min()
@@ -103,9 +104,9 @@ def backtest():
                     fibRetracement[2] = fibRetracement[1] * 0.9995
                     fibRetracement[3] = fibRetracement[1] * 1.0005
                
-               #calculate corvalue
+                #calculate corvalue
                 corValue = fibDates[0].corr(fibDates[3])
-                
+
                 #get statistical parameters
                 statisticsTools = {}
                 statisticsTools["stDev"] = statistics.stdev(fibDates[3])
@@ -121,15 +122,16 @@ def backtest():
                             openPositions = {}
                 else:
                     #loop over considered fibonacciretracements
-                    for i in [6]:
+                    for i in [1,2,3]:
                         #check if buy requirements are met
-                        if (corValue > 0.1 and
-                            statisticsTools["skew"] < -0.1 and
-                            statisticsTools["kurtosis"] < -0.1 and
+                        if (corValue > 0 and
+                            statisticsTools["skew"] < 0 and
+                            statisticsTools["kurtosis"] < 0 and
                             row[3] > fibRetracement[3][i] and
                             row[3] < statistics.mean([fibRetracement[2][i+1],fibRetracement[3][i]])):
                                 openPositions['startId'] = fibDates[0].min()
                                 openPositions['id'] = row[0]
+                                openPositions['midId'] = fibDates[0].max()
                                 openPositions['bidPrice'] = row[4]
                                 openPositions['fibLevel'] = i
                                 openPositions['symbol'] = symbol
@@ -139,7 +141,7 @@ def backtest():
                                 openPositions['skew'] = statisticsTools["skew"]
                                 openPositions['kurtosis'] = statisticsTools["kurtosis"]
                                 openPositions['takeProfit'] = fibRetracement[3][i+3]
-                                openPositions['stopLoss'] = fibRetracement[2][i]
+                                openPositions['stopLoss'] = fibRetracement[2][i-1]
     #close database connection
     postgres.databaseClose()
 
