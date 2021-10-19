@@ -146,10 +146,10 @@ def backtest():
     #close database connection
     postgres.databaseClose()
 
-testTables = [{"table":"table001","currency":"BNB"},
-             {"table":"table001","currency":"BTC"},
-             {"table":"table001","currency":"ETH"},
-             {"table":"table001","currency":"ADA"}]
+testTables = [{"table":"backtesting","currency":"BNB"},
+             {"table":"backtesting","currency":"BTC"},
+             {"table":"backtesting","currency":"ETH"},
+             {"table":"backtesting","currency":"ADA"}]
 for iteration in testTables:
     load_dotenv('../.env')
     try:
