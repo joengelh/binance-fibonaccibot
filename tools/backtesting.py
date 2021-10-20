@@ -101,8 +101,8 @@ def backtest():
                 maxAsk = fibDates[3].max()
                 for lvl in fibRetracement:
                     fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
-                    fibRetracement[2] = fibRetracement[1] * 0.9995
-                    fibRetracement[3] = fibRetracement[1] * 1.0005
+                    fibRetracement[2] = fibRetracement[1] * 0.999
+                    fibRetracement[3] = fibRetracement[1] * 1.001
                
                 #calculate corvalue
                 corValue = fibDates[0].corr(fibDates[3])
@@ -124,10 +124,10 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [7]:
                         #check if buy requirements are met
-                        if (row[7] > 0 and
-                            corValue > 0 and
-                            statisticsTools["skew"] < 0 and
-                            statisticsTools["kurtosis"] < 0 and
+                        if (row[7] >= 0 and
+                            corValue >= 0 and
+                            statisticsTools["skew"] <= 0 and
+                            statisticsTools["kurtosis"] <= 0 and
                             row[3] > fibRetracement[2][i] and
                             row[3] < fibRetracement[3][i]):
                                 openPositions['startId'] = fibDates[0].min()
@@ -141,7 +141,7 @@ def backtest():
                                 openPositions['stDev'] = statisticsTools["stDev"]
                                 openPositions['skew'] = statisticsTools["skew"]
                                 openPositions['kurtosis'] = statisticsTools["kurtosis"]
-                                openPositions['takeProfit'] = fibRetracement[2][i+3]
+                                openPositions['takeProfit'] = fibRetracement[2][i+4]
                                 openPositions['stopLoss'] = fibRetracement[2][i-1]
     #close database connection
     postgres.databaseClose()
@@ -153,13 +153,11 @@ testTables = [{"table":"backtesting","currency":"BNB"},
 for iteration in testTables:
     load_dotenv('../.env')
     try:
-        liveVolume=env("liveVolume")
         apiSecret=env('apiSecret')
         apiKey=env('apiKey')
         dbTable=iteration["table"]
         baseCurrency=iteration["currency"]
         brokerFees=float(env('brokerFees'))
-        liveTrading=env("liveTrading", 'False').lower() in ('true', '1', 't')
     except KeyError:
         print("No env variables set.")
         sys.exit(1)
