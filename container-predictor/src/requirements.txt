@@ -1,7 +1,0 @@
-psycopg2
-environs
-pydantic
-pandas
-envs
-schedule
-redis
