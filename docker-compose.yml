@@ -10,7 +10,7 @@ services:
    ports:
    - 5432:5432
    volumes:
-   - /home/db:/var/lib/postgresql/data:rw
+   - /home/db/binance-fibonaccibot:/var/lib/postgresql/data:rw
    - ./container-db/initdb.d:/docker-entrypoint-initdb.d
   telegram:
    build: ./container-telegram
