@@ -78,13 +78,9 @@ def crawl():
     for i in range(len(tickers)):
         intermDict = buildPairDict(tickers, i)
         #dont write data when not usable
-        if not (intermDict['symbol'].endswith('BNB') or
-            intermDict['symbol'].endswith('BTC') or
-            intermDict['symbol'].endswith('ADA') or
-            intermDict['symbol'].endswith('ETH')):
+        if not intermDict['symbol'].endswith('USDT'):
             continue
-        if (intermDict['askPrice'] <= 0 and
-            len(intermDict['symbol']) > 10):
+        if intermDict['askPrice'] <= 0:
             continue
         #write intermDict to database
         postgres.insertRow(intermDict)
