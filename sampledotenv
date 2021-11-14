@@ -9,5 +9,5 @@ dbPort=5432
 liveTrading=true
 liveVolume=1
 brokerFees=0.0750
-baseCurrency=BNB
+baseCurrency=USDT
 botToken=
