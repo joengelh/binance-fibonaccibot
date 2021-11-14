@@ -1,9 +1,6 @@
 // import modules
 require('dotenv').config();
-const { Client } = require('pg');
 const express = require('express');
-const yn = require('yn');
-const Binance = require('node-binance-api');
 const app = express();
 const redis = require("redis");
 
@@ -15,20 +12,11 @@ app.use(function(req, res, next) {
 app.use(express.static('./public'));
 app.listen(13000, () => console.log('listening on port 13000'));
 
-// load binance connection vars from environment
-const binance = new Binance().options({
-	  APIKEY: process.env.apiKey,
-	  APISECRET: process.env.apiSecret
-});
-
 // load redis connection vars from environment
 const redisClient = redis.createClient({
 	    host: process.env.dbHost,
 	    password: process.env.POSTGRES_PASSWORD
 });
-
-// declare cache refresh minutes
-var minutes = 1, the_interval = minutes * 60 * 1000;
 
 // get current baseCurrency balance from account
 app.get('/assets', (request, response) => {
