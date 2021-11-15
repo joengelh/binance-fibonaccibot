@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use dotenv::dotenv;
 use std::env;
 
-struct Result {
+struct QueryResult {
     data: String
 }
 
@@ -32,10 +32,10 @@ pub fn get_query_single() -> Result<(), Error> {
     authors.insert(String::from("Anita Nair"), "India");
 
     for row in client.query("SELECT count(*) from table001;", &[])? {
-        let result = Result {
+        let result = QueryResult {
             data: row.get(0),
         };
-        println!("{}", result.data);
+        println!("{}", result.data.as_str());
     }
 
     Ok(())
