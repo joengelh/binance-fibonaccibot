@@ -81,7 +81,8 @@ def crawl():
         if not intermDict['symbol'].endswith('USDT'):
             continue
         if (intermDict['askPrice'] <= 0 or
-            len(intermDict['symbol']) > 10):
+            "UP" in intermDict['askPrice'] or
+            "DOWN" in intermDict['askPrice']):
             continue
         #write intermDict to database
         postgres.insertRow(intermDict)
