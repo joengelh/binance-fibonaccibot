@@ -1,9 +1,8 @@
 mod binance_access;
 
-
-
 fn main() {
-    binance_access::get_base_currency_balance()
+    let balance = binance_access::get_base_currency_balance();
+    println!("{:?}", balance);
 }
 
 // keys to be cached
