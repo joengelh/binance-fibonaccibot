@@ -3,7 +3,7 @@ use binance::account::*;
 use dotenv::dotenv;
 use std::env;
 
-pub fn get_base_currency_balance() {
+pub fn get_base_currency_balance() -> f64 {
     dotenv().ok();
 
     let api_key = Some(env::var("apiKey").unwrap());
@@ -14,5 +14,5 @@ pub fn get_base_currency_balance() {
     
     // get balance
     let balance = account.get_balance(base_currency).unwrap();
-    println!("{:?}", balance.free);
+    balance.free
 }
