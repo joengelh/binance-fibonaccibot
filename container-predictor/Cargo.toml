@@ -9,5 +9,5 @@ edition = "2021"
 redis = "*"
 dotenv = "*"
 dotenv_codegen = "*"
-postgres = "*"
 binance = { git = "https://github.com/wisespace-io/binance-rs.git" }
+postgres = "*"
