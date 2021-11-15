@@ -4,7 +4,7 @@ use dotenv::dotenv;
 use std::env;
 
 struct QueryResult {
-    data: String
+    data: i32
 }
 
 pub fn get_query_single() -> Result<(), Error> {
@@ -35,7 +35,7 @@ pub fn get_query_single() -> Result<(), Error> {
         let result = QueryResult {
             data: row.get(0),
         };
-        println!("{}", result.data.as_str());
+        println!("{}", result.data);
     }
 
     Ok(())
