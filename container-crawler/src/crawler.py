@@ -78,18 +78,15 @@ def crawl():
     for i in range(len(tickers)):
         intermDict = buildPairDict(tickers, i)
         #dont write data when not usable
-        if not intermDict['symbol'].endswith('USDT'):
-            continue
         if (intermDict['askPrice'] <= 0 or
             "UP" in intermDict['symbol'] or
-            "DOWN" in intermDict['symbol']):
+            "DOWN" in intermDict['symbol'] or
+            not intermDict['symbol'].endswith(baseCurrency):
             continue
         #write intermDict to database
         postgres.insertRow(intermDict)
-        #filter for only coins relevant for the bot
         #and check if enough data has been gathered
-        if (intermDict['symbol'].endswith(baseCurrency) and
-            countLen[0][0] > 0):
+        if countLen[0][0] > 0:
             #run caluclation
             trader.runCalculation(intermDict)
     #check if any trades meet the conditions to be closed yet
