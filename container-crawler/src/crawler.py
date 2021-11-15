@@ -80,7 +80,8 @@ def crawl():
         #dont write data when not usable
         if not intermDict['symbol'].endswith('USDT'):
             continue
-        if intermDict['askPrice'] <= 0:
+        if (intermDict['askPrice'] <= 0 or
+            len(intermDict['symbol']) > 10):
             continue
         #write intermDict to database
         postgres.insertRow(intermDict)
