@@ -7,8 +7,7 @@ use sqlx::{FromRow, Row};
 
 #[derive(Debug, FromRow)]
 struct Ticket {
-	id: i32,
-	symbol: String,
+	count: i64
 }
 
 #[tokio::main]
@@ -36,9 +35,9 @@ async fn main() -> Result<(), sqlx::Error> {
 		.connect(&postgres_path)
 		.await?;
 
-	let select_query = sqlx::query_as::<_, Ticket>("SELECT id, symbol FROM table001");
+	let select_query = sqlx::query_as::<_, Ticket>("SELECT count(*) FROM table001");
 	let tickets: Vec<Ticket> = select_query.fetch_all(&pool).await?;
-	println!("\n{:?}", tickets);
+	println!("\n{:?}", tickets[0].count);
 
 	Ok(())
 }
