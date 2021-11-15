@@ -81,7 +81,7 @@ def crawl():
         if (intermDict['askPrice'] <= 0 or
             "UP" in intermDict['symbol'] or
             "DOWN" in intermDict['symbol'] or
-            not intermDict['symbol'].endswith(baseCurrency):
+            not intermDict['symbol'].endswith(baseCurrency)):
             continue
         #write intermDict to database
         postgres.insertRow(intermDict)
