@@ -28,16 +28,12 @@ pub fn get_query_single() -> Result<(), Error> {
         NoTls,
     )?;
 
-    client.batch_execute(
-        "
-        CREATE TABLE IF NOT EXISTS users (
-            id              SERIAL PRIMARY KEY,
-            username        VARCHAR UNIQUE NOT NULL,
-            password        VARCHAR NOT NULL,
-            email           VARCHAR UNIQUE NOT NULL
-            )
-    ",
-    )?;
+    for row in client.query("SELECT count(*) from table001", &[])? {
+        let id: i32 = row.get(0);
+        println!(
+            "found app user: {}",
+            id
+        );
 
     Ok(())
 }
