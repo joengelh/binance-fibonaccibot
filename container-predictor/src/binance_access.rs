@@ -21,3 +21,14 @@ pub fn get_base_currency_balance() -> f32 {
     let balance_r: f32 = (balance_f * 100.0).round() / 100.0;
     return balance_r;
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_biance_connection() {
+        let balance = get_base_currency_balance();
+        assert!(balance >= 0.0);
+    }
+}
