@@ -28,12 +28,9 @@ pub fn get_query_single() -> Result<(), Error> {
         NoTls,
     )?;
 
-    for row in client.query("SELECT count(*) from table001", &[])? {
+    Ok(for row in client.query("SELECT count(*) from table001", &[])? {
         let id: i32 = row.get(0);
-        println!(
-            "found app user: {}",
-            id
-        );
+        println!("found app user: {}", id);
+    })
 
-    Ok(())
 }
