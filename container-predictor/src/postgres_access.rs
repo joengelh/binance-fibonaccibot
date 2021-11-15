@@ -3,8 +3,9 @@ use std::collections::HashMap;
 use dotenv::dotenv;
 use std::env;
 
-struct QueryResult {
-    data: i32
+struct Person {
+    id: i32,
+    symbol: String
 }
 
 pub fn get_query_single() -> Result<(), Error> {
@@ -25,19 +26,14 @@ pub fn get_query_single() -> Result<(), Error> {
     ].join("");
 
     let mut client = Client::connect(&postgres_path, NoTls)?;
-    
-    let mut authors = HashMap::new();
-    authors.insert(String::from("Chinua Achebe"), "Nigeria");
-    authors.insert(String::from("Rabindranath Tagore"), "India");
-    authors.insert(String::from("Anita Nair"), "India");
 
-    for row in client.query("SELECT count(*) from table001;", &[])? {
-        let result = QueryResult {
-            data: row.get(0),
-        };
-        println!("{}", result.data);
-    }
+    client.batch_execute("
+        CREATE TABLE IF NOT EXISTS author (
+            id              SERIAL PRIMARY KEY,
+            name            VARCHAR NOT NULL,
+            country         VARCHAR NOT NULL
+            )
+    ")?;
 
     Ok(())
-
 }

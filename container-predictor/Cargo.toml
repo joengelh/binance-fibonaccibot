@@ -11,4 +11,3 @@ dotenv = "*"
 dotenv_codegen = "*"
 binance = { git = "https://github.com/wisespace-io/binance-rs.git" }
 postgres = "*"
-tokio-postgres = {version="0.7.2", features=["with-uuid-0_8"]}
