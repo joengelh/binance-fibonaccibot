@@ -1,8 +1,10 @@
 mod binance_access;
+mod redis_access;
 
 fn main() {
     let balance = binance_access::get_base_currency_balance();
-    println!("{:?}", balance);
+    println!("{}", balance);
+    redis_access::set_key_value("assets", &balance);
 }
 
 // keys to be cached
