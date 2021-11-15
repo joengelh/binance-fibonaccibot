@@ -1,6 +1,7 @@
+use postgres::{Client, NoTls, Error};
+use std::collections::HashMap;
 use dotenv::dotenv;
 use std::env;
-use postgres::{Client, NoTls, Error};
 
 struct Author {
     _id: i32,
@@ -8,7 +9,7 @@ struct Author {
     country: String
 }
 
-pub fn get_query_single() {
+pub fn get_query_single() -> Result<(), Error> {
 
     dotenv().ok();
 
@@ -25,7 +26,26 @@ pub fn get_query_single() {
         &env::var("dbName").unwrap(),
     ].join("");
 
-    let mut client = Client::connect(&postgres_path, NoTls);
+    let mut client = Client::connect(&postgres_path, NoTls)?;
+    
+    let mut authors = HashMap::new();
+    authors.insert(String::from("Chinua Achebe"), "Nigeria");
+    authors.insert(String::from("Rabindranath Tagore"), "India");
+    authors.insert(String::from("Anita Nair"), "India");
+
+    for (key, value) in &authors {
+        let author = Author {
+            _id: 0,
+            name: key.to_string(),
+            country: value.to_string()
+        };
+
+        client.execute(
+                "INSERT INTO author (name, country) VALUES ($1, $2)",
+                &[&author.name, &author.country],
+        )?;
+    }
+
     for row in client.query("SELECT id, name, country FROM author", &[])? {
         let author = Author {
             _id: row.get(0),
