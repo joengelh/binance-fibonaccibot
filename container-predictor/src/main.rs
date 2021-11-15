@@ -2,7 +2,7 @@ mod postgres_access;
 mod redis_access;
 
 fn main() {
-    postgres_access::get_count();
+    printl!(String::from(postgres_access::get_count()));
     redis_access::push_data();
 }
 
