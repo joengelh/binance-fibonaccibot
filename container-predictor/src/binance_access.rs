@@ -11,9 +11,8 @@ pub fn get_base_currency_balance() {
     let base_currency = &env::var("baseCurrency").unwrap();
 
     let account: Account = Binance::new(api_key, secret_key);
-
-    match account.get_account() {
-        Ok(answer) => println!("{:?}", answer.balances[0]),
-        Err(e) => println!("Error: {:?}", e),
-    }
+    
+    // get balance
+    let balance = account.get_balance(base_currency).unwrap();
+    println!("{:?}", balance.free);
 }
