@@ -1,9 +1,9 @@
-mod postgres_access;
-mod redis_access;
+mod binance_access;
+
+
 
 fn main() {
-    printl!(String::from(postgres_access::get_count()));
-    redis_access::push_data();
+    binance_access::get_base_currency_balance()
 }
 
 // keys to be cached
