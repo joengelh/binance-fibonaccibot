@@ -13,7 +13,7 @@ pub fn get_base_currency_balance() {
     let account: Account = Binance::new(api_key, secret_key);
 
     match account.get_account() {
-        Ok(answer) => println!("{:?}", answer.balances),
+        Ok(answer) => println!("{:?}", answer.balances[0]),
         Err(e) => println!("Error: {:?}", e),
     }
 }
