@@ -3,7 +3,9 @@ use std::env;
 use postgres::{Client, NoTls, Error};
 
 struct Author {
-    id: i32
+    _id: i32,
+    name: String,
+    country: String
 }
 
 pub fn get_query_single() {
@@ -24,13 +26,15 @@ pub fn get_query_single() {
     ].join("");
 
     let mut client = Client::connect(&postgres_path, NoTls);
-
-    for row in client.query("SELECT id FROM table001;", &[])? {
+    for row in client.query("SELECT id, name, country FROM author", &[])? {
         let author = Author {
-            id: row.get(0),
+            _id: row.get(0),
+            name: row.get(1),
+            country: row.get(2),
         };
         println!("Author {} is from {}", author.name, author.country);
     }
 
     Ok(())
+
 }
