@@ -1,11 +1,10 @@
-use postgres::{Client, NoTls, Error};
+use postgres::{Client, TlsMode};
 use std::collections::HashMap;
 use dotenv::dotenv;
 use std::env;
 
-struct Person {
-    id: i32,
-    symbol: String
+struct Student {
+    id: i32
 }
 
 pub fn get_query_single() -> Result<(), Error> {
@@ -25,15 +24,11 @@ pub fn get_query_single() -> Result<(), Error> {
         &env::var("dbName").unwrap(),
     ].join("");
 
-    let mut client = Client::connect(&postgres_path, NoTls)?;
-
-    client.batch_execute("
-        CREATE TABLE IF NOT EXISTS author (
-            id              SERIAL PRIMARY KEY,
-            name            VARCHAR NOT NULL,
-            country         VARCHAR NOT NULL
-            )
-    ")?;
-
-    Ok(())
+    let mut conn = Client::connect(&postgres_path, NoTls).unwrap();
+    for row in &conn.query("SELECT count(*) from table001", &[]).unwrap() {
+        let student = Student {
+            id: row.get(0)
+        };
+        println!("Found student {}", student.id);
+    }
 }

@@ -10,4 +10,4 @@ redis = "*"
 dotenv = "*"
 dotenv_codegen = "*"
 binance = { git = "https://github.com/wisespace-io/binance-rs.git" }
-postgres = "*"
+postgres = "0.19.1"
