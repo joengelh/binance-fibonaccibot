@@ -1,13 +1,15 @@
-use postgres::{Client, Error, NoTls};
-use std::collections::HashMap;
+use sqlx::postgres::{PgPoolOptions, PgRow};
+use sqlx::{FromRow, Row};
 use dotenv::dotenv;
 use std::env;
 
-struct Student {
-    id: i32
+#[derive(Debug, FromRow)]
+struct Ticket {
+	id: i64,
+	name: String,
 }
 
-pub fn get_query_single() -> Result<(), Error> {
+pub async fn get_query_single() -> Result<(), sqlx::Error> {
 
     dotenv().ok();
 
@@ -24,13 +26,16 @@ pub fn get_query_single() -> Result<(), Error> {
         &env::var("dbName").unwrap(),
     ].join("");
 
-    let mut client = Client::connect(&postgres_path,
-        NoTls,
-    )?;
+    let pool = PgPoolOptions::new()
+		.max_connections(5)
+		.connect(&postgres_path)
+		.await?;
 
-    Ok(for row in client.query("SELECT count(*) from table001", &[])? {
-        let id: i32 = row.get(0);
-        println!("found app user: {}", id);
-    })
-
+        let rows = sqlx::query("SELECT * FROM table001").fetch_all(&pool).await?;
+        let str_result = rows
+            .iter()
+            .map(|r| format!("{} - {}", r.get::<i64, _>("id"), r.get::<String, _>("name")))
+            .collect::<Vec<String>>()
+            .join(", ");
+        println!("\n== select tickets with PgRows:\n{}", str_result);
 }
