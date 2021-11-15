@@ -1,4 +1,4 @@
-use postgres::{Client, TlsMode};
+use postgres::{Client, Error, NoTls};
 use std::collections::HashMap;
 use dotenv::dotenv;
 use std::env;
@@ -24,11 +24,20 @@ pub fn get_query_single() -> Result<(), Error> {
         &env::var("dbName").unwrap(),
     ].join("");
 
-    let mut conn = Client::connect(&postgres_path, NoTls).unwrap();
-    for row in &conn.query("SELECT count(*) from table001", &[]).unwrap() {
-        let student = Student {
-            id: row.get(0)
-        };
-        println!("Found student {}", student.id);
-    }
+    let mut client = Client::connect(&postgres_path,
+        NoTls,
+    )?;
+
+    client.batch_execute(
+        "
+        CREATE TABLE IF NOT EXISTS users (
+            id              SERIAL PRIMARY KEY,
+            username        VARCHAR UNIQUE NOT NULL,
+            password        VARCHAR NOT NULL,
+            email           VARCHAR UNIQUE NOT NULL
+            )
+    ",
+    )?;
+
+    Ok(())
 }
