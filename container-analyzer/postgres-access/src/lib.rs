@@ -42,7 +42,6 @@ pub async fn get_count(sql: &str) -> Result<i64, sqlx::Error> {
 
 #[tokio::main]
 pub async fn get_sum(sql: &str) -> Result<f64, sqlx::Error> {
-    dotenv().ok();
 
     let postgres_path: String = [
         "postgresql://",
