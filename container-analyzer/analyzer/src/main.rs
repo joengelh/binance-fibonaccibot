@@ -2,11 +2,16 @@ use binance_access;
 use postgres_access;
 use redis_access;
 
+use std::{thread, time};
+
 fn main() {
-    cache_balance();
-    cache_open_trades();
-    cache_sum_result();
-    cache_recent_sum_result();
+    loop {
+        cache_balance();
+        cache_open_trades();
+        cache_sum_result();
+        cache_recent_sum_result();
+        thread::sleep(time::Duration::from_secs(60));
+    }    
 }
 
 fn cache_balance() {
