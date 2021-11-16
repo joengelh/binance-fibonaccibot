@@ -8,7 +8,7 @@ use std::env;
 use std::{thread, time};
 
 fn main() {
-    dotenv().ok();
+    // dotenv().ok();
     loop {
         cache_balance();
         cache_open_trades();

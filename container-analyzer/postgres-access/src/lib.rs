@@ -15,7 +15,7 @@ struct SumResult {
 
 #[tokio::main]
 pub async fn get_count(sql: &str) -> Result<i64, sqlx::Error> {
-    dotenv().ok();
+    // dotenv().ok();
 
     let postgres_path: String = [
         "postgresql://",
