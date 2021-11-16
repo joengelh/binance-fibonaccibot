@@ -1,3 +1,0 @@
-[workspace]
-
-members = ["binance-access", "redis-access", "postgres-access", "predictor"]

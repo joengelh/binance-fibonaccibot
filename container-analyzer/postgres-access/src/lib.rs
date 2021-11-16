@@ -69,3 +69,24 @@ pub async fn get_sum(sql: &str) -> Result<f64, sqlx::Error> {
 
     Ok(result[0].sum)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_count() {
+        let sql = "SELECT count(*) FROM table001
+        where takeprofit is not null and resultpercent is null;";
+        let open_trades = get_count(&sql);
+        assert!(open_trades.is_ok());
+    }
+
+    #[test]
+    fn test_get_sum() {
+        let sql = "SELECT sum(askprice) FROM table001
+        where time > now() - interval \'10 minutes\';";
+        let ask_sum = get_sum(&sql);
+        assert!(ask_sum.is_ok());
+    }
+}
