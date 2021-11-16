@@ -1,3 +1,6 @@
+fn main() {
+    println!("Hello, world!");
+}
 mod binance_access;
 mod redis_access;
 mod postgres_access;
