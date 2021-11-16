@@ -15,11 +15,7 @@
   "author": "jengelh",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^9.0.1",
     "express": "^4.17.1",
-    "node-binance-api": "^0.12.5",
-    "pg": "^8.6.0",
-    "redis": "^3.1.2",
-    "yn": "^4.0.0"
+    "redis": "^3.1.2"
   }
 }
