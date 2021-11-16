@@ -9,3 +9,5 @@ edition = "2021"
 binance-access = { path = "../binance-access" }
 redis-access = { path = "../redis-access" }
 postgres-access = { path = "../postgres-access" }
+dotenv = "*"
+dotenv_codegen = "*"
