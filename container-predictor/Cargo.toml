@@ -12,3 +12,6 @@ dotenv_codegen = "*"
 binance = { git = "https://github.com/wisespace-io/binance-rs.git" }
 tokio = { version = "1", features = ["full"] }
 sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls"] }
+
+[workspace]
+members = ["biannce", "redis", "postgres", "predictor"]
