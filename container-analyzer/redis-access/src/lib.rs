@@ -38,7 +38,7 @@ mod tests {
 
     #[test]
     fn test_set_key_value() {
-        set_key_value("test", "hello");
+        set_key_value("openTrades", "200000");
     }
 }
 
