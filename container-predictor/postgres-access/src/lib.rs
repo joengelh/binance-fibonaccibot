@@ -9,8 +9,7 @@ struct Ticket {
 }
 
 #[tokio::main]
-pub async fn get_query_single() -> Result<(), sqlx::Error> {
-	
+pub async fn get_count(sql: &str) -> Result<i64, sqlx::Error> {
     dotenv().ok();
 
     let postgres_path: String = [
@@ -26,15 +25,13 @@ pub async fn get_query_single() -> Result<(), sqlx::Error> {
         &env::var("dbName").unwrap(),
     ].join("");
 
-    // 1) Create a connection pool
-	let pool = PgPoolOptions::new()
-		.max_connections(5)
-		.connect(&postgres_path)
-		.await?;
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&postgres_path)
+        .await?;
 
-	let select_query = sqlx::query_as::<_, Ticket>("SELECT count(*) FROM table001");
+	let select_query = sqlx::query_as::<_, Ticket>(&sql);
 	let tickets: Vec<Ticket> = select_query.fetch_all(&pool).await?;
-	println!("\n{:?}", tickets[0].count);
 
-	Ok(())
+    Ok(tickets[0].count)
 }

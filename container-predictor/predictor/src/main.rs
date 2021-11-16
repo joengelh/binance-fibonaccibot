@@ -7,7 +7,8 @@ fn main() {
     let balance = binance_access::get_base_currency_balance();
     println!("{}", balance);
     redis_access::set_key_value("assets", &balance);
-    postgres_access::get_query_single();
+    let count = postgres_access::get_count("SELECT count(*) FROM table001");
+    println!("{}", count.unwrap());
 }
 
 // keys to be cached

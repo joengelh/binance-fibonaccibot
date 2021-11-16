@@ -1,11 +1,3 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
-}
 use binance::api::*;
 use binance::account::*;
 use dotenv::dotenv;
@@ -30,7 +22,7 @@ pub fn get_base_currency_balance() -> String {
     let balance_s: String = base_currency.to_owned();
     let owned_string: String = balance_r.to_string() + " ";
     let together = owned_string.clone() + &balance_s;
-    return together;
+    together
 }
 
 #[cfg(test)]
