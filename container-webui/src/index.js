@@ -1,5 +1,4 @@
 // import modules
-require('dotenv').config();
 const express = require('express');
 const app = express();
 const redis = require("redis");
