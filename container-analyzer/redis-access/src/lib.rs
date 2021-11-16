@@ -2,9 +2,7 @@ use dotenv::dotenv;
 use std::env;
 
 fn connect() -> redis::Connection {
-    //format - host:port
-    
-    dotenv().ok();
+    // dotenv().ok();
 
     let redis_host_name =
         env::var("dbHost").expect("missing environment variable REDIS_HOSTNAME");

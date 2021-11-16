@@ -45,6 +45,7 @@ fibonacci-validator|profit calculator||
 fibonacci-webui|result display|13000|
 fibonacci-cache|redis database|6379|
 fibonacci-predictor|calculating present trades performance||
+fibonacci-analyzer|writing past performance stats to cache||
 fobonacci-telegram|can use bot to give live performance overview||
 
 # Webui
