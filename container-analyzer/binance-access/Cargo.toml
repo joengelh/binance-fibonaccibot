@@ -7,6 +7,5 @@ edition = "2021"
 
 [dependencies]
 dotenv = "*"
-dotenv_codegen = "*"
 binance = { git = "https://github.com/wisespace-io/binance-rs.git" }
 

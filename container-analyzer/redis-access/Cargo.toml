@@ -8,5 +8,4 @@ edition = "2021"
 [dependencies]
 redis = "*"
 dotenv = "*"
-dotenv_codegen = "*"
 

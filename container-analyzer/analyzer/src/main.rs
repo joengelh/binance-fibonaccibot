@@ -2,13 +2,11 @@ use binance_access;
 use postgres_access;
 use redis_access;
 
-use dotenv::dotenv;
 use std::env;
 
 use std::{thread, time};
 
 fn main() {
-    // dotenv().ok();
     loop {
         cache_balance();
         cache_open_trades();

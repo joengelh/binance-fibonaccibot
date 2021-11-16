@@ -1,10 +1,8 @@
 use binance::api::*;
 use binance::account::*;
-use dotenv::dotenv;
 use std::env;
 
 pub fn get_base_currency_balance() -> String {
-    // dotenv().ok();
 
     let api_key = Some(env::var("apiKey").unwrap());
     let secret_key = Some(env::var("apiSecret").unwrap());

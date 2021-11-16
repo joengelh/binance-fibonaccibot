@@ -1,4 +1,3 @@
-use dotenv::dotenv;
 use std::env;
 use sqlx::postgres::{PgPoolOptions};
 use sqlx::{FromRow};
@@ -15,7 +14,6 @@ struct SumResult {
 
 #[tokio::main]
 pub async fn get_count(sql: &str) -> Result<i64, sqlx::Error> {
-    // dotenv().ok();
 
     let postgres_path: String = [
         "postgresql://",
