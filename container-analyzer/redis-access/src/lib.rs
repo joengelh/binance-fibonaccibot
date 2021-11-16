@@ -33,3 +33,14 @@ pub fn set_key_value(key: &str, value: &str) {
         .query(&mut conn)
         .expect("failed to execute SET for 'foo'");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_set_key_value() {
+        set_key_value("test", "hello");
+    }
+}
+
