@@ -2,7 +2,7 @@ FROM rust:latest as builder
 
 RUN USER=root cargo new --bin rust-docker-web
 WORKDIR /analyzer
-COPY ./Cargo.toml ./
+COPY . ./
 RUN cargo build --release
 RUN rm src/*.rs
 
