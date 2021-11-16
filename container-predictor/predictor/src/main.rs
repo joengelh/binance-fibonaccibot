@@ -3,29 +3,51 @@ use postgres_access;
 use redis_access;
 
 fn main() {
-    // cache balance
-    let balance = binance_access::get_base_currency_balance();
-    println!("{}", balance);
-    redis_access::set_key_value("assets", &balance);
-    let count = postgres_access::get_count("SELECT count(*) FROM table001");
-    println!("{}", count.unwrap());
+    cache_balance();
+    cache_open_trades();
+    cache_sum_result();
+    cache_recent_sum_result();
 }
 
-// keys to be cached
-// simulatedAvg
-//  value=str(round(sum(resultPercent)/len(resultPercent), 2)) + " %"
-// simulatedSum
-//  value=str(round(sum(resultPercent), 2)) + " %"
-// simulatedWinner
-//  value=round(sum(i > 0 for i in resultPercent), 2)
-// simulatedLoser
-//  value=round(sum(i < 0 for i in resultPercent), 2)
-//  for index, row in openTrades.iterrows():
-//  resultPercent.append(((float(stopId[0][0]) - float(row[1])) / float(row[1])) * 100 - self.brokerFees * 2)
-//  str(round(sum(resultPercent)/len(resultPercent), 2)) + " %"
-// assets
-// openTrades
-// sumResult
-//  select sum((resultpercent/100) * positioncost) from ' + 
-// recentSumResult
-//  select sum((resultpercent/100) * positioncost) from ' + 
+fn cache_balance() {
+    let balance = binance_access::get_base_currency_balance();
+    redis_access::set_key_value("assets", &balance);
+}
+
+fn cache_open_trades() {
+    let sql = "SELECT count(*) FROM table001
+    where takeprofit is not null and resultpercent is null;";
+    let open_trades = postgres_access::get_count(&sql);
+    redis_access::set_key_value("openTrades", 
+        &open_trades.unwrap().to_string());
+}
+
+fn cache_sum_result() {
+    let sql = "SELECT count(resultpercent) FROM table001;";
+    let closed_trades = postgres_access::get_count(&sql);
+    let cutoff: i64 = 1;
+    if &closed_trades.as_ref().unwrap() <= &&cutoff {
+        redis_access::set_key_value("sumResult", "0 %");
+    } else {
+        let sql = "select sum(resultpercent) from table001;";
+        let sum_result = postgres_access::get_sum(&sql);
+        redis_access::set_key_value("sumResult", 
+        &format!("{}{}", &sum_result.unwrap().to_string(), " %"));
+    }
+}
+
+fn cache_recent_sum_result() {
+    let sql = "SELECT count(resultpercent) FROM table001
+    where time > now() - interval \'24 hours\';";
+    let closed_trades = postgres_access::get_count(&sql);
+    let cutoff: i64 = 1;
+    if &closed_trades.as_ref().unwrap() <= &&cutoff {
+        redis_access::set_key_value("recentSumResult", "0 %");
+    } else {
+        let sql = "select sum(resultpercent) from table001
+        where time > now() - interval \'24 hours\';";
+        let sum_result = postgres_access::get_sum(&sql);
+        redis_access::set_key_value("recentSumResult", 
+        &format!("{}{}", &sum_result.unwrap().to_string(), " %"));
+    }
+}
