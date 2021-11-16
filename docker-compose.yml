@@ -58,7 +58,7 @@ services:
    - cache
    ports:
    - "13000:13000"
- analyzer:
+  analyzer:
    build: ./container-analyzer
    container_name: fibonacci-analyzer
    restart: unless-stopped
