@@ -41,8 +41,9 @@ fn cache_sum_result() {
         let sql = ["select sum(resultpercent) from ",
             &env::var("dbTable").unwrap_or_default()].join(" ");
         let sum_result = postgres_access::get_sum(&sql);
+        let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
         redis_access::set_key_value("sumResult", 
-        &format!("{}{}", &sum_result.unwrap().to_string(), " %"));
+        &format!("{}{}", &rounded_result.to_string(), " %"));
     }
 }
 
@@ -59,7 +60,8 @@ fn cache_recent_sum_result() {
             &env::var("dbTable").unwrap_or_default(),
             "where time > now() - interval \'24 hours\';"].join(" ");
         let sum_result = postgres_access::get_sum(&sql);
+        let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
         redis_access::set_key_value("recentSumResult", 
-        &format!("{}{}", &sum_result.unwrap().to_string(), " %"));
+        &format!("{}{}", &rounded_result.to_string(), " %"));
     }
 }
