@@ -1,5 +1,9 @@
 # Introduction
-Just a fun exercise to see if fibonacci retracement levels and simple correlation can predict the value of cryptocurrencies to one antoher. Have fun =) 
+This is a fun exercise to see if fibonacci retracement levels and simple correlation can predict the value of cryptocurrencies. Have fun =) 
+
+This Project was meant to explore the concept of microservices, aswell as getting to know a coule of programming languages. In this project JavaScript, Python, R and Rust are used to write Binance marketdata to a POSTGRESQL database. Decisions on trading are being made using this data and service monitoring is cached in a REDIS database thereafter.
+
+The User can monitor the tradingbot using a custom webinterface or a Telegram bot.
 
 
 # Architecture
