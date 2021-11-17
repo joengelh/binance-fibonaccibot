@@ -79,7 +79,7 @@ def crawl():
         intermDict = buildPairDict(tickers, i)
         #dont write data when not usable
         if (intermDict['askPrice'] <= 0 or
-            1.015 >= intermDict['lowPrice'] / intermDict['highPrice'] <= 0.985 or
+            1.015 >= intermDict['lowPrice'] / intermDict['highPrice'] >= 0.985 or
             "UP" in intermDict['symbol'] or
             "DOWN" in intermDict['symbol'] or
             not intermDict['symbol'].endswith(baseCurrency)):
