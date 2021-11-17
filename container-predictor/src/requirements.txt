@@ -5,3 +5,4 @@ pandas
 envs
 schedule
 redis
+hiredis
