@@ -1,7 +1,6 @@
 #import modules
 import json
 import pandas as pd
-from binance.client import Client
 from dotenv import load_dotenv
 from envs import env
 import time
@@ -83,16 +82,14 @@ def backtest():
         bigData[8] = pd.to_numeric(bigData[8], errors='coerce', downcast='float')
         bigData[9] = pd.to_numeric(bigData[9], errors='coerce', downcast='float')
         #get start of timedelta
-        bigData[5] = bigData[1] - timedelta(hours=96)
-        #get end of timedelta
-        bigData[10] = bigData[1] - timedelta(hours=24)
+        bigData[5] = bigData[1] - timedelta(hours=24)
         #loop over every row
         for index, row in bigData.iterrows():
             before_start_date = bigData[1] <= row[5]
             if len(bigData.loc[before_start_date]) > 0:
                 #get data for consideration
                 after_start_date = bigData[1] >= row[5]
-                before_end_date = bigData[1] <= row[10]
+                before_end_date = bigData[1] <= row[1]
                 between_two_dates = after_start_date & before_end_date
                 fibDates = bigData.loc[between_two_dates]
                 diff = fibDates[3].max() - fibDates[3].min()
@@ -146,17 +143,12 @@ def backtest():
     #close database connection
     postgres.databaseClose()
 
-testTables = [{"table":"backtesting","currency":"BUSD"}]
-for iteration in testTables:
-    load_dotenv('../.env')
-    try:
-        apiSecret=env('apiSecret')
-        apiKey=env('apiKey')
-        dbTable=iteration["table"]
-        baseCurrency=iteration["currency"]
-        brokerFees=float(env('brokerFees'))
-    except KeyError:
-        print("No env variables set.")
-        sys.exit(1)
-    client = Client(apiKey, apiSecret, {'timeout':600})
-    backtest()
+load_dotenv('../.env')
+try:
+    dbTable="backtesting"
+    baseCurrency=env('baseCurrency')
+    brokerFees=float(env('brokerFees'))
+except KeyError:
+    print("No env variables set.")
+    sys.exit(1)
+backtest()
