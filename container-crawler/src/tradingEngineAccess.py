@@ -51,7 +51,7 @@ class tradingAccess:
             positionCost = 0
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
-            " takeProfit = '" + str(fib[3][i+4]) +
+            " takeProfit = '" + str(fib[3][i+5]) +
             "', stopLoss = '" + str(fib[2][i-1]) +
             "', corValue = '" + str(cor) +
             "', startId = '" + str(large[0].min()) +
@@ -106,7 +106,7 @@ class tradingAccess:
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
-                    float(tick["priceChangePercent"] >= 0 and
+                    #float(tick["priceChangePercent"] >= 0 and
                     #corValue >= 0 and
                     #statisticsTools["skew"] <= 0 and
                     #statisticsTools["kurtosis"] <= 0 and
