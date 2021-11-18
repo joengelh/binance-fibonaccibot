@@ -42,22 +42,22 @@ fn cache_sum_result() {
         } else {
             redis_access::set_key_value("sumResult", "NaN %");
         }
-} else { 
-        let sql = ["select sum(resultpercent) from ",
-            &env::var("dbTable").unwrap_or_default()].join(" ");
-        let sum_result = postgres_access::get_sum(&sql);
-        let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
-        if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let live_volume: f64 = env::var("liveVolume").unwrap_or_default().parse().unwrap();
-            redis_access::set_key_value("sumResult",
-                &format!("{}{}{}", &rounded_result / 100.0 * &live_volume,
-                 " ", &env::var("baseCurrency").unwrap_or_default()));
-        } else {
-            redis_access::set_key_value("sumResult", 
-                &format!("{}{}", &rounded_result.to_string(), " %"));
+    } else { 
+            let sql = ["select sum(resultpercent) from ",
+                &env::var("dbTable").unwrap_or_default()].join(" ");
+            let sum_result = postgres_access::get_sum(&sql);
+            let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
+            if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
+                let live_volume: f64 = env::var("liveVolume").unwrap_or_default().parse().unwrap();
+                redis_access::set_key_value("sumResult",
+                    &format!("{}{}{}", &rounded_result / 100.0 * &live_volume,
+                    " ", &env::var("baseCurrency").unwrap_or_default()));
+            } else {
+                redis_access::set_key_value("sumResult", 
+                    &format!("{}{}", &rounded_result.to_string(), " %"));
+            }
         }
     }
-}
 
 fn cache_recent_sum_result() {
     let sql = ["SELECT count(resultpercent) FROM",
@@ -72,20 +72,20 @@ fn cache_recent_sum_result() {
         } else {
             redis_access::set_key_value("recentSumResult", "NaN %");
         }
-    } else { 
-        let sql = ["select sum(resultpercent) from ",
-            &env::var("dbTable").unwrap_or_default(),
-            "where time > now() - interval \'24 hours\';"].join(" ");
-        let sum_result = postgres_access::get_sum(&sql);
-        let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
-        if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let live_volume: f64 = env::var("liveVolume").unwrap_or_default().parse().unwrap();
-            redis_access::set_key_value("recentSumResult",
-                &format!("{}{}{}", &rounded_result / 100.0 * &live_volume,
-                 " ", &env::var("baseCurrency").unwrap_or_default()));
-        } else {
-            redis_access::set_key_value("recentSumResult", 
-                &format!("{}{}", &rounded_result.to_string(), " %"));
+        } else { 
+            let sql = ["select sum(resultpercent) from ",
+                &env::var("dbTable").unwrap_or_default(),
+                "where time > now() - interval \'24 hours\';"].join(" ");
+            let sum_result = postgres_access::get_sum(&sql);
+            let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
+            if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
+                let live_volume: f64 = env::var("liveVolume").unwrap_or_default().parse().unwrap();
+                redis_access::set_key_value("recentSumResult",
+                    &format!("{}{}{}", &rounded_result / 100.0 * &live_volume,
+                    " ", &env::var("baseCurrency").unwrap_or_default()));
+            } else {
+                redis_access::set_key_value("recentSumResult", 
+                    &format!("{}{}", &rounded_result.to_string(), " %"));
+            }
         }
     }
-}
