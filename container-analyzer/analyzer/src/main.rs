@@ -35,15 +35,27 @@ fn cache_sum_result() {
         &env::var("dbTable").unwrap_or_default()].join(" ");
     let closed_trades = postgres_access::get_count(&sql);
     let cutoff: i64 = 1;
-    if &closed_trades.as_ref().unwrap() <= &&cutoff {
-        redis_access::set_key_value("sumResult", "0 %");
-    } else {
+    if &closed_trades.as_ref().unwrap() <= &&cutoff  {
+        if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
+            redis_access::set_key_value("sumResult",
+                &format!("{}{}", "0 ", &env::var("baseCurrency").unwrap_or_default()));
+        } else {
+            redis_access::set_key_value("sumResult", "0 %");
+        }
+} else { 
         let sql = ["select sum(resultpercent) from ",
             &env::var("dbTable").unwrap_or_default()].join(" ");
         let sum_result = postgres_access::get_sum(&sql);
         let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
-        redis_access::set_key_value("sumResult", 
-        &format!("{}{}", &rounded_result.to_string(), " %"));
+        if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
+            let live_volume: f64 = env::var("liveVolume").unwrap_or_default().parse().unwrap();
+            redis_access::set_key_value("sumResult",
+                &format!("{}{}{}", &rounded_result / 100.0 * &live_volume,
+                 " ", &env::var("baseCurrency").unwrap_or_default()));
+        } else {
+            redis_access::set_key_value("sumResult", 
+                &format!("{}{}", &rounded_result.to_string(), " %"));
+        }
     }
 }
 
@@ -53,8 +65,13 @@ fn cache_recent_sum_result() {
         "where time > now() - interval \'24 hours\';"].join(" ");
     let closed_trades = postgres_access::get_count(&sql);
     let cutoff: i64 = 1;
-    if &closed_trades.as_ref().unwrap() <= &&cutoff {
-        redis_access::set_key_value("recentSumResult", "0 %");
+    if &closed_trades.as_ref().unwrap() <= &&cutoff  {
+        if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
+            redis_access::set_key_value("recentSumResult",
+                &format!("{}{}", "0 ", &env::var("baseCurrency").unwrap_or_default()));
+        } else {
+            redis_access::set_key_value("recentSumResult", "0 %");
+        }
     } else { 
         let sql = ["select sum(resultpercent) from ",
             &env::var("dbTable").unwrap_or_default(),
