@@ -1,7 +1,0 @@
----
-backupPath: "/mnt/nfs/fibonacciBackup"
-logPath: "/var/log/fibonacci"
-dbPassword: "password"
-dbUser: "postgres"
-db: "postgres"
-user: "ansible"

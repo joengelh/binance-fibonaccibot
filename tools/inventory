@@ -1,2 +1,0 @@
-[total]
-dockerVm ansible_user=ansible ansible_host=192.168.2.8

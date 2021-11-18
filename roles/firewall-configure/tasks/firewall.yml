@@ -1,6 +1,0 @@
----
-- firewalld:
-    port: "{{ dbPort }}/tcp"
-    permanent: yes
-    state: enabled
-    immediate: yes
