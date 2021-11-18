@@ -112,8 +112,10 @@ def backtest():
                 
                 #if an open position exists, check if it can be closed
                 if openPositions:
+                    elapsed = row[1] - startTime
                     if (row[3] < openPositions['stopLoss'] or
-                        row[3] > openPositions['takeProfit']):
+                        row[3] > openPositions['takeProfit'] or
+                        elapsed >= timedelta('10 hours'):
                             writeTrade(openPositions, row, postgres)
                             #clear open position
                             openPositions = {}
@@ -127,6 +129,7 @@ def backtest():
                             #statisticsTools["kurtosis"] <= 0 and
                             row[3] > fibRetracement[2][i] and
                             row[3] < fibRetracement[3][i]):
+                                startTime = row[1]
                                 openPositions['startId'] = fibDates[0].min()
                                 openPositions['id'] = row[0]
                                 openPositions['midId'] = fibDates[0].max()
