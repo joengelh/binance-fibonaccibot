@@ -38,9 +38,9 @@ fn cache_sum_result() {
     if &closed_trades.as_ref().unwrap() <= &&cutoff  {
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
             redis_access::set_key_value("sumResult",
-                &format!("{}{}", "0 ", &env::var("baseCurrency").unwrap_or_default()));
+                &format!("{}{}", "NaN ", &env::var("baseCurrency").unwrap_or_default()));
         } else {
-            redis_access::set_key_value("sumResult", "0 %");
+            redis_access::set_key_value("sumResult", "NaN %");
         }
 } else { 
         let sql = ["select sum(resultpercent) from ",
@@ -68,9 +68,9 @@ fn cache_recent_sum_result() {
     if &closed_trades.as_ref().unwrap() <= &&cutoff  {
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
             redis_access::set_key_value("recentSumResult",
-                &format!("{}{}", "0 ", &env::var("baseCurrency").unwrap_or_default()));
+                &format!("{}{}", "NaN ", &env::var("baseCurrency").unwrap_or_default()));
         } else {
-            redis_access::set_key_value("recentSumResult", "0 %");
+            redis_access::set_key_value("recentSumResult", "NaN %");
         }
     } else { 
         let sql = ["select sum(resultpercent) from ",
