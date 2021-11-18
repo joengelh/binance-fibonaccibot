@@ -111,6 +111,6 @@ class tradingAccess:
                     #statisticsTools["skew"] <= 0 and
                     #statisticsTools["kurtosis"] <= 0 and
                 float(tick['askPrice']) < fibRetracement[3][i] and
-                float(tick['askPrice']) > fibRetracement[2][i])):
+                float(tick['askPrice']) > fibRetracement[2][i]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, statisticsTools)
         self.postgres.databaseClose()
