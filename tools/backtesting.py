@@ -115,7 +115,7 @@ def backtest():
                     elapsed = row[1] - startTime
                     if (row[3] < openPositions['stopLoss'] or
                         row[3] > openPositions['takeProfit'] or
-                        (elapsed >= timedelta('10 hours') and
+                        (elapsed >= timedelta(hours=24) and
                         row[3] > openPositions['bidPrice'])):
                             writeTrade(openPositions, row, postgres)
                             #clear open position
