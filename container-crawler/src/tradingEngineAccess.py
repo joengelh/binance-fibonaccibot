@@ -52,7 +52,7 @@ class tradingAccess:
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
             " takeProfit = '" + str(fib[3][i+5]) +
-            "', stopLoss = '" + str(fib[2][i-1]) +
+            "', stopLoss = '" + str(fib[2][i-5]) +
             "', corValue = '" + str(cor) +
             "', startId = '" + str(large[0].min()) +
             "', midId = '" + str(large[0].max()) +
@@ -64,21 +64,11 @@ class tradingAccess:
             "' WHERE id IN(SELECT max(id) FROM " + self.dbTable + ");")
         self.postgres.sqlUpdate(sql)
 
-    def corConsistency(self,scale,tick):
-        sql = ("SELECT id, askprice, time FROM " + self.dbTable + 
-            " WHERE symbol LIKE '" + tick['symbol'] + 
-            "' AND time > NOW() - INTERVAL '" + str(scale) + " hours';")
-        largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
-        largeData[0] = pd.to_numeric(largeData[0])
-        largeData[1] = pd.to_numeric(largeData[1])
-        corValue = largeData[0].corr(largeData[1])
-        return corValue
-
     def runCalculation(self, tick):
         self.postgres = postgresdbAccess.postgresAccess()
         sql = ("SELECT id, askprice FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
-            "' AND time > NOW() - INTERVAL '24 hours';")
+            "' AND time > NOW() - INTERVAL '1 hours';")
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
         if len(largeData) > 0:    
             #convert columns id and askprice to float
@@ -106,10 +96,8 @@ class tradingAccess:
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
-                    #float(tick["priceChangePercent"] >= 0 and
-                    #corValue >= 0 and
-                    statisticsTools["skew"] <= -1 and
-                    #statisticsTools["kurtosis"] <= 0 and
+                    float(tick["priceChangePercent"] <= -10 and
+                    statisticsTools["skew"] <= 0 and
                     float(tick['askPrice']) < fibRetracement[3][i] and
                     float(tick['askPrice']) > fibRetracement[2][i]):
                     self.openTrade(fibRetracement, i, largeData, corValue, tick, statisticsTools)
