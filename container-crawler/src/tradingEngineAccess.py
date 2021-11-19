@@ -52,7 +52,7 @@ class tradingAccess:
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
             " takeProfit = '" + str(fib[3][i+5]) +
-            "', stopLoss = '" + str(fib[2][i-5]) +
+            "', stopLoss = '" + str(fib[2][i-6]) +
             "', corValue = '" + str(cor) +
             "', startId = '" + str(large[0].min()) +
             "', midId = '" + str(large[0].max()) +
