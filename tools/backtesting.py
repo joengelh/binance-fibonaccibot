@@ -82,7 +82,7 @@ def backtest():
         bigData[8] = pd.to_numeric(bigData[8], errors='coerce', downcast='float')
         bigData[9] = pd.to_numeric(bigData[9], errors='coerce', downcast='float')
         #get start of timedelta
-        bigData[5] = bigData[1] - timedelta(hours=24)
+        bigData[5] = bigData[1] - timedelta(hours=6)
         #loop over every row
         for index, row in bigData.iterrows():
             before_start_date = bigData[1] <= row[5]
@@ -115,7 +115,7 @@ def backtest():
                     elapsed = row[1] - startTime
                     if (row[3] < openPositions['stopLoss'] or
                         row[3] > openPositions['takeProfit'] or
-                        (elapsed >= timedelta(hours=100) and
+                        (elapsed >= timedelta(hours=200) and
                         row[3] > openPositions['bidPrice'])):
                             writeTrade(openPositions, row, postgres)
                             #clear open position
@@ -124,9 +124,9 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [7]:
                         #check if buy requirements are met
-                        if (#row[7] >= 0 and
-                            #corValue >= 0 and
-                            #statisticsTools["skew"] <= 0 and
+                        if (row[7] >= 0 and
+                            corValue >= 0 and
+                            statisticsTools["skew"] <= 0 and
                             #statisticsTools["kurtosis"] <= 0 and
                             row[3] > fibRetracement[2][i] and
                             row[3] < fibRetracement[3][i]):

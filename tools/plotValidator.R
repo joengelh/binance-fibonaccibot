@@ -22,7 +22,7 @@ fR$northLevel <- NA
 
 #get list of buy advice instances
 sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 
-                     WHERE resultpercent IS NOT NULL AND skew <= -1;")
+                     WHERE resultpercent IS NOT NULL AND skew < -1.5 and skew > -1.8;")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 
