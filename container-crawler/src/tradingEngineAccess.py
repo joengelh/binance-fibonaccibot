@@ -96,7 +96,7 @@ class tradingAccess:
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
-                    float(tick["priceChangePercent"] <= -10 and
+                    float(tick["priceChangePercent"]) <= -10 and
                     statisticsTools["skew"] <= 0 and
                     float(tick['askPrice']) < fibRetracement[3][i] and
                     float(tick['askPrice']) > fibRetracement[2][i]):
