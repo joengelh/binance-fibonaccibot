@@ -80,25 +80,18 @@ class predictAccess:
                     "' ORDER BY id DESC LIMIT 1;")
                 stopId = pd.DataFrame(postgres.sqlQuery(sql))
                 resultPercent.append(((float(stopId[0][0]) - float(row[1])) / float(row[1])) * 100 - self.brokerFees * 2)
+            r.setex(
+                "simulatedAvg",
+                timedelta(minutes=15),
+                value=str(round(sum(resultPercent)/len(resultPercent), 2)) + " %"
+            )
             if self.liveTrading:    
-                r.setex(
-                    "simulatedAvg",
-                    timedelta(minutes=15),
-                    value=str(round(sum(resultPercent)/len(resultPercent) * self.liveVolume, 2)) + 
-                        " " + self.baseCurrency
-                )
                 r.setex(
                     "simulatedSum",
                     timedelta(minutes=15),
-                    value=str(round(sum(resultPercent)/100 * self.liveVolume, 2)) + 
-                        " " + self.baseCurrency
+                    value=str(round(sum(resultPercent)/100 * self.liveVolume, 2)) + " " + self.baseCurrency
                 )
             else:
-                r.setex(
-                    "simulatedAvg",
-                    timedelta(minutes=15),
-                    value=str(round(sum(resultPercent)/len(resultPercent), 2)) + " %"
-                )   
                 r.setex(
                     "simulatedSum",
                     timedelta(minutes=15),
