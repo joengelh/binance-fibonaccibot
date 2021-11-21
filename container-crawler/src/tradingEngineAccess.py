@@ -95,7 +95,7 @@ class tradingAccess:
             statisticsTools["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
             for i in [7]:
-                if (float(tick["priceChangePercent"] <= -10 or
+                if (float(tick["priceChangePercent"]) <= -10 or
                     float(tick["priceChangePercent"]) >= 0):
                     if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                         float(statisticsTools["skew"]) <= -0.1 and
