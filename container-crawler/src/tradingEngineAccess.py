@@ -70,7 +70,9 @@ class tradingAccess:
             " WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '33 hours';")
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
-        if len(largeData) > 1:    
+        #only run calculation if data for 600 minutes (roughly 12 hours including calc. times)
+        #is present
+        if len(largeData) > 600:    
             #convert columns id and askprice to float
             largeData = largeData.apply(pd.to_numeric, errors='coerce', downcast='float')
             #calculate diff
