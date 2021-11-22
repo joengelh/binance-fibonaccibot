@@ -98,7 +98,7 @@ class tradingAccess:
                 if (float(tick["priceChangePercent"]) <= -10 or
                     float(tick["priceChangePercent"]) >= 1):
                     if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
-                        float(statisticsTools["skew"]) <= -1 and
+                        float(statisticsTools["skew"]) <= -0.1 and
                         float(tick['askPrice']) <= fibRetracement[3][i] and
                         float(tick['askPrice']) >= fibRetracement[2][i]):
                         self.openTrade(fibRetracement, i, largeData, corValue, tick, statisticsTools)
