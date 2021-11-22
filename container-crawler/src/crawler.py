@@ -78,7 +78,8 @@ def crawl():
     for i in range(len(tickers)):
         intermDict = buildPairDict(tickers, i)
         #dont write data when not usable
-        if intermDict['askPrice'] <= 0:
+        if (intermDict['askPrice'] <= 0 or
+            intermDict['highPrice'] <= 0):
             continue
         if (1.015 >= intermDict['lowPrice'] / intermDict['highPrice'] >= 0.985 or
             "UP" in intermDict['symbol'] or
