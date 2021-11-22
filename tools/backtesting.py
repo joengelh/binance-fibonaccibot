@@ -138,7 +138,7 @@ def backtest():
                                     openPositions['skew'] = statisticsTools["skew"]
                                     openPositions['kurtosis'] = statisticsTools["kurtosis"]
                                     openPositions['takeProfit'] = fibRetracement[2][i+5]
-                                    openPositions['stopLoss'] = fibRetracement[2][i-1]
+                                    openPositions['stopLoss'] = fibRetracement[2][i-6]
     #close database connection
     postgres.databaseClose()
 
