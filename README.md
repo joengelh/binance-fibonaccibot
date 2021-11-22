@@ -1,14 +1,11 @@
 # Introduction
-This is a fun exercise to see if fibonacci retracement levels and simple correlation can predict the value of cryptocurrencies. Have fun =) 
+This is a fun exercise to see if fibonacci retracement levels and statistical tools can predict the value of cryptocurrencies. Have fun =) 
 
-This Project was meant to explore the concept of microservices, aswell as getting to know a coule of programming languages. In this project JavaScript, Python, R and Rust are used to write Binance marketdata to a POSTGRESQL database. Decisions on trading are being made using this data and service monitoring is cached in a REDIS database thereafter.
-
-The User can monitor the tradingbot using a custom webinterface or a Telegram bot.
-
+This Project was meant to explore the concept of microservices, aswell as getting to know a couple of programming languages. In this project Python, Rust, R and JavaScript are used to write Binance marketdata to a database, make trading decisions, cache performance information and present it to the user in a website or through a Telegram Bot.
 
 # Architecture
 
-![Architecture](![grafik](https://user-images.githubusercontent.com/73387330/142045507-ae8cc7e0-df08-49e5-b946-9705755e0c32.png))
+![Architecture](https://user-images.githubusercontent.com/73387330/142045507-ae8cc7e0-df08-49e5-b946-9705755e0c32.png)
 
 The Trading bot comes as a microservices architecture launched via docker-compose.
 Docker compose can be installed using the ansible Role 
