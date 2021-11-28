@@ -21,8 +21,7 @@ fR$southLevel <- NA
 fR$northLevel <- NA
 
 #get list of buy advice instances
-sqlQuery <- dbSendQuery(con, "SELECT * FROM backtesting
-                     WHERE id = 1368517")
+sqlQuery <- dbSendQuery(con, "SELECT * FROM table001 where takeprofit is not null")
 validated <- dbFetch(sqlQuery)
 dbClearResult(sqlQuery)
 

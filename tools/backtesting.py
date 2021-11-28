@@ -121,7 +121,7 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [7]:
                         #check if buy requirements are met
-                        if (row[7] >= 0 or
+                        if (row[7] >= 1 or
                             row[7] <= -10):
                             if (statisticsTools["skew"] <= -0.1 and
                                 row[3] >= fibRetracement[2][i] and
