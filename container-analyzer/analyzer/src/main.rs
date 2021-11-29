@@ -31,7 +31,7 @@ fn cache_open_trades() {
 }
 
 fn cache_sum_result() {
-    let sql = ["SELECT count(resultpercent) FROM ",
+    let sql = ["SELECT count(resultpercent) FROM",
         &env::var("dbTable").unwrap_or_default()].join(" ");
     let closed_trades = postgres_access::get_count(&sql);
     let cutoff: i64 = 1;
@@ -44,7 +44,7 @@ fn cache_sum_result() {
         }
     } else { 
             if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-                let sql = ["select sum(resultpercent) * sum(positioncost) from ",
+                let sql = ["select sum(resultpercent) * sum(positioncost) from",
                     &env::var("dbTable").unwrap_or_default(),
                     "where positioncost is not null"].join(" ");
                 let sum_result = postgres_access::get_sum(&sql);
@@ -53,7 +53,7 @@ fn cache_sum_result() {
                     &format!("{}{}{}", &rounded_result,
                     " ", &env::var("baseCurrency").unwrap_or_default()));
             } else {
-                let sql = ["select sum(resultpercent) from ",
+                let sql = ["select sum(resultpercent) from",
                     &env::var("dbTable").unwrap_or_default()].join(" ");
                 let sum_result = postgres_access::get_sum(&sql);
                 let rounded_result = (sum_result.unwrap() * 100.0).round() / 100.0;
@@ -78,7 +78,7 @@ fn cache_recent_sum_result() {
         }
     } else { 
             if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-                let sql = ["select sum(resultpercent) * sum(positioncost) from ",
+                let sql = ["select sum(resultpercent) * sum(positioncost) from",
                     &env::var("dbTable").unwrap_or_default(),
                     "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
                 let sum_result = postgres_access::get_sum(&sql);
@@ -87,7 +87,7 @@ fn cache_recent_sum_result() {
                     &format!("{}{}{}", &rounded_result,
                     " ", &env::var("baseCurrency").unwrap_or_default()));
             } else {
-                let sql = ["select sum(resultpercent) from ",
+                let sql = ["select sum(resultpercent) from",
                     &env::var("dbTable").unwrap_or_default(),
                     "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
                 let sum_result = postgres_access::get_sum(&sql);
