@@ -47,7 +47,7 @@ fn cache_sum_result() {
             let sql = ["select sum(resultpercent / 100) * positioncost from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null"].join(" ");
-            let result = postgres_access::get_sum(&sql_positioncost);
+            let result = postgres_access::get_sum(&sql);
             let rounded_result = (result.unwrap() * 100.0).round() / 100.0;
             redis_access::set_key_value("sumResult",
                 &format!("{}{}{}", &rounded_result,
@@ -78,10 +78,10 @@ fn cache_recent_sum_result() {
         }
     } else { 
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let result = ["select sum(resultpercent / 100) * positioncost from",
+            let sql = ["select sum(resultpercent / 100) * positioncost from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
-            let result = postgres_access::get_sum(&sql_positioncost);
+            let result = postgres_access::get_sum(&sql);
             let rounded_result = (result.unwrap() * 100.0).round() / 100.0;
             redis_access::set_key_value("recentSumResult", 
                 &format!("{}{}", &rounded_result.to_string(), " %"));
