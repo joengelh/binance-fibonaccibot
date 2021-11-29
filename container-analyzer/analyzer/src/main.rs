@@ -89,7 +89,7 @@ fn cache_recent_sum_result() {
             let sql_positioncost = ["select sum(positioncost) from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
-            let sum_resultpercent = postgres_access::get_sum(&sql_resultpercent)
+            let sum_resultpercent = postgres_access::get_sum(&sql_resultpercent);
             let sum_positioncost = postgres_access::get_sum(&sql_positioncost);
             let rounded_result = (sum_resultpercent.unwrap() * 
                 sum_positioncost.unwrap() * 100.0).round() / 100.0;
