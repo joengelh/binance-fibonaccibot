@@ -87,7 +87,7 @@ class predictAccess:
                     r.setex(
                     "simulatedAvg",
                     timedelta(minutes=15),
-                    value=str(round(sum(resultPercent)/len(resultPercent), 2)) + " %"
+                    value=str(round(sum(result)/len(result), 2)) + " %"
                     )
                     r.setex(
                         "simulatedSum",
@@ -97,12 +97,12 @@ class predictAccess:
                     r.setex(
                         "simulatedWinner",
                         timedelta(minutes=15),
-                        value=round(sum(i > 0 for i in resultPercent), 2)
+                        value=round(sum(i > 0 for i in result), 2)
                     )  
                     r.setex(
                         "simulatedLoser",
                         timedelta(minutes=15),
-                        value=round(sum(i < 0 for i in resultPercent), 2)
+                        value=round(sum(i < 0 for i in result), 2)
                     )
 
             else:
