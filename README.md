@@ -49,6 +49,25 @@ fibonacci-predictor|calculating present trades performance||
 fibonacci-analyzer|writing past performance stats to cache||
 fobonacci-telegram|can use bot to give live performance overview||
 
+# Testing
+
+Currenty, only for the component ``container-analyzer`` proper unittests have been developed.
+These can be run after installing Rust using the following command:
+
+```bash 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+The unittests can be run using the command ``cargo run``
+
+> :warning: **Loading dotenv vars**: Unit tests will fail without them
+
+The .env file from the parent directory can be brought into scope using:
+
+```bash
+export $(cat ../.env | xargs)
+```
+
 # Webui
 
 The Webui Displays Information about the Bot´s performance.
