@@ -44,16 +44,11 @@ fn cache_sum_result() {
         }
     } else {
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let sql_resultpercent = ["select sum(resultpercent) from",
+            let sql = ["select sum(resultpercent / 100) * positioncost from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null"].join(" ");
-            let sql_positioncost = ["select sum(positioncost) from",
-                &env::var("dbTable").unwrap_or_default(),
-                "where positioncost is not null"].join(" ");
-            let sum_resultpercent = postgres_access::get_sum(&sql_resultpercent);
-            let sum_positioncost = postgres_access::get_sum(&sql_positioncost);
-            let rounded_result = (sum_resultpercent.unwrap() * 
-                sum_positioncost.unwrap() * 100.0).round() / 100.0;
+            let result = postgres_access::get_sum(&sql_positioncost);
+            let rounded_result = (result.unwrap() * 100.0).round() / 100.0;
             redis_access::set_key_value("sumResult",
                 &format!("{}{}{}", &rounded_result,
                 " ", &env::var("baseCurrency").unwrap_or_default()));
@@ -83,16 +78,11 @@ fn cache_recent_sum_result() {
         }
     } else { 
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let sql_resultpercent = ["select sum(resultpercent) from",
+            let result = ["select sum(resultpercent / 100) * positioncost from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
-            let sql_positioncost = ["select sum(positioncost) from",
-                &env::var("dbTable").unwrap_or_default(),
-                "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
-            let sum_resultpercent = postgres_access::get_sum(&sql_resultpercent);
-            let sum_positioncost = postgres_access::get_sum(&sql_positioncost);
-            let rounded_result = (sum_resultpercent.unwrap() * 
-                sum_positioncost.unwrap() * 100.0).round() / 100.0;
+            let result = postgres_access::get_sum(&sql_positioncost);
+            let rounded_result = (result.unwrap() * 100.0).round() / 100.0;
             redis_access::set_key_value("recentSumResult", 
                 &format!("{}{}", &rounded_result.to_string(), " %"));
         } else {
