@@ -44,7 +44,7 @@ fn cache_sum_result() {
         }
     } else {
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let sql = ["select sum(resultpercent / 100) * positioncost from",
+            let sql = ["select sum((resultpercent / 100) * positioncost) from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null"].join(" ");
             let result = postgres_access::get_sum(&sql);
@@ -78,7 +78,7 @@ fn cache_recent_sum_result() {
         }
     } else { 
         if FromStr::from_str(&env::var("liveTrading").unwrap_or_default()) == Ok(true) {
-            let sql = ["select sum(resultpercent / 100) * positioncost from",
+            let sql = ["select sum((resultpercent / 100) * positioncost) from",
                 &env::var("dbTable").unwrap_or_default(),
                 "where positioncost is not null and time > now() - interval \'24 hours\';"].join(" ");
             let result = postgres_access::get_sum(&sql);

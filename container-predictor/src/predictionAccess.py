@@ -71,6 +71,8 @@ class predictAccess:
             " where resultpercent is null and takeprofit is not null;")
         openTrades = pd.DataFrame(postgres.sqlQuery(sql))
         if len(openTrades) > 0:
+            if self.liveTrading:
+        
             #initiate empty output dataframe
             for index, row in openTrades.iterrows():
                 #query for simulated stopid
