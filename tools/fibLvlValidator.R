@@ -8,9 +8,9 @@ con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
 
 #declare fibonacci levels
 fR <- data.frame(
-  retracement = c(2,1.786,1.618,1.382,1.236,
-                  1,0.786,1.5,
-                  0.618,0.5,0.382,0.236,0),
+  retracement = c(2,1.886,1.618,1.382,1.25,
+                  1,0.886,1.5,
+                  0.618,0.5,0.382,0.25,0),
   lineColor = c('red', 'blue', 'green','blanchedalmond',
                 'yellow', 'brown', 'turquoise3',
                 'orange', 'purple', 'chartreuse1', 
