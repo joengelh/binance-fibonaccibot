@@ -144,7 +144,7 @@ def backtest():
 
 load_dotenv('../.env')
 try:
-    dbTable="backtesting3"
+    dbTable="backtesting4"
     baseCurrency=env('baseCurrency')
     brokerFees=float(env('brokerFees'))
 except KeyError:

@@ -138,13 +138,13 @@ def backtest():
                                     openPositions['skew'] = statisticsTools["skew"]
                                     openPositions['kurtosis'] = statisticsTools["kurtosis"]
                                     openPositions['takeProfit'] = fibRetracement[2][i+5]
-                                    openPositions['stopLoss'] = fibRetracement[2][i-7]
+                                    openPositions['stopLoss'] = fibRetracement[2][i-6]
     #close database connection
     postgres.databaseClose()
 
 load_dotenv('../.env')
 try:
-    dbTable="backtesting"
+    dbTable="backtesting3"
     baseCurrency=env('baseCurrency')
     brokerFees=float(env('brokerFees'))
 except KeyError:
