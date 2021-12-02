@@ -70,9 +70,9 @@ class tradingAccess:
             " WHERE symbol LIKE '" + tick['symbol'] + 
             "' AND time > NOW() - INTERVAL '33 hours';")
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
-        #only run calculation if data for 600 minutes (roughly 12 hours including calc. times)
+        #only run calculation if data for 2000 minutes (roughly 36 hours including calc. times ) to not buy ICOs on Biance (usually unprofitable at the beginning).
         #is present
-        if len(largeData) > 600:    
+        if len(largeData) > 2000:    
             #convert columns id and askprice to float
             largeData = largeData.apply(pd.to_numeric, errors='coerce', downcast='float')
             #calculate diff
