@@ -52,7 +52,7 @@ def backtest():
     #initiate empty percent bar
     percentBar = 0
     #loop over every symbol in symbol list
-    for symbol in uniqueSymbol:
+    for symbol in "BTCBUSD": #uniqueSymbol:
         #print progress
         print(percentBar, " / ", len(uniqueSymbol))
         percentBar = percentBar + 1
@@ -121,11 +121,10 @@ def backtest():
                     #loop over considered fibonacciretracements
                     for i in [7]:
                         #check if buy requirements are met
-                        if (row[7] >= 1 or
-                            row[7] <= -10):
-                            if (statisticsTools["skew"] <= -0.1 and
-                                row[3] >= fibRetracement[2][i] and
-                                row[3] <= fibRetracement[3][i]):
+                        if (row[7] <= -10):
+                            #if (statisticsTools["skew"] <= -0.1 and
+                            #    row[3] >= fibRetracement[2][i] and
+                            #    row[3] <= fibRetracement[3][i]):
                                     openPositions['startId'] = fibDates[0].min()
                                     openPositions['id'] = row[0]
                                     openPositions['midId'] = fibDates[0].max()
