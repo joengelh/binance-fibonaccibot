@@ -51,8 +51,8 @@ class tradingAccess:
             positionCost = 0
         #write the advice
         sql = ("UPDATE " + self.dbTable + " SET " +
-            " takeProfit = '" + str(fib[3][i+5]) +
-            "', stopLoss = '" + str(fib[2][i-7]) +
+            " takeProfit = '" + str(fib[3][i+3]) +
+            "', stopLoss = '" + str(fib[2][i-1]) +
             "', corValue = '" + str(cor) +
             "', startId = '" + str(large[0].min()) +
             "', midId = '" + str(large[0].max()) +
@@ -68,11 +68,10 @@ class tradingAccess:
         self.postgres = postgresdbAccess.postgresAccess()
         sql = ("SELECT id, askprice FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
-            "' AND time > NOW() - INTERVAL '33 hours';")
+            "' AND time > NOW() - INTERVAL '24 hours';")
         largeData = pd.DataFrame(self.postgres.sqlQuery(sql))
-        #only run calculation if data for 2000 minutes (roughly 36 hours including calc. times ) to not buy ICOs on Biance (usually unprofitable at the beginning).
-        #is present
-        if len(largeData) > 2000:    
+        #only run calculation if data for 1000 minutes (roughly 18 hours including calc. times ) to not buy ICOs on Biance (usually unprofitable at the beginning).
+        if len(largeData) > 1000:    
             #convert columns id and askprice to float
             largeData = largeData.apply(pd.to_numeric, errors='coerce', downcast='float')
             #calculate diff
