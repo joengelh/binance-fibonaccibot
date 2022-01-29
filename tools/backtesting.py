@@ -52,7 +52,7 @@ def backtest():
     #initiate empty percent bar
     percentBar = 0
     #loop over every symbol in symbol list
-    for symbol in "BTCBUSD": #uniqueSymbol:
+    for symbol in uniqueSymbol:
         #print progress
         print(percentBar, " / ", len(uniqueSymbol))
         percentBar = percentBar + 1

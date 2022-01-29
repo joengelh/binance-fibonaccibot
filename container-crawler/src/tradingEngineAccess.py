@@ -65,6 +65,10 @@ class tradingAccess:
         self.postgres.sqlUpdate(sql)
 
     def runCalculation(self, tick):
+        if tick['symbol'] in ["AAVEBNB", "NEARBNB", "ROSEBNB", "LUNABNB"]:
+            pass
+        else:
+            continue
         self.postgres = postgresdbAccess.postgresAccess()
         sql = ("SELECT id, askprice FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
