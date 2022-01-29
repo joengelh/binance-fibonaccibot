@@ -85,8 +85,8 @@ class tradingAccess:
             maxAsk = largeData[1].max()
             for lvl in fibRetracement:
                 fibRetracement[1] =  maxAsk - diff * fibRetracement[0]
-                fibRetracement[2] = fibRetracement[1] * 0.9995
-                fibRetracement[3] = fibRetracement[1] * 1.0005
+                fibRetracement[2] = fibRetracement[1] * 0.999
+                fibRetracement[3] = fibRetracement[1] * 1.001
             #see of currently an open trade exists
             sql = ("SELECT count(*) FROM " + self.dbTable + 
                     """ WHERE takeprofit is not null and resultpercent is null and 
@@ -99,7 +99,7 @@ class tradingAccess:
             statisticsTools["skew"] = skew(largeData[1])
             statisticsTools["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
-            for i in [7]:
+            for i in [6]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                     float(statisticsTools["skew"]) <= -0.1 and
                     float(tick['askPrice']) <= fibRetracement[3][i] and
