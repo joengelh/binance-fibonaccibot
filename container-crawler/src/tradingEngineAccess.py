@@ -99,7 +99,7 @@ class tradingAccess:
             statisticsTools["skew"] = skew(largeData[1])
             statisticsTools["kurtosis"] = kurtosis(largeData[1])
             #if no open trade for symbol exists and price in between 7th fiblvl
-            for i in [7,8,9,10]:
+            for i in [7,8,9]:
                 if (int(self.postgres.sqlQuery(sql)[0][0]) == 0 and
                     float(tick['askPrice']) <= fibRetracement[3][i] and
                     float(tick['askPrice']) >= fibRetracement[2][i]):
