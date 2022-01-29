@@ -68,7 +68,7 @@ class tradingAccess:
         if tick['symbol'] in ["AAVEBNB", "NEARBNB", "ROSEBNB", "LUNABNB"]:
             pass
         else:
-            continue
+            return
         self.postgres = postgresdbAccess.postgresAccess()
         sql = ("SELECT id, askprice FROM " + self.dbTable + 
             " WHERE symbol LIKE '" + tick['symbol'] + 
