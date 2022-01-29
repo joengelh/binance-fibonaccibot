@@ -69,8 +69,6 @@ def crawl():
     #get current market data
     tickers = client.get_ticker()
     #get counts
-    countLen = postgres.sqlQuery("SELECT count(*) FROM " + dbTable +
-    " WHERE time < NOW() - INTERVAL '24 hours';")
     countOpen = postgres.sqlQuery("SELECT count(*)" +
     " FROM " + dbTable + " WHERE" +
     " resultpercent IS NULL" +
@@ -88,10 +86,8 @@ def crawl():
             continue
         #write intermDict to database
         postgres.insertRow(intermDict)
-        #and check if enough data has been gathered
-        if countLen[0][0] > 0:
-            #run caluclation
-            trader.runCalculation(intermDict)
+        #run caluclation
+        trader.runCalculation(intermDict)
     #check if any trades meet the conditions to be closed yet
     if countOpen[0][0] > 0:
         test.validate()
@@ -102,7 +98,7 @@ def crawl():
 initiateTable()
 
 #write price ticker to database every full minute
-schedule.every(1).minutes.do(crawl)
+schedule.every(60).seconds.do(crawl)
 
 #repeat
 while True:
