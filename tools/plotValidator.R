@@ -3,6 +3,7 @@ library(RPostgres)
 #connect to postgres
 con <- dbConnect(RPostgres::Postgres(), dbname = "postgres",
                  host = "192.168.2.8",
+                 port = "7525",
                  user = "postgres",
                  password = "password")
 
@@ -27,7 +28,7 @@ dbClearResult(sqlQuery)
 
 for (i in 1:nrow(validated)){
   # get plot data
-  sqlString <-  paste("select * from backtesting 
+  sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"' 
   and id >= '", validated$startid[i], "' 
   and id <= '", validated$stopid[i] + 100000, "';", sep = "")
@@ -36,14 +37,14 @@ for (i in 1:nrow(validated)){
   dbClearResult(sqlQuery)
   
   # get stopid time
-  sqlString <-  paste("select time from backtesting 
+  sqlString <-  paste("select time from table001 
   where id = '", validated$stopid[i], "';", sep = "")
   sqlQuery <- dbSendQuery(con, sqlString)
   stopIdTime <- dbFetch(sqlQuery)
   dbClearResult(sqlQuery)
   
   # re-engineer data present at point of making decision
-  sqlString <-  paste("select * from backtesting 
+  sqlString <-  paste("select * from table001 
   where symbol like '", validated$symbol[i],"'
   and id >= '", validated$startid[i], "'
   and id <= '", validated$midid[i], "';", sep = "")

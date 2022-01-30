@@ -21,5 +21,13 @@ except KeyError:
     print("No env variables set.")
     sys.exit(1)
 
+sumbnb = 0
 client = Client(apiKey, apiSecret, {'timeout':600})
-print(get_exchange_info())
+tickers = client.get_ticker()
+for asset in client.get_account()["balances"]:
+    if float(asset["free"]) > 0:
+        print(asset)
+        if asset["asset"] != "BNBETH":
+            pass
+            sumbnb += asset["free"] * tickers[ 
+print(sumbnb)

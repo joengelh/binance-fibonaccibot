@@ -65,7 +65,7 @@ class tradingAccess:
         self.postgres.sqlUpdate(sql)
 
     def runCalculation(self, tick):
-        if tick['symbol'] in ["AAVEBNB", "NEARBNB", "ROSEBNB", "SOLBNB"]:
+        if tick['symbol'] in ["ENJBNB", "AAVEBNB", "NEARBNB", "ROSEBNB", "SOLBNB"]:
             pass
         else:
             return
