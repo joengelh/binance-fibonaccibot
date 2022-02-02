@@ -8,9 +8,14 @@ from dotenv import load_dotenv
 import schedule
 import time
 from envs import env
+from youtubesearchpython import *
+import re
 
 #read env vars
 load_dotenv()
+
+channel_id = "UCqK_GSMbpiV8spgD3ZGloSw"
+playlist = Playlist(playlist_from_channel_id(channel_id))
 
 try:
     apiSecret=env('apiSecret')
@@ -42,22 +47,20 @@ def buildPairDict(tickers, i):
     columns['quoteVolume'] = float(tickers[i]['quoteVolume'])
     return columns
 
-sumbnb = 0
 client = Client(apiKey, apiSecret, {'timeout':600})
 tickers = client.get_ticker()
-for asset in client.get_account()["balances"]:
-    if float(asset["free"]) > 0:
-        if asset["asset"] == "BNB":
-            sumbnb += float(asset["free"])
-        print(asset)
-        if asset["asset"] in ["ETH", "EUR", "TLM"]:
-            continue
-        for i in range(len(tickers)):
-            intermDict = buildPairDict(tickers, i)
-            if intermDict["symbol"] == "BNBEUR":
-                bnbEurPrice = intermDict["askPrice"]
-            if intermDict["symbol"] == asset["asset"] + "BNB":
-                sumbnb += float(asset["free"]) * float(intermDict["bidPrice"])
-sumbnb -= 1.16949939
-print(sumbnb, "BNB")
-print(sumbnb * bnbEurPrice, "€")
+print(tickers)
+#initiate list to save advice
+advice = []
+
+#get possible names of crypto pais
+cpl = []
+cpl.extend(playlist.videos[0]["title"].split())
+for i in range(len(tickers)):
+    intermDict = buildPairDict(tickers, i)
+    for word in cpl:
+        alphanum = ''.join(e for e in word if e.isalnum())
+        if "BNB" + alphanum.upper() == intermDict["symbol"]:
+            advice.append(intermDict["symbol"])
+
+#print(advice)
